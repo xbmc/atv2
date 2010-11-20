@@ -19,7 +19,9 @@
  *
  */
 
-#include <SDL/SDL.h>
+//#include <SDL/SDL.h>
+#include <utils/XBMC_cond.h>
+#include <utils/XBMC_mutex.h>
 
 #include "XHandle.h"
 #include "XThreadUtils.h"
@@ -56,7 +58,7 @@ CXHandle::CXHandle(const CXHandle &src)
   }
 
   if (src.m_hMutex)
-    m_hMutex = SDL_CreateMutex();
+    m_hMutex = XBMC_CreateMutex();
 
   fd = src.fd;
   m_bManualEvent = src.m_bManualEvent;
@@ -87,15 +89,15 @@ CXHandle::~CXHandle()
   delete m_pSem;
 
   if (m_hMutex) {
-    SDL_DestroyMutex(m_hMutex);
+    XBMC_DestroyMutex(m_hMutex);
   }
 
   if (m_internalLock) {
-    SDL_DestroyMutex(m_internalLock);
+    XBMC_DestroyMutex(m_internalLock);
   }
 
   if (m_hCond) {
-    SDL_DestroyCond(m_hCond);
+    XBMC_DestroyCond(m_hCond);
   }
 
   if (m_threadValid) {
@@ -123,7 +125,7 @@ void CXHandle::Init()
   m_nFindFileIterator=0 ;
   m_nRefCount=1;
   m_tmCreation = time(NULL);
-  m_internalLock = SDL_CreateMutex();
+  m_internalLock = XBMC_CreateMutex();
 #ifdef __APPLE__
   m_machThreadPort = 0;
 #endif
@@ -149,10 +151,10 @@ bool CloseHandle(HANDLE hObject) {
     return true;
 
   bool bDelete = false;
-  SDL_LockMutex(hObject->m_internalLock);
+  XBMC_LockMutex(hObject->m_internalLock);
   if (--hObject->m_nRefCount == 0)
     bDelete = true;
-  SDL_UnlockMutex(hObject->m_internalLock);
+  XBMC_UnlockMutex(hObject->m_internalLock);
 
   if (bDelete)
     delete hObject;
@@ -182,9 +184,9 @@ BOOL WINAPI DuplicateHandle(
   if (hSourceHandle == (HANDLE)-1)
     return FALSE;
 
-  SDL_LockMutex(hSourceHandle->m_internalLock);
+  XBMC_LockMutex(hSourceHandle->m_internalLock);
   hSourceHandle->m_nRefCount++;
-  SDL_UnlockMutex(hSourceHandle->m_internalLock);
+  XBMC_UnlockMutex(hSourceHandle->m_internalLock);
 
   if(lpTargetHandle)
     *lpTargetHandle = hSourceHandle;

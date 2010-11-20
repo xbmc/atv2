@@ -51,6 +51,8 @@ SRCS=AlarmClock.cpp \
      ScraperUrl.cpp \
      MusicArtistInfo.cpp \
      Mutex.cpp \
+     XBMC_cond.cpp \
+     XBMC_mutex.cpp \
      md5.cpp \
      ArabicShaping.cpp \
      AsyncFileCopy.cpp \

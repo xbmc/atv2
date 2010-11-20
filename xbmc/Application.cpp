@@ -238,9 +238,11 @@
 #ifdef HAS_XRANDR
 #include "XRandR.h"
 #endif
-#ifdef __APPLE__
-#include "CocoaInterface.h"
-#include "XBMCHelper.h"
+#if  defined(__APPLE__)
+  #include "CocoaInterface.h"
+  #if !defined(__arm__)
+    #include "XBMCHelper.h"
+  #endif
 #endif
 
 #ifdef HAS_DVD_DRIVE
@@ -322,11 +324,11 @@ CApplication::CApplication(void) : m_itemCurrentFile(new CFileItem), m_progressT
 #endif
   m_currentStack = new CFileItemList;
 
-#ifdef HAS_SDL
+//#ifdef HAS_SDL
   m_frameCount = 0;
-  m_frameMutex = SDL_CreateMutex();
-  m_frameCond = SDL_CreateCond();
-#endif
+  m_frameMutex = XBMC_CreateMutex();
+  m_frameCond = XBMC_CreateCond();
+//#endif
 
   m_bPresentFrame = false;
   m_bPlatformDirectories = true;
@@ -345,13 +347,13 @@ CApplication::~CApplication(void)
   delete m_pKaraokeMgr;
 #endif
 
-#ifdef HAS_SDL
+//#ifdef HAS_SDL
   if (m_frameMutex)
-    SDL_DestroyMutex(m_frameMutex);
+    XBMC_DestroyMutex(m_frameMutex);
 
   if (m_frameCond)
-    SDL_DestroyCond(m_frameCond);
-#endif
+    XBMC_DestroyCond(m_frameCond);
+//#endif
   delete m_dpms;
 }
 
@@ -655,7 +657,7 @@ bool CApplication::Create()
   g_Joystick.Initialize();
 #endif
 
-#ifdef __APPLE__
+#if defined(__APPLE__) && !defined(__arm__)
   // Configure and possible manually start the helper.
   XBMCHelper::GetInstance().Configure();
 #endif
@@ -846,6 +848,8 @@ bool CApplication::InitDirectoriesOSX()
 
   CStdString xbmcPath;
   CUtil::GetHomePath(xbmcPath);
+  xbmcPath = "/private/var/stash/Applications/Lowtide.app/Appliances/XBMC.frappliance/XBMCData/XBMCHome";
+
   setenv("XBMC_HOME", xbmcPath.c_str(), 0);
 
   // OSX always runs with m_bPlatformDirectories == true
@@ -854,20 +858,32 @@ bool CApplication::InitDirectoriesOSX()
     // map our special drives
     CSpecialProtocol::SetXBMCBinPath(xbmcPath);
     CSpecialProtocol::SetXBMCPath(xbmcPath);
-    CSpecialProtocol::SetHomePath(userHome + "/Library/Application Support/XBMC");
-    CSpecialProtocol::SetMasterProfilePath(userHome + "/Library/Application Support/XBMC/userdata");
+    #if defined(__arm__)
+      CSpecialProtocol::SetHomePath(userHome + "/Library/Preferences/XBMC");
+      CSpecialProtocol::SetMasterProfilePath(userHome + "/Library/Preferences/XBMC/userdata");
+    #else
+      CSpecialProtocol::SetHomePath(userHome + "/Library/Application Support/XBMC");
+      CSpecialProtocol::SetMasterProfilePath(userHome + "/Library/Application Support/XBMC/userdata");
+    #endif
 
-#ifdef __APPLE__
-    CStdString strTempPath = CUtil::AddFileToFolder(userHome, ".xbmc/");
-    CDirectory::Create(strTempPath);
-#endif
-
-    strTempPath = CUtil::AddFileToFolder(userHome, ".xbmc/temp");
+    // location for temp files
+    #if defined(__arm__)
+      CStdString strTempPath = CUtil::AddFileToFolder(userHome + "/Library/Preferences", ".xbmc/");
+      CDirectory::Create(strTempPath);
+      strTempPath = CUtil::AddFileToFolder(userHome + "/Library/Preferences", ".xbmc/temp");
+    #else
+      CStdString strTempPath = CUtil::AddFileToFolder(userHome, ".xbmc/");
+      CDirectory::Create(strTempPath);
+      strTempPath = CUtil::AddFileToFolder(userHome, ".xbmc/temp");
+    #endif
     CSpecialProtocol::SetTempPath(strTempPath);
 
-#ifdef __APPLE__
-    strTempPath = userHome + "/Library/Logs";
-#endif
+    // xbmc.log file location
+    #if defined(__arm__)
+      strTempPath = userHome + "/Library/Preferences";
+    #else
+      strTempPath = userHome + "/Library/Preferences";
+    #endif
     CUtil::AddSlashAtEnd(strTempPath);
     g_settings.m_logFolder = strTempPath;
 
@@ -1146,7 +1162,7 @@ bool CApplication::Initialize()
 
   m_slowTimer.StartZero();
 
-#ifdef __APPLE__
+#if defined(__APPLE__) && !defined(__arm__)
   XBMCHelper::GetInstance().CaptureAllInput();
 #endif
 #if defined(HAVE_LIBCRYSTALHD)
@@ -1883,15 +1899,15 @@ void CApplication::RenderScreenSaver()
 bool CApplication::WaitFrame(unsigned int timeout)
 {
   bool done = false;
-#ifdef HAS_SDL
+//#ifdef HAS_SDL
   // Wait for all other frames to be presented
-  SDL_mutexP(m_frameMutex);
+  XBMC_mutexP(m_frameMutex);
   //wait until event is set, but modify remaining time
   DWORD dwStartTime = CTimeUtils::GetTimeMS();
   DWORD dwRemainingTime = timeout;
   while(m_frameCount > 0)
   {
-    int result = SDL_CondWaitTimeout(m_frameCond, m_frameMutex, dwRemainingTime);
+    int result = XBMC_CondWaitTimeout(m_frameCond, m_frameMutex, dwRemainingTime);
     if (result == 0)
     {
       //fix time to wait because of spurious wakeups
@@ -1904,31 +1920,31 @@ bool CApplication::WaitFrame(unsigned int timeout)
       else
       {
         //ran out of time
-        result = SDL_MUTEX_TIMEDOUT;
+        result = XBMC_MUTEX_TIMEDOUT;
       }
     }
 
-    if(result == SDL_MUTEX_TIMEDOUT)
+    if(result == XBMC_MUTEX_TIMEDOUT)
       break;
     if(result < 0)
       CLog::Log(LOGWARNING, "CApplication::WaitFrame - error from conditional wait");
   }
   done = m_frameCount == 0;
-  SDL_mutexV(m_frameMutex);
-#endif
+  XBMC_mutexV(m_frameMutex);
+//#endif
   return done;
 }
 
 void CApplication::NewFrame()
 {
-#ifdef HAS_SDL
+//#ifdef HAS_SDL
   // We just posted another frame. Keep track and notify.
-  SDL_mutexP(m_frameMutex);
+  XBMC_mutexP(m_frameMutex);
   m_frameCount++;
-  SDL_mutexV(m_frameMutex);
+  XBMC_mutexV(m_frameMutex);
 
-  SDL_CondBroadcast(m_frameCond);
-#endif
+  XBMC_CondBroadcast(m_frameCond);
+//#endif
 }
 
 void CApplication::Render()
@@ -1959,8 +1975,8 @@ void CApplication::Render()
     m_bPresentFrame = false;
     if (!extPlayerActive && g_graphicsContext.IsFullScreenVideo() && !IsPaused())
     {
-#ifdef HAS_SDL
-      SDL_mutexP(m_frameMutex);
+//#ifdef HAS_SDL
+      XBMC_mutexP(m_frameMutex);
 
       //wait until event is set, but modify remaining time
       DWORD dwStartTime = CTimeUtils::GetTimeMS();
@@ -1968,7 +1984,7 @@ void CApplication::Render()
       // If we have frames or if we get notified of one, consume it.
       while(m_frameCount == 0)
       {
-        int result = SDL_CondWaitTimeout(m_frameCond, m_frameMutex, dwRemainingTime);
+        int result = XBMC_CondWaitTimeout(m_frameCond, m_frameMutex, dwRemainingTime);
         if (result == 0)
         {
           //fix time to wait because of spurious wakeups
@@ -1981,21 +1997,21 @@ void CApplication::Render()
           else
           {
             //ran out of time
-            result = SDL_MUTEX_TIMEDOUT;
+            result = XBMC_MUTEX_TIMEDOUT;
           }
         }
 
-        if(result == SDL_MUTEX_TIMEDOUT)
+        if(result == XBMC_MUTEX_TIMEDOUT)
           break;
         if(result < 0)
           CLog::Log(LOGWARNING, "CApplication::Render - error from conditional wait");
       }
 
       m_bPresentFrame = m_frameCount > 0;
-      SDL_mutexV(m_frameMutex);
-#else
-      m_bPresentFrame = true;
-#endif
+      XBMC_mutexV(m_frameMutex);
+//#else
+//      m_bPresentFrame = true;
+//#endif
       decrement = m_bPresentFrame;
     }
     else
@@ -2045,13 +2061,13 @@ void CApplication::Render()
 
   g_renderManager.UpdateResolution();
 
-#ifdef HAS_SDL
-  SDL_mutexP(m_frameMutex);
+//#ifdef HAS_SDL
+  XBMC_mutexP(m_frameMutex);
   if(m_frameCount > 0 && decrement)
     m_frameCount--;
-  SDL_mutexV(m_frameMutex);
-  SDL_CondBroadcast(m_frameCond);
-#endif
+  XBMC_mutexV(m_frameMutex);
+  XBMC_CondBroadcast(m_frameCond);
+//#endif
 }
 
 void CApplication::SetStandAlone(bool value)
@@ -2699,7 +2715,9 @@ void CApplication::FrameMove()
 #endif
 
   // process input actions
+#ifdef HAS_SDL
   CWinEvents::MessagePump();
+#endif
   ProcessHTTPApiButtons();
   ProcessRemote(frameTime);
   ProcessGamepad(frameTime);
@@ -3262,7 +3280,7 @@ void CApplication::Stop()
     StopServices();
     //Sleep(5000);
 
-#ifdef __APPLE__
+#if defined(__APPLE__) && !defined(__arm__)
     XBMCHelper::GetInstance().ReleaseAllInput();
 #endif
 
@@ -3302,7 +3320,7 @@ void CApplication::Stop()
     CLog::Log(LOGNOTICE, "unload skin");
     UnloadSkin();
 
-#ifdef __APPLE__
+#if defined(__APPLE__) && !defined(__arm__)
     if (XBMCHelper::GetInstance().IsAlwaysOn() == false)
       XBMCHelper::GetInstance().Stop();
 #endif
@@ -4118,7 +4136,7 @@ void CApplication::ResetScreenSaver()
 
 void CApplication::ResetScreenSaverTimer()
 {
-#ifdef __APPLE__
+#if defined(__APPLE__) && !defined(__arm__)
   Cocoa_UpdateSystemActivity();
 #endif
   m_screenSaverTimer.StartZero();
@@ -4765,6 +4783,12 @@ void CApplication::ProcessSlow()
   
   if (!IsPlayingVideo())
     ADDON::CAddonMgr::Get().UpdateRepos();
+
+#if defined(__arm__)
+  // TODO: gui rendering testing, remove later
+  //printf( "FPS: %s\n", g_infoManager.GetLabel(SYSTEM_FPS).c_str() );
+  //CLog::Log(LOGNOTICE, " FPS: %s\n", g_infoManager.GetLabel(SYSTEM_FPS).c_str());
+#endif
 }
 
 // Global Idle Time in Seconds
@@ -5132,12 +5156,12 @@ bool CApplication::SwitchToFullScreen()
   // See if we're playing a video, and are in GUI mode
   if ( IsPlayingVideo() && g_windowManager.GetActiveWindow() != WINDOW_FULLSCREEN_VIDEO)
   {
-#ifdef HAS_SDL
+//#ifdef HAS_SDL
     // Reset frame count so that timing is FPS will be correct.
-    SDL_mutexP(m_frameMutex);
+    XBMC_mutexP(m_frameMutex);
     m_frameCount = 0;
-    SDL_mutexV(m_frameMutex);
-#endif
+    XBMC_mutexV(m_frameMutex);
+//#endif
 
     // then switch to fullscreen mode
     g_windowManager.ActivateWindow(WINDOW_FULLSCREEN_VIDEO);
@@ -5309,15 +5333,15 @@ bool CApplication::IsCurrentThread() const
 
 bool CApplication::IsPresentFrame()
 {
-#ifdef HAS_SDL // TODO:DIRECTX
-  SDL_mutexP(m_frameMutex);
+//#ifdef HAS_SDL // TODO:DIRECTX
+  XBMC_mutexP(m_frameMutex);
   bool ret = m_bPresentFrame;
-  SDL_mutexV(m_frameMutex);
+  XBMC_mutexV(m_frameMutex);
 
   return ret;
-#else
-  return false;
-#endif
+//#else
+//  return false;
+//#endif
 }
 
 #if defined(HAS_LINUX_NETWORK)

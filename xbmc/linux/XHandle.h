@@ -25,7 +25,9 @@
 #ifndef _WIN32
 
 #include "../../guilib/StdString.h"
-#include <SDL/SDL_mutex.h>
+//#include <SDL/SDL_mutex.h>
+#include <utils/XBMC_cond.h>
+#include <utils/XBMC_mutex.h>
 #include <pthread.h>
 
 #include "PlatformDefs.h"
@@ -50,7 +52,7 @@ public:
   CSemaphore            *m_pSem;
   ThreadIdentifier      m_hThread;
   bool                  m_threadValid;
-  SDL_cond              *m_hCond;
+  XBMC_cond             *m_hCond;
   std::list<CXHandle*>  m_hParents;
 
 #ifdef __APPLE__
@@ -61,7 +63,7 @@ public:
 #endif
 
   // simulate mutex and critical section
-  SDL_mutex *m_hMutex;
+  XBMC_mutex *m_hMutex;
   int       RecursionCount;  // for mutex - for compatibility with WIN32 critical section
   pthread_t OwningThread;
   int       fd;
@@ -74,7 +76,7 @@ public:
   bool             m_bCDROM;
   bool             m_bEventSet;
   int              m_nRefCount;
-  SDL_mutex *m_internalLock;
+  XBMC_mutex *m_internalLock;
 
   static void DumpObjectTracker();
 

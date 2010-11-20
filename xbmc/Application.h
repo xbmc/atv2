@@ -69,9 +69,11 @@ namespace ADDON
 #include "utils/WebServer.h"
 #endif
 
-#ifdef HAS_SDL
-#include <SDL/SDL_mutex.h>
-#endif
+//#ifdef HAS_SDL
+//#include <SDL/SDL_mutex.h>
+//#endif
+#include "utils/XBMC_cond.h"
+#include "utils/XBMC_mutex.h"
 
 class CKaraokeLyricsManager;
 class CApplicationMessenger;
@@ -348,11 +350,11 @@ protected:
   
   CGUITextLayout *m_debugLayout;
 
-#ifdef HAS_SDL
+//#ifdef HAS_SDL
   int        m_frameCount;
-  SDL_mutex* m_frameMutex;
-  SDL_cond*  m_frameCond;
-#endif
+  XBMC_mutex* m_frameMutex;
+  XBMC_cond*  m_frameCond;
+//#endif
 
   void SetHardwareVolume(long hardwareVolume);
   void UpdateLCD();

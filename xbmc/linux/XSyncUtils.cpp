@@ -25,12 +25,16 @@
 #include "XHandle.h"
 #include "XEventUtils.h"
 
+/*
 #ifdef __APPLE__
 #include <mach/mach.h>
 #include <SDL/SDL.h>
 #else
 #include <SDL.h>
 #endif
+*/
+#include <utils/XBMC_cond.h>
+#include <utils/XBMC_mutex.h>
 
 #ifdef _LINUX
 
@@ -45,7 +49,7 @@ using namespace std;
 #include "../utils/log.h"
 #include "../utils/TimeUtils.h"
 
-static SDL_mutex *g_mutex = SDL_CreateMutex();
+static XBMC_mutex *g_mutex = XBMC_CreateMutex();
 
 bool InitializeRecursiveMutex(HANDLE hMutex, BOOL bInitialOwner) {
   if (!hMutex)
@@ -54,7 +58,7 @@ bool InitializeRecursiveMutex(HANDLE hMutex, BOOL bInitialOwner) {
   // we use semaphores instead of the mutex because in SDL we CANT wait for a mutex
   // to lock with timeout.
   hMutex->m_pSem    = new CSemaphore(bInitialOwner?0:1);
-  hMutex->m_hMutex  = SDL_CreateMutex();
+  hMutex->m_hMutex  = XBMC_CreateMutex();
   hMutex->ChangeType(CXHandle::HND_MUTEX);
 
   if (bInitialOwner) {
@@ -70,7 +74,7 @@ bool  DestroyRecursiveMutex(HANDLE hMutex) {
     return false;
 
   delete hMutex->m_pSem;
-  SDL_DestroyMutex(hMutex->m_hMutex);
+  XBMC_DestroyMutex(hMutex->m_hMutex);
 
   hMutex->m_hMutex = NULL;
   hMutex->m_pSem = NULL;
@@ -92,7 +96,7 @@ bool WINAPI ReleaseMutex( HANDLE hMutex ) {
 
   BOOL bOk = false;
 
-  SDL_mutexP(hMutex->m_hMutex);
+  XBMC_mutexP(hMutex->m_hMutex);
   if (hMutex->OwningThread == pthread_self() && hMutex->RecursionCount > 0) {
     bOk = true;
     if (--hMutex->RecursionCount == 0) {
@@ -100,7 +104,7 @@ bool WINAPI ReleaseMutex( HANDLE hMutex ) {
       hMutex->m_pSem->Post();
     }
   }
-  SDL_mutexV(hMutex->m_hMutex);
+  XBMC_mutexV(hMutex->m_hMutex);
 
   return bOk;
 }
@@ -208,14 +212,14 @@ static DWORD WINAPI WaitForEvent(HANDLE hHandle, DWORD dwMilliseconds)
   {
     if (dwMilliseconds == 0)
     {
-      nRet = SDL_MUTEX_TIMEDOUT;
+      nRet = XBMC_MUTEX_TIMEDOUT;
     }
     else if (dwMilliseconds == INFINITE)
     {
       //wait until event is set
       while( hHandle->m_bEventSet == false )
       {
-        nRet = SDL_CondWait(hHandle->m_hCond, hHandle->m_hMutex);
+        nRet = XBMC_CondWait(hHandle->m_hCond, hHandle->m_hMutex);
       }
     }
     else
@@ -225,7 +229,7 @@ static DWORD WINAPI WaitForEvent(HANDLE hHandle, DWORD dwMilliseconds)
       DWORD dwRemainingTime = dwMilliseconds;
       while( hHandle->m_bEventSet == false )
       {
-        nRet = SDL_CondWaitTimeout(hHandle->m_hCond, hHandle->m_hMutex, dwRemainingTime);
+        nRet = XBMC_CondWaitTimeout(hHandle->m_hCond, hHandle->m_hMutex, dwRemainingTime);
         if(hHandle->m_bEventSet)
           break;
 
@@ -238,7 +242,7 @@ static DWORD WINAPI WaitForEvent(HANDLE hHandle, DWORD dwMilliseconds)
         else
         {
           //ran out of time
-          nRet = SDL_MUTEX_TIMEDOUT;
+          nRet = XBMC_MUTEX_TIMEDOUT;
           break;
         }
       }
@@ -251,7 +255,7 @@ static DWORD WINAPI WaitForEvent(HANDLE hHandle, DWORD dwMilliseconds)
   // Translate return code.
   if (nRet == 0)
     dwRet = WAIT_OBJECT_0;
-  else if (nRet == SDL_MUTEX_TIMEDOUT)
+  else if (nRet == XBMC_MUTEX_TIMEDOUT)
     dwRet = WAIT_TIMEOUT;
   else
     dwRet = WAIT_FAILED;
@@ -269,22 +273,22 @@ DWORD WINAPI WaitForSingleObject( HANDLE hHandle, DWORD dwMilliseconds ) {
     case CXHandle::HND_EVENT:
     case CXHandle::HND_THREAD:
 
-      SDL_mutexP(hHandle->m_hMutex);
+      XBMC_mutexP(hHandle->m_hMutex);
 
       // Perform the wait.
       dwRet = WaitForEvent(hHandle, dwMilliseconds);
 
-      SDL_mutexV(hHandle->m_hMutex);
+      XBMC_mutexV(hHandle->m_hMutex);
       break;
 
     case CXHandle::HND_MUTEX:
 
-      SDL_mutexP(hHandle->m_hMutex);
+      XBMC_mutexP(hHandle->m_hMutex);
       if (hHandle->OwningThread == pthread_self() &&
         hHandle->RecursionCount > 0) {
         hHandle->RecursionCount++;
         dwRet = WAIT_OBJECT_0;
-        SDL_mutexV(hHandle->m_hMutex);
+        XBMC_mutexV(hHandle->m_hMutex);
         break;
       }
 
@@ -297,7 +301,7 @@ DWORD WINAPI WaitForSingleObject( HANDLE hHandle, DWORD dwMilliseconds ) {
         hHandle->RecursionCount = 1;
       }
 
-      SDL_mutexV(hHandle->m_hMutex);
+      XBMC_mutexV(hHandle->m_hMutex);
 
       break;
     default:
@@ -321,9 +325,9 @@ DWORD WINAPI WaitForMultipleObjects( DWORD nCount, HANDLE* lpHandles, BOOL bWait
   for (unsigned int i=0; i < nCount; i++)
   {
     bDone[i] = FALSE;
-    SDL_mutexP(lpHandles[i]->m_hMutex);
+    XBMC_mutexP(lpHandles[i]->m_hMutex);
     lpHandles[i]->m_hParents.push_back(multi);
-    SDL_mutexV(lpHandles[i]->m_hMutex);
+    XBMC_mutexV(lpHandles[i]->m_hMutex);
   }
 
   DWORD nSignalled = 0;
@@ -364,9 +368,9 @@ DWORD WINAPI WaitForMultipleObjects( DWORD nCount, HANDLE* lpHandles, BOOL bWait
       break;
     }
 
-    SDL_mutexP(multi->m_hMutex);
+    XBMC_mutexP(multi->m_hMutex);
     DWORD dwWaitRC = WaitForEvent(multi, 200);
-    SDL_mutexV(multi->m_hMutex);
+    XBMC_mutexV(multi->m_hMutex);
 
     if(dwWaitRC == WAIT_FAILED)
     {
@@ -378,9 +382,9 @@ DWORD WINAPI WaitForMultipleObjects( DWORD nCount, HANDLE* lpHandles, BOOL bWait
 
   for (unsigned int i=0; i < nCount; i++)
   {
-    SDL_mutexP(lpHandles[i]->m_hMutex);
+    XBMC_mutexP(lpHandles[i]->m_hMutex);
     lpHandles[i]->m_hParents.remove_if(bind2nd(equal_to<CXHandle*>(), multi));
-    SDL_mutexV(lpHandles[i]->m_hMutex);
+    XBMC_mutexV(lpHandles[i]->m_hMutex);
   }
 
   delete [] bDone;
@@ -392,10 +396,10 @@ LONG InterlockedIncrement(  LONG * Addend ) {
   if (Addend == NULL)
     return 0;
 
-  SDL_mutexP(g_mutex);
+  XBMC_mutexP(g_mutex);
   (* Addend)++;
   LONG nKeep = *Addend;
-  SDL_mutexV(g_mutex);
+  XBMC_mutexV(g_mutex);
 
   return nKeep;
 }
@@ -404,10 +408,10 @@ LONG InterlockedDecrement(  LONG * Addend ) {
   if (Addend == NULL)
     return 0;
 
-  SDL_mutexP(g_mutex);
+  XBMC_mutexP(g_mutex);
   (* Addend)--;
   LONG nKeep = *Addend;
-  SDL_mutexV(g_mutex);
+  XBMC_mutexV(g_mutex);
 
   return nKeep;
 }
@@ -419,11 +423,11 @@ LONG InterlockedCompareExchange(
 ) {
   if (Destination == NULL)
     return 0;
-  SDL_mutexP(g_mutex);
+  XBMC_mutexP(g_mutex);
   LONG nKeep = *Destination;
   if (*Destination == Comparand)
     *Destination = Exchange;
-  SDL_mutexV(g_mutex);
+  XBMC_mutexV(g_mutex);
 
   return nKeep;
 }
@@ -436,10 +440,10 @@ LONG InterlockedExchange(
   if (Target == NULL)
     return 0;
 
-  SDL_mutexP(g_mutex);
+  XBMC_mutexP(g_mutex);
   LONG nKeep = *Target;
   *Target = Value;
-  SDL_mutexV(g_mutex);
+  XBMC_mutexV(g_mutex);
 
   return nKeep;
 }
