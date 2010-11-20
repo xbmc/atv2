@@ -19,7 +19,7 @@
  *
  */
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) && !defined(__arm__)
 #include <CoreServices/CoreServices.h>
 #elif defined(_LINUX)
 #else
@@ -32,7 +32,7 @@ bool IsAliasShortcut(CStdString &path)
 {
   bool  rtn = false;
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) && !defined(__arm__)
   // Note: regular files that have an .alias extension can be
   //   reported as an alias when clearly, they are not. Trap them out.
   if (CUtil::GetExtension(path) != ".alias")
@@ -55,20 +55,22 @@ bool IsAliasShortcut(CStdString &path)
   }
 #elif defined(_LINUX)
   // Linux does not use alias or shortcut methods
-#else
+#elif defined(WIN32)
 /* Needs testing under Windows platform so ignore shortcuts for now
     if (CUtil::GetExtension(path) == ".lnk")
     {
       rtn = true;
     }
 */
+#else
+
 #endif
   return(rtn);
 }
 
 void TranslateAliasShortcut(CStdString &path)
 {
-#if defined(__APPLE__)
+#if defined(__APPLE__) && !defined(__arm__)
   FSRef fileRef;
   Boolean targetIsFolder, wasAliased;
 
@@ -89,7 +91,7 @@ void TranslateAliasShortcut(CStdString &path)
 #elif defined(_LINUX)
   // Linux does not use alias or shortcut methods
 
-#else
+#elif defined(WIN32)
 /* Needs testing under Windows platform so ignore shortcuts for now
   CComPtr<IShellLink> ipShellLink;
 
@@ -129,5 +131,6 @@ void TranslateAliasShortcut(CStdString &path)
     }
   }
 */
+#else
 #endif
 }
