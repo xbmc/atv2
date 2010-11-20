@@ -24,18 +24,19 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #ifndef __APPLE__
-#include <linux/if.h>
-#include <linux/wireless.h>
-#include <linux/sockios.h>
+  #include <linux/if.h>
+  #include <linux/wireless.h>
+  #include <linux/sockios.h>
 #endif
 #include <errno.h>
 #include <resolv.h>
-#ifdef __APPLE__
-#include <sys/sockio.h>
-#include <net/if.h>
-#include <ifaddrs.h>
+#if defined(__APPLE__)
+  #include <sys/sockio.h>
+  #include <net/if.h>
+  #include <ifaddrs.h>
+#else
+  #include <net/if_arp.h>
 #endif
-#include <net/if_arp.h>
 #include "PlatformDefs.h"
 #include "NetworkLinux.h"
 #include "Util.h"
