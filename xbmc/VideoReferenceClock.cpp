@@ -31,8 +31,7 @@
   #include <sstream>
   #include <X11/extensions/Xrandr.h>
   #define NVSETTINGSCMD "nvidia-settings -nt -q RefreshRate3"
-#elif defined(__APPLE__)
-  #include <QuartzCore/CVDisplayLink.h>
+#elif defined(__APPLE__) && !defined(__arm__)
   #include "CocoaInterface.h"
 #elif defined(_WIN32) && defined(HAS_DX)
   #pragma comment (lib,"d3d9.lib")
@@ -132,7 +131,7 @@ void CVideoReferenceClock::Process()
     SetupSuccess = SetupGLX();
 #elif defined(_WIN32) && defined(HAS_DX)
     SetupSuccess = SetupD3D();
-#elif defined(__APPLE__)
+#elif defined(__APPLE__) && !defined(__arm__)
     SetupSuccess = SetupCocoa();
 #elif defined(HAS_GLX)
     CLog::Log(LOGDEBUG, "CVideoReferenceClock: compiled without RandR support");
@@ -162,7 +161,7 @@ void CVideoReferenceClock::Process()
       RunGLX();
 #elif defined(_WIN32) && defined(HAS_DX)
       RunD3D();
-#elif defined(__APPLE__)
+#elif defined(__APPLE__) && !defined(__arm__)
       RunCocoa();
 #endif
 
@@ -184,7 +183,7 @@ void CVideoReferenceClock::Process()
     CleanupGLX();
 #elif defined(_WIN32) && defined(HAS_DX)
     CleanupD3D();
-#elif defined(__APPLE__)
+#elif defined(__APPLE__) && !defined(__arm__)
     CleanupCocoa();
 #endif
     if (!SetupSuccess) break;
@@ -759,7 +758,7 @@ void CVideoReferenceClock::CleanupD3D()
   m_D3dCallback.Release();
 }
 
-#elif defined(__APPLE__)
+#elif defined(__APPLE__) && !defined(__arm__)
 
 // Called by the Core Video Display Link whenever it's appropriate to render a frame.
 static CVReturn DisplayLinkCallBack(CVDisplayLinkRef displayLink, const CVTimeStamp* inNow, const CVTimeStamp* inOutputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, void* displayLinkContext)
@@ -1015,7 +1014,7 @@ bool CVideoReferenceClock::UpdateRefreshrate(bool Forced /*= false*/)
 
   return false;
 
-#elif defined(__APPLE__)
+#elif defined(__APPLE__) && !defined(__arm__)
   int RefreshRate = MathUtils::round_int(Cocoa_GetCVDisplayLinkRefreshPeriod());
 
   if (RefreshRate != m_RefreshRate || Forced)

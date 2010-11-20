@@ -21,7 +21,7 @@
  */
 
 #include "system.h" // for HAS_XRANDR, and Win32 types
-#include "Thread.h"
+#include "utils/Thread.h"
 #include "utils/CriticalSection.h"
 
 //TODO: get rid of #ifdef hell, abstract implementations in separate classes
