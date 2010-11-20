@@ -1,8 +1,8 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.59)
-AC_INIT([xbmc], [9.11], [http://trac.xbmc.org])
+AC_PREREQ(2.63)
+AC_INIT([xbmc],[9.11],[http://trac.xbmc.org])
 AC_CONFIG_HEADERS([config.h])
 AH_TOP([#pragma once])
 
@@ -307,19 +307,19 @@ AC_ARG_ENABLE([external-python],
 
 use_external_libass="yes"
 ### End of external library options
-DEFAULT_COMPILE_FLAGS="-fPIC -DPIC -D_REENTRANT"
-if test "x$host_vendor" = "xapple"; then
-  DEFAULT_COMPILE_FLAGS="$DEFAULT_COMPILE_FLAGS -isysroot /Developer/SDKs/MacOSX10.4u.sdk -mmacosx-version-min=10.4"
-else
+
+if test "x$host_vendor" != "xapple"; then
+  DEFAULT_COMPILE_FLAGS="-fPIC -DPIC -D_REENTRANT"
   DEFAULT_COMPILE_FLAGS="$DEFAULT_COMPILE_FLAGS -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64"
 fi
+
 # Checks for programs.
 PASSED_CXXFLAGS=$CXXFLAGS # Hack to override autoconf default values
 AC_PROG_CXX
 CXXFLAGS="$PASSED_CXXFLAGS $DEFAULT_COMPILE_FLAGS"
 PASSED_CFLAGS=$CFLAGS # Hack to override autoconf default values
 AC_PROG_CC
-AC_PROG_LIBTOOL
+LT_INIT
 CFLAGS="$PASSED_CFLAGS $DEFAULT_COMPILE_FLAGS"
 AC_PROG_AWK
 AC_PROG_LN_S
@@ -333,14 +333,24 @@ case $host in
   x86_64-*-linux-gnu*)
      ARCH="x86_64-linux"
      ;;
+  arm-apple-darwin*)
+     use_vdadecoder=no
+     ARCH="arm-osx"
+     SYSROOT="-miphoneos-version-min=4.1 -isysroot /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.1.sdk"
+     ARCHTYPE=$HOSTTYPE
+     AC_SUBST([ARCHTYPE])
+     AC_SUBST(ARCH_DEFINES, "-D_ARMEL")
+     ;;
   i386-apple-darwin*)
      ARCH="x86-osx"
+     SYSROOT="-mmacosx-version-min=10.4 -isysroot /Developer/SDKs/MacOSX10.4u.sdk"
      # define i386 or x86_64, cannot use $HOSTTYPE as it reports x86_64 on 10.6 regardless of kernel flavor
      ARCHTYPE=`uname -m`
      AC_SUBST([ARCHTYPE])
      ;;
   powerpc-apple-darwin*)
      ARCH="powerpc-osx"
+     SYSROOT="-mmacosx-version-min=10.4 -isysroot /Developer/SDKs/MacOSX10.4u.sdk"
      # define ppc
      ARCHTYPE=`arch`
      AC_SUBST([ARCHTYPE])
@@ -361,6 +371,8 @@ case $host in
      AC_MSG_ERROR(unsupported host ($host))
 esac
 AC_SUBST([ARCH])
+
+# platform debug flags
 if test "$use_debug" = "yes"; then
   final_message="$final_message\n  Debugging:\tYes"
   if test "$use_profiling" = "yes"; then
@@ -380,9 +392,9 @@ else
     DEBUG_FLAGS="-DNDEBUG=1"
   fi
 fi
-
 CFLAGS="$CFLAGS $DEBUG_FLAGS"
 CXXFLAGS="$CXXFLAGS $DEBUG_FLAGS"
+
 
 if test "$use_optimizations" = "yes"; then
   final_message="$final_message\n  Optimization:\tYes"
@@ -395,38 +407,38 @@ fi
 
 # platform specific flags
 if test "$host_vendor" = "apple" ; then
-  AC_SUBST(MACOSX_DEPLOYMENT_TARGET, "10.4")
   # need these in CFLAGS/CXXFLAGS so AC_CHECK_LIB works
-  CFLAGS="$CFLAGS -I/opt/local/include"
-  CXXFLAGS="$CXXFLAGS -I/opt/local/include"
+  #CFLAGS="$CFLAGS -I/opt/local/include"
+  #CXXFLAGS="$CXXFLAGS -I/opt/local/include"
   # standard xbmc paths
   INCLUDES="$INCLUDES -I\$(abs_top_srcdir)/xbmc/osx"
-  LDFLAGS="$LDFLAGS -mmacosx-version-min=10.4"
-  LDFLAGS="$LDFLAGS -isysroot /Developer/SDKs/MacOSX10.4u.sdk"
-  LDFLAGS="$LDFLAGS -L/opt/local/lib"
-  LDFLAGS="$LDFLAGS -L/opt/local/lib/mysql5/mysql"
-  LDFLAGS="$LDFLAGS -L/opt/local/lib/samba3"
-  LIBS="$LIBS -framework IOKit"
-  LIBS="$LIBS -framework Cocoa"
-  LIBS="$LIBS -framework OpenGL"
-  LIBS="$LIBS -framework AppKit"
-  LIBS="$LIBS -framework Carbon"
-  LIBS="$LIBS -framework CoreAudio"
-  LIBS="$LIBS -framework QuickTime"
-  LIBS="$LIBS -framework AudioUnit"
-  LIBS="$LIBS -framework Foundation"
-  LIBS="$LIBS -framework CoreServices"
-  LIBS="$LIBS -framework CoreVideo"
-  LIBS="$LIBS -framework CoreAudio"
-  LIBS="$LIBS -framework AudioToolbox"
-  LIBS="$LIBS -framework CoreFoundation"
-  LIBS="$LIBS -framework DiskArbitration"
-  LIBS="$LIBS -framework ApplicationServices"
-elif expr "X$host_cpu" : 'Xarm.*' > /dev/null; then
+  #LDFLAGS="$LDFLAGS -mmacosx-version-min=10.4"
+  #LDFLAGS="$LDFLAGS -isysroot /Developer/SDKs/MacOSX10.4u.sdk"
+  #LDFLAGS="$LDFLAGS -L/opt/local/lib"
+  #LDFLAGS="$LDFLAGS -L/opt/local/lib/mysql5/mysql"
+  #LDFLAGS="$LDFLAGS -L/opt/local/lib/samba3"
+  #LIBS="$LIBS -framework IOKit"
+  #LIBS="$LIBS -framework Cocoa"
+  #LIBS="$LIBS -framework OpenGL"
+  #LIBS="$LIBS -framework AppKit"
+  #LIBS="$LIBS -framework Carbon"
+  #LIBS="$LIBS -framework CoreAudio"
+  #LIBS="$LIBS -framework QuickTime"
+  #LIBS="$LIBS -framework AudioUnit"
+  #LIBS="$LIBS -framework Foundation"
+  #LIBS="$LIBS -framework CoreServices"
+  #LIBS="$LIBS -framework CoreVideo"
+  #LIBS="$LIBS -framework CoreAudio"
+  #LIBS="$LIBS -framework AudioToolbox"
+  #LIBS="$LIBS -framework CoreFoundation"
+  #LIBS="$LIBS -framework DiskArbitration"
+  #LIBS="$LIBS -framework ApplicationServices"
+fi
+if expr "X$host_cpu" : 'Xarm.*' > /dev/null; then
   use_arch=arm
-  CFLAGS="$CFLAGS -mfloat-abi=softfp -mno-apcs-stack-check"
-  CXXFLAGS="$CXXFLAGS -mfloat-abi=softfp -mno-apcs-stack-check"
-  FFMPEG_EXTRACFLAGS="-mfloat-abi=softfp"
+  CFLAGS="$CFLAGS"
+  CXXFLAGS="$CXXFLAGS"
+  FFMPEG_EXTRACFLAGS=""
   if test "$use_tegra" = "yes"; then
     # Compile for ARMv7a architecture, need to test gcc for vfpv3-d16 support 
     SAVE_CFLAGS="$CFLAGS"
@@ -442,9 +454,9 @@ elif expr "X$host_cpu" : 'Xarm.*' > /dev/null; then
         use_cpu=cortex-a8])
   else
     # Compile for ARMv7a architecture, CortexA8 cpu and NEON coprocessor
-    CFLAGS+=" -Wa,-march=armv7a -mcpu=cortex-a8 -mfpu=neon -mvectorize-with-neon-quad"
-    CXXFLAGS+=" -Wa,-march=armv7a -mcpu=cortex-a8 -mfpu=neon -mvectorize-with-neon-quad"
-    FFMPEG_EXTRACFLAGS+=" -mfpu=neon"
+    CFLAGS+=""
+    CXXFLAGS+=""
+    #FFMPEG_EXTRACFLAGS+=" -mfpu=neon"
   fi
 fi
 
@@ -465,7 +477,18 @@ AC_FUNC_MMAP
 #AC_FUNC_REALLOC
 AC_FUNC_SELECT_ARGTYPES
 AC_FUNC_SETVBUF_REVERSED
-AC_TYPE_SIGNAL
+AC_DIAGNOSE([obsolete],[your code may safely assume C89 semantics that RETSIGTYPE is void.
+Remove this warning and the `AC_CACHE_CHECK' when you adjust the code.])dnl
+AC_CACHE_CHECK([return type of signal handlers],[ac_cv_type_signal],[AC_COMPILE_IFELSE(
+[AC_LANG_PROGRAM([#include <sys/types.h>
+#include <signal.h>
+],
+		 [return *(signal (0, 0)) (0) == 1;])],
+		   [ac_cv_type_signal=int],
+		   [ac_cv_type_signal=void])])
+AC_DEFINE_UNQUOTED([RETSIGTYPE],[$ac_cv_type_signal],[Define as the return type of signal handlers
+		    (`int' or `void').])
+
 AC_FUNC_STAT
 AC_FUNC_STRCOLL
 AC_FUNC_STRFTIME
@@ -489,8 +512,9 @@ AC_LANG_POP([C++])
 # Checks for platforms libraries.
 if test "$use_gles" = "yes"; then
   # GLES overwrites GL if both set to yes.
-  AC_CHECK_LIB([EGL],     [main],, AC_MSG_ERROR($missing_library))
-  AC_CHECK_LIB([GLESv2],  [main],, AC_MSG_ERROR($missing_library))
+  #AC_CHECK_LIB([EGL],     [main],, AC_MSG_ERROR($missing_library))
+  #AC_CHECK_LIB([GLESv2],  [main],, AC_MSG_ERROR($missing_library))
+  AC_MSG_RESULT(== WARNING: OpenGL EL  support is assumed.)
 else
   if test "$use_gl" = "yes"; then
     if test "$host_vendor" = "apple" ; then
@@ -523,8 +547,8 @@ AC_CHECK_LIB([z],           [main],, AC_MSG_ERROR($missing_library))
 AC_CHECK_LIB([ssl],         [main],, AC_MSG_ERROR($missing_library))
 AC_CHECK_LIB([crypto],      [main],, AC_MSG_ERROR($missing_library))
 AC_CHECK_LIB([wavpack],     [main],, AC_MSG_ERROR($missing_library))
-AC_CHECK_LIB([mpeg2],       [main],, AC_MSG_ERROR($missing_library))
-AC_CHECK_LIB([mpeg2convert],[main],, AC_MSG_ERROR($missing_library))
+#AC_CHECK_LIB([mpeg2],       [main],, AC_MSG_ERROR($missing_library))
+#AC_CHECK_LIB([mpeg2convert],[main],, AC_MSG_ERROR($missing_library))
 AC_CHECK_LIB([ssh],         [sftp_tell64],, AC_MSG_RESULT([Could not find suitable version of libssh]))
 PKG_CHECK_MODULES([MAD],        [mad],
   [INCLUDES="$INCLUDES $MAD_CFLAGS"; LIBS="$LIBS $MAD_LIBS"],
@@ -549,9 +573,9 @@ PKG_CHECK_MODULES([PCRECPP],    [libpcrecpp],
   [INCLUDES="$INCLUDES $PCRECPP_CFLAGS"; LIBS="$LIBS $PCRECPP_LIBS"]; \
   AC_DEFINE([HAVE_LIBPCRECPP],[1],["Define to 1 if libpcrecpp is installed"]),
   AC_MSG_ERROR($missing_library))
-PKG_CHECK_MODULES([CDIO],       [libcdio],
-  [INCLUDES="$INCLUDES $CDIO_CFLAGS"; LIBS="$LIBS $CDIO_LIBS"],
-  AC_MSG_ERROR($missing_library))
+#PKG_CHECK_MODULES([CDIO],       [libcdio],
+#  [INCLUDES="$INCLUDES $CDIO_CFLAGS"; LIBS="$LIBS $CDIO_LIBS"],
+#  AC_MSG_ERROR($missing_library))
 PKG_CHECK_MODULES([SAMPLERATE], [samplerate],
   [INCLUDES="$INCLUDES $SAMPLERATE_CFLAGS"; LIBS="$LIBS $SAMPLERATE_LIBS"],
   AC_MSG_ERROR($missing_library))
@@ -596,6 +620,15 @@ AS_CASE([x$use_libbluray],
 
 # platform dependent libraries
 if test "$host_vendor" = "apple" ; then
+  if expr "X$host_cpu" : 'Xarm.*' > /dev/null; then
+    AC_CHECK_PROG(MYSQL_CONFIG, mysql_config, "yes", "no")
+    if test $MYSQL_CONFIG = "yes"; then
+      INCLUDES="$INCLUDES `mysql_config --include`"
+      LIBS="$LIBS `mysql_config --libs`"
+    else
+      AC_MSG_ERROR($missing_program)
+    fi
+  fi
   AC_CHECK_LIB([iconv],     [main],, AC_MSG_ERROR($missing_library))
   AC_CHECK_LIB([mysqlclient], [main],, AC_MSG_ERROR($missing_library))
   AC_CHECK_LIB([smbclient], [main],, AC_MSG_ERROR($missing_library))
@@ -1067,7 +1100,7 @@ AC_CHECK_HEADERS([arpa/inet.h fcntl.h float.h inttypes.h limits.h locale.h \
   malloc.h memory.h netdb.h netinet/in.h stddef.h stdint.h stdlib.h string.h \
   strings.h sys/file.h sys/ioctl.h sys/mount.h sys/param.h sys/socket.h \
   sys/time.h sys/timeb.h sys/vfs.h termios.h unistd.h utime.h wchar.h wctype.h])
-AC_CHECK_HEADERS([cdio/iso9660.h],,AC_MSG_ERROR([$missing_headers]))
+#AC_CHECK_HEADERS([cdio/iso9660.h],,AC_MSG_ERROR([$missing_headers]))
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STAT
@@ -1202,10 +1235,8 @@ else
 fi
 
 if test "x$use_pulse" != "xno"; then
-  XBMC_STANDALONE_SH_PULSE=tools/Linux/xbmc-standalone.sh.pulse
   final_message="$final_message\n  PulseAudio:\tYes"
 else
-  XBMC_STANDALONE_SH_PULSE=/dev/null
   final_message="$final_message\n  PulseAudio:\tNo"
 fi
 
@@ -1402,7 +1433,6 @@ OUTPUT_FILES="Makefile \
     xbmc/visualizations/iTunes/Makefile \
     xbmc/FileSystem/Makefile \
     tools/Linux/xbmc.sh \
-    tools/Linux/xbmc-standalone.sh \
     tools/TexturePacker/Makefile \
     tools/EventClients/Clients/OSXRemote/Makefile"
 
@@ -1432,6 +1462,7 @@ AC_SUBST(CFLAGS)
 AC_SUBST(CXXFLAGS)
 AC_SUBST(INCLUDES)
 AC_SUBST(LDFLAGS)
+AC_SUBST(SYSROOT)
 AC_SUBST(SDL_DEFINES)
 AC_SUBST(BUILD_DVDCSS)
 AC_SUBST(BUILD_GOOM)
@@ -1459,7 +1490,6 @@ AC_SUBST(LIBMAD_BASENAME)
 AC_SUBST(LIBOGG_BASENAME)
 AC_SUBST(LIBVORBISENC_BASENAME)
 AC_SUBST(LIBVORBIS_BASENAME)
-AC_SUBST_FILE(XBMC_STANDALONE_SH_PULSE)
 
 # pushd and popd are not available in other shells besides bash, so implement
 # our own pushd/popd functions
@@ -1514,6 +1544,9 @@ fi
 XB_CONFIG_MODULE([xbmc/lib/libPython/Python], [
   if test "$host_vendor" = "apple" ; then
     ./configure \
+      --host=$host_alias \
+      --build=$build_alias \
+      --target=$target_alias \
       --enable-ipv6 \
       --enable-unicode=ucs4 \
       --without-cxx \
@@ -1522,7 +1555,7 @@ XB_CONFIG_MODULE([xbmc/lib/libPython/Python], [
       --with-suffix=.exe \
       LDFLAGS="-L/opt/local/lib" \
       OPT="-Wno-deprecated-declarations -I/opt/local/include" \
-      MACOSX_DEPLOYMENT_TARGET=10.4 CFLAGS="$CFLAGS" &&
+      CFLAGS="$CFLAGS" &&
     sed -i bak -e "s/define HAVE_GETC_UNLOCKED 1/undef HAVE_GETC_UNLOCKED/" pyconfig.h && 
     sed -i bak -e "s/define HAVE_FSEEKO 1/undef HAVE_FSEEKO/" pyconfig.h &&
     sed -i bak -e "s/define HAVE_FTELLO 1/undef HAVE_FTELLO/" pyconfig.h &&
@@ -1557,8 +1590,12 @@ XB_CONFIG_MODULE([xbmc/lib/libPython/Python], [
 
 XB_CONFIG_MODULE([xbmc/cores/paplayer/FLACCodec/flac-1.2.1], [
   if test "$host_vendor" = "apple" ; then
-    CFLAGS="$CFLAGS -fno-common" \ 
-    ./configure MACOSX_DEPLOYMENT_TARGET=10.4 -C \
+    CFLAGS="$CFLAGS -fno-common" \
+    LDFLAGS="$LDFLAGS -Wl,-read_only_relocs,suppress -Wl,-undefined,dynamic_lookup" \
+    ./configure -C \
+      --host=$host_alias \
+      --build=$build_alias \
+      --target=$target_alias \
       --with-pic \
       --disable-asm-optimizations \
       --disable-xmms-plugin \
@@ -1571,7 +1608,12 @@ XB_CONFIG_MODULE([xbmc/cores/paplayer/FLACCodec/flac-1.2.1], [
 XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/ffmpeg], [
   if test "$host_vendor" = "apple" ; then
     ./configure \
-      --extra-cflags="$CFLAGS -w -D_DARWIN_C_SOURCE -Dattribute_deprecated=" \
+      --extra-cflags="$CFLAGS $FFMPEG_EXTRACFLAGS -w -D_DARWIN_C_SOURCE -Dattribute_deprecated=" \
+      --extra-ldflags="-Wl,-undefined,dynamic_lookup" \
+      `if test "$cross_compiling" = "yes"; then echo --enable-cross-compile; fi` \
+      `if test "$use_arch" != "no"; then echo --arch=$use_arch; fi`\
+      `if test "$use_cpu" != "no"; then echo --cpu=$use_cpu; fi`\
+      --target-os=$(tolower $(uname -s)) \
       --disable-amd3dnow \
       --disable-static \
       `if test "$use_debug" = "no"; then echo --disable-debug; fi` \
@@ -1592,10 +1634,10 @@ XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/ffmpeg], [
       --enable-gpl \
       --enable-protocol=http \
       --enable-pthreads \
+      --enable-memalign-hack \
       --enable-runtime-cpudetect \
-      --cc="$CC" &&
-    sed -i "" -e "s#define HAVE_POSIX_MEMALIGN 1#define HAVE_POSIX_MEMALIGN 0#" config.h &&
-    sed -i "" -e "s#YASM=yasm#YASM=/opt/local/bin/yasm#" config.mak &&
+      --cc="$CC" \
+      --as="gas-preprocessor.pl $CC" &&
     sed -i "" -e "s# -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 # #" config.mak &&
     sed -i "" -e "s#libswscale_VERSION_MAJOR=0#libswscale_VERSION_MAJOR=0.7.1#" config.mak &&
     sed -i "" -e "s#libavfilter_VERSION_MAJOR=0#libavfilter_VERSION_MAJOR=0.4.0#" config.mak
@@ -1640,9 +1682,12 @@ XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/ffmpeg], [
 
 XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/libdts], [
   if test "$host_vendor" = "apple" ; then
-    CFLAGS="$CFLAGS -fno-common"
-    LDFLAGS="-isysroot /Developer/SDKs/MacOSX10.4u.sdk -mmacosx-version-min=10.4" \
+    CFLAGS="$CFLAGS -fno-common" \
+    LDFLAGS="-Wl,-read_only_relocs,suppress" \
     ./configure \
+      --host=$host_alias \
+      --build=$build_alias \
+      --target=$target_alias \
       --disable-oss \
       --disable-solaris-audio \
       --disable-al-audio \
@@ -1662,8 +1707,11 @@ XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/libdts], [
 
 XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/libdvd/libdvdcss], [
   if test "$host_vendor" = "apple" ; then
-    ./configure MACOSX_DEPLOYMENT_TARGET=10.4 \
+    ./configure \
     CFLAGS="$CFLAGS -fno-common" \
+      --host=$host_alias \
+      --build=$build_alias \
+      --target=$target_alias \
       --disable-doc \
       --enable-static \
       --with-pic
@@ -1683,7 +1731,10 @@ XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/libdvd/libdvdcss], [
 
 XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/libdvd/libdvdread], [
   if test "$host_vendor" = "apple" ; then
-    ./configure2 MACOSX_DEPLOYMENT_TARGET=10.4 \
+    ./configure2 \
+      --host=$host_alias \
+      --build=$build_alias \
+      --target=$target_alias \
       --extra-cflags="$CFLAGS -fno-common $DVDREAD_CFLAGS -D__DARWIN__ -I`pwd`/../libdvdcss/src" \
       --enable-static \
       --disable-shared \
@@ -1712,7 +1763,10 @@ XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/libdvd/libdvdread], [
 
 XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/libdvd/libdvdnav], [
   if test "$host_vendor" = "apple" ; then
-    ./configure2 MACOSX_DEPLOYMENT_TARGET=10.4 \
+    ./configure2 \
+      --host=$host_alias \
+      --build=$build_alias \
+      --target=$target_alias \
       --extra-cflags="$CFLAGS -fno-common $DVDREAD_CFLAGS -I`pwd`/../includes" \
       --extra-ldflags="-L`pwd`/../libdvdread/obj" \
       --with-dvdread-config="`pwd`/../libdvdread/obj/dvdread-config" \
@@ -1735,8 +1789,12 @@ XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/libdvd/libdvdnav], [
 
 XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/libfaad2], [
   if test "$host_vendor" = "apple" ; then
-    CFLAGS="$CFLAGS -O3 -fno-common" \
-    ./configure MACOSX_DEPLOYMENT_TARGET=10.4 \
+    CFLAGS="$CFLAGS -O3 -fno-common -undefined dynamic_lookup" \
+    LDFLAGS="-Wl,-read_only_relocs,suppress" \
+    ./configure \
+      --host=$host_alias \
+      --build=$build_alias \
+      --target=$target_alias \
       --with-pic
   fi
 ], [$HOST_NOT_APPLE])
@@ -1744,7 +1802,11 @@ XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/libfaad2], [
 XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/liba52], [
   if test "$host_vendor" = "apple" ; then
     CFLAGS="$CFLAGS -fno-common" \
-    ./configure MACOSX_DEPLOYMENT_TARGET=10.4 \
+    LDFLAGS="-Wl,-read_only_relocs,suppress" \
+    ./configure \
+      --host=$host_alias \
+      --build=$build_alias \
+      --target=$target_alias \
       --with-pic \
       --disable-static \
       --enable-shared \
@@ -1771,23 +1833,35 @@ XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/liba52], [
 XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/libmad], [
   if test "$host_vendor" = "apple" ; then
     CFLAGS="$CFLAGS -fno-common" \
-    ./configure MACOSX_DEPLOYMENT_TARGET=10.4 \
+    LDFLAGS="-Wl,-read_only_relocs,suppress" \
+    ./configure \
+      --host=$host_alias \
+      --build=$build_alias \
+      --target=$target_alias \
+      --enable-fpm=default \
       --with-pic
   fi
 ], [$HOST_NOT_APPLE])
 
 XB_CONFIG_MODULE([xbmc/lib/cximage-6.0/zlib], [
   if test "$host_vendor" = "apple" ; then
-    export MACOSX_DEPLOYMENT_TARGET=10.4
     CFLAGS="$CFLAGS -fno-common" \
-    ./configure
+    LDFLAGS="-Wl,-read_only_relocs,suppress" \
+    ./configure \
+      --host=$host_alias \
+      --build=$build_alias \
+      --target=$target_alias
   fi
 ], [$HOST_NOT_APPLE])
 
 XB_CONFIG_MODULE([lib/libass], [
   if test "$host_vendor" = "apple" ; then
     CFLAGS="$CFLAGS -fno-common" \
-    ./configure MACOSX_DEPLOYMENT_TARGET=10.4
+    LDFLAGS="-Wl,-read_only_relocs,suppress" \
+    ./configure \
+      --host=$host_alias \
+      --build=$build_alias \
+      --target=$target_alias
   else
     CFLAGS="$CFLAGS" \
     ./configure \
@@ -1800,7 +1874,11 @@ XB_CONFIG_MODULE([lib/libass], [
 XB_CONFIG_MODULE([xbmc/lib/libid3tag/libid3tag],[
   if test "$host_vendor" = "apple" ; then
     CFLAGS="$CFLAGS -fno-common" \
-    ./configure MACOSX_DEPLOYMENT_TARGET=10.4 \
+    LDFLAGS="-Wl,-read_only_relocs,suppress" \
+    ./configure \
+      --host=$host_alias \
+      --build=$build_alias \
+      --target=$target_alias \
       --disable-static \
       --disable-debugging \
       --with-pic
@@ -1821,7 +1899,9 @@ XB_CONFIG_MODULE([xbmc/lib/libid3tag/libid3tag],[
 
 XB_CONFIG_MODULE([xbmc/visualizations/XBMCProjectM/libprojectM],[
   if test "$host_vendor" = "apple" ; then
+  if test "$use_arch" != "arm" ; then
     rm -f CMakeCache.txt && CC="" CXX=""  cmake -D CMAKE_C_FLAGS:STRING="${CFLAGS} -fno-common" -D CMAKE_CXX_FLAGS:STRING="${CXXFLAGS} -fno-common" -D CMAKE_BUILD_TYPE:STRING=RelWithDebInfo -D USE_FTGL:BOOL=OFF .
+  fi
   else
 set -x
     rm -f CMakeCache.txt && CC="$CC" CXX="$CXX" cmake -DCMAKE_BUILD_TYPE=None -DUSE_FTGL:BOOL=OFF \
@@ -1849,14 +1929,17 @@ XB_CONFIG_MODULE([xbmc/visualizations/Goom/goom2k4-0],[
 ], [$BUILD_GOOM])
 
 XB_CONFIG_MODULE([xbmc/screensavers/rsxs-0.9/], [
-if expr "X$host_cpu" : 'Xarm.*' > /dev/null; then :; else
   if test "$host_vendor" = "apple" ; then
+  if test "$use_arch" != "arm" ; then
     ./configure \
       CFLAGS="$CFLAGS" \
       CXXFLAGS="$CXXFLAGS" \
       LDFLAGS="-L/opt/local/lib" \
       LIBS="-lz" \
       --x-includes=/usr/X11/include --x-libraries=/usr/X11/lib \
+      --host=$host_alias \
+      --build=$build_alias \
+      --target=$target_alias \      
       --without-xscreensaver \
       --disable-sound \
       --disable-cyclone \
@@ -1867,6 +1950,7 @@ if expr "X$host_cpu" : 'Xarm.*' > /dev/null; then :; else
       --disable-hyperspace \
       --disable-lattice \
       --disable-skyrocket
+  fi
   else
     ./configure \
       CC="$CC" \
@@ -1888,13 +1972,15 @@ if expr "X$host_cpu" : 'Xarm.*' > /dev/null; then :; else
       --disable-lattice \
       --disable-skyrocket
   fi
-fi
 ], [0])
 
 XB_CONFIG_MODULE([xbmc/lib/libapetag], [
   if test "$host_vendor" = "apple" ; then
     CFLAGS="$CFLAGS -fno-common" \
-    ./configure MACOSX_DEPLOYMENT_TARGET=10.4 --disable-shared
+    ./configure --disable-shared \
+      --host=$host_alias \
+      --build=$build_alias \
+      --target=$target_alias     
   else
     ./configure \
       --host=$host_alias \
@@ -1907,7 +1993,10 @@ XB_CONFIG_MODULE([lib/libmodplug], [
   if test "$host_vendor" = "apple" ; then
     CFLAGS="$CFLAGS -fno-common" \
     CXXFLAGS="$CXXFLAGS -fno-common" \
-    ./configure MACOSX_DEPLOYMENT_TARGET=10.4 --with-pic --disable-shared --enable-static
+    ./configure --with-pic --disable-shared --enable-static \
+      --host=$host_alias \
+      --build=$build_alias \
+      --target=$target_alias     
   fi
 ], [$HOST_NOT_APPLE])
 
@@ -1915,13 +2004,19 @@ XB_CONFIG_MODULE([lib/libmicrohttpd], [
   if test "$host_vendor" = "apple" ; then
     CFLAGS="$CFLAGS -fno-common" \
     CXXFLAGS="$CXXFLAGS -fno-common" \
-    ./configure MACOSX_DEPLOYMENT_TARGET=10.4 --with-pic --disable-shared --enable-static --with-libgcrypt-prefix=/dev/null
+    ./configure --with-pic --disable-shared --enable-static --with-libgcrypt-prefix=/dev/null \
+      --host=$host_alias \
+      --build=$build_alias \
+      --target=$target_alias     
   fi
 ], [$HOST_NOT_APPLE])
 
 XB_CONFIG_MODULE([lib/cpluff], [
   if test "$host_vendor" = "apple" ; then
-    ./configure --disable-nls --with-libiconv-prefix=/opt/local --with-libintl-prefix=/opt/local --without-readline CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS"
+    ./configure --disable-nls --with-libiconv-prefix=/opt/local --with-libintl-prefix=/opt/local --without-readline CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS -Wl,-read_only_relocs,suppress" \
+      --host=$host_alias \
+      --build=$build_alias \
+      --target=$target_alias     
   else
     ./configure --disable-nls \
       --host=$host_alias \
