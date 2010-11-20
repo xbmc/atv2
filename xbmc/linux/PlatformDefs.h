@@ -23,102 +23,111 @@
  */
 
 #ifdef _LINUX
+  #ifndef _LARGEFILE64_SOURCE
+    #define _LARGEFILE64_SOURCE
+  #endif
 
-#ifndef _LARGEFILE64_SOURCE
-#define _LARGEFILE64_SOURCE
-#endif
+  #undef _FILE_OFFSET_BITS
+  #define _FILE_OFFSET_BITS 64
 
-#undef _FILE_OFFSET_BITS
-#define _FILE_OFFSET_BITS 64
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <pthread.h>
-#include <string.h>
-#ifdef __APPLE__
-#include <stdio.h>
-#include <sys/sysctl.h>
-#include <mach/mach.h>
-#else
-#include <sys/sysinfo.h>
-#endif
-#include <sys/time.h>
-#include <time.h>
+  #include <sys/types.h>
+  #include <sys/stat.h>
+  #include <fcntl.h>
+  #include <unistd.h>
+  #include <pthread.h>
+  #include <string.h>
+  #ifdef __APPLE__
+    #include <stdio.h>
+    #include <sys/sysctl.h>
+    #include <mach/mach.h>
+  #else
+    #include <sys/sysinfo.h>
+  #endif
+  #include <sys/time.h>
+  #include <time.h>
 #endif
 
 #ifdef HAS_SDL
-#include <SDL/SDL.h>
-#include <SDL/SDL_mutex.h>
-#include <SDL/SDL_endian.h>
+  #include <SDL/SDL.h>
+  #include <SDL/SDL_mutex.h>
+  #include <SDL/SDL_endian.h>
 
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-#define PIXEL_ASHIFT 0
-#define PIXEL_RSHIFT 8
-#define PIXEL_GSHIFT 16
-#define PIXEL_BSHIFT 24
-#define AMASK 0x000000ff
-#define RMASK 0x0000ff00
-#define GMASK 0x00ff0000
-#define BMASK 0xff000000
-
+  #if SDL_BYTEORDER == SDL_BIG_ENDIAN
+    #define PIXEL_ASHIFT 0
+    #define PIXEL_RSHIFT 8
+    #define PIXEL_GSHIFT 16
+    #define PIXEL_BSHIFT 24
+    #define AMASK 0x000000ff
+    #define RMASK 0x0000ff00
+    #define GMASK 0x00ff0000
+    #define BMASK 0xff000000
+  #else
+    #define PIXEL_ASHIFT 24
+    #define PIXEL_RSHIFT 16
+    #define PIXEL_GSHIFT 8
+    #define PIXEL_BSHIFT 0
+    #define AMASK 0xff000000
+    #define RMASK 0x00ff0000
+    #define GMASK 0x0000ff00
+    #define BMASK 0x000000ff
+  #endif
 #else
-#define PIXEL_ASHIFT 24
-#define PIXEL_RSHIFT 16
-#define PIXEL_GSHIFT 8
-#define PIXEL_BSHIFT 0
-#define AMASK 0xff000000
-#define RMASK 0x00ff0000
-#define GMASK 0x0000ff00
-#define BMASK 0x000000ff
-#endif
+  #if defined(__arm__)
+    #define PIXEL_ASHIFT 24
+    #define PIXEL_RSHIFT 16
+    #define PIXEL_GSHIFT 8
+    #define PIXEL_BSHIFT 0
+    #define AMASK 0xff000000
+    #define RMASK 0x00ff0000
+    #define GMASK 0x0000ff00
+    #define BMASK 0x000000ff
+  #endif
 #endif
 
 #include <stdint.h>
 
 #ifndef PRId64
-#ifdef _MSC_VER
-#define PRId64 "I64d"
-#else
-#if __WORDSIZE == 64
-#define PRId64 "ld"
-#else
-#define PRId64 "lld"
-#endif
-#endif
+  #ifdef _MSC_VER
+    #define PRId64 "I64d"
+  #else
+    #if __WORDSIZE == 64
+      #define PRId64 "ld"
+    #else
+      #define PRId64 "lld"
+    #endif
+  #endif
 #endif
 
 #ifndef PRIu64
-#ifdef _MSC_VER
-#define PRIu64 "I64u"
-#else
-#if __WORDSIZE == 64
-#define PRIu64 "lu"
-#else
-#define PRIu64 "llu"
-#endif
-#endif
+  #ifdef _MSC_VER
+    #define PRIu64 "I64u"
+  #else
+    #if __WORDSIZE == 64
+      #define PRIu64 "lu"
+    #else
+      #define PRIu64 "llu"
+    #endif
+  #endif
 #endif
 	
 #ifndef PRIx64
-#ifdef _MSC_VER
-#define PRIx64 "I64x"
-#else
-#if __WORDSIZE == 64
-#define PRIx64 "lx"
-#else
-#define PRIx64 "llx"
-#endif
-#endif
+  #ifdef _MSC_VER
+    #define PRIx64 "I64x"
+  #else
+    #if __WORDSIZE == 64
+      #define PRIx64 "lx"
+    #else
+      #define PRIx64 "llx"
+    #endif
+  #endif
 #endif
 
 #ifndef PRIdS
-#define PRIdS "zd"
+  #define PRIdS "zd"
 #endif
 
 #ifndef PRIuS
-#define PRIuS "zu"
+  #define PRIuS "zu"
 #endif
 
 #ifdef _LINUX
@@ -126,11 +135,11 @@
 #define XXLog(a,b) printf("%s", (b))
 
 #ifndef INSTALL_PATH
-#define INSTALL_PATH    "/usr/share/xbmc"
+  #define INSTALL_PATH    "/usr/share/xbmc"
 #endif
 
 #ifndef BIN_INSTALL_PATH
-#define BIN_INSTALL_PATH "/usr/lib/xbmc"
+  #define BIN_INSTALL_PATH "/usr/lib/xbmc"
 #endif
 
 #define CONST   const
@@ -156,9 +165,9 @@
 #define __uint64  unsigned long long
 
 #if defined(__x86_64__) || defined(__powerpc__) || defined(__ppc__) || defined (__arm__) // should this be powerpc64 only?
-#define __stdcall
+  #define __stdcall
 #else /* !__x86_64__ */
-#define __stdcall   __attribute__((__stdcall__))
+  #define __stdcall   __attribute__((__stdcall__))
 #endif /* __x86_64__ */
 #define __cdecl
 #define WINBASEAPI
@@ -167,9 +176,9 @@
 #define WINAPI      __stdcall
 #define WINAPIV     __cdecl
 #ifndef __APPLE__
-#define APIENTRY    WINAPI
+  #define APIENTRY    WINAPI
 #else
-#define APIENTRY
+  #define APIENTRY
 #endif
 #define APIPRIVATE  __stdcall
 #define IN
@@ -189,15 +198,6 @@ typedef CXHandle* HANDLE;
 
 typedef void* HINSTANCE;
 typedef void* HMODULE;
-
-#ifdef __APPLE__
-#include <AvailabilityMacros.h>
-typedef int64_t   off64_t;
-typedef off_t     __off_t;
-typedef off64_t   __off64_t;
-typedef fpos_t fpos64_t;
-#include <sched.h>
-#endif
 
 typedef unsigned int  DWORD;
 typedef unsigned short  WORD;
@@ -236,9 +236,9 @@ typedef WCHAR         *PWSTR,      *LPWSTR,    *NWPSTR;
 typedef CHAR            *PSTR,       *LPSTR,     *NPSTR;
 typedef LONG        *PLONG, *LPLONG;
 #ifdef UNICODE
-typedef LPCWSTR       LPCTSTR;
+  typedef LPCWSTR       LPCTSTR;
 #else
-typedef LPCSTR      LPCTSTR;
+  typedef LPCSTR      LPCTSTR;
 #endif
 typedef unsigned __int64 ULONGLONG;
 typedef long        LONG_PTR;
@@ -357,13 +357,28 @@ typedef int (*LPTHREAD_START_ROUTINE)(void *);
 #define _O_WRONLY O_WRONLY
 #define _off_t off_t
 
-#if defined(__APPLE__) && (MAC_OS_X_VERSION_MAX_ALLOWED < 1050)
-#define __stat64 stat
-#define stat64 stat
-#define statfs64 statfs
-#define fstat64 fstat
-#else
-#define __stat64 stat64
+#if defined(__APPLE__)
+  #include <sched.h>
+  #include <AvailabilityMacros.h>
+  typedef int64_t   off64_t;
+  typedef off_t     __off_t;
+  typedef off64_t   __off64_t;
+  typedef fpos_t    fpos64_t;
+  #if (MAC_OS_X_VERSION_MAX_ALLOWED < 1050)
+    #define __stat64 stat
+    #define stat64 stat
+    #define statfs64 statfs
+    #define fstat64 fstat
+  #else
+    #if defined(__arm__)
+      #define __stat64 stat
+      #define stat64 stat
+      #define statfs64 statfs
+      #define fstat64 fstat
+    #else
+      #define __stat64 stat64
+    #endif
+  #endif
 #endif
 
 struct _stati64 {
