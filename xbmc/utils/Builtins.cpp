@@ -87,7 +87,9 @@
 
 using namespace std;
 using namespace XFILE;
+#if defined(HAS_DVD_DRIVE)
 using namespace MEDIA_DETECT;
+#endif
 using namespace ADDON;
 
 typedef struct
@@ -343,7 +345,7 @@ int CBuiltins::Execute(const CStdString& execString)
 #ifdef HAS_PYTHON
   else if (execute.Equals("runscript") && params.size())
   {
-#if defined(__APPLE__)
+#if defined(__APPLE__) && !defined(__arm__)
     if (CUtil::GetExtension(strParameterCaseIntact) == ".applescript")
     {
       CStdString osxPath = CSpecialProtocol::TranslatePath(strParameterCaseIntact);
@@ -369,7 +371,7 @@ int CBuiltins::Execute(const CStdString& execString)
     }
   }
 #endif
-#if defined(__APPLE__)
+#if defined(__APPLE__) && !defined(__arm__)
   else if (execute.Equals("runapplescript"))
   {
     Cocoa_DoAppleScript(strParameterCaseIntact.c_str());
@@ -764,10 +766,12 @@ int CBuiltins::Execute(const CStdString& execString)
   {
     g_playlistPlayer.Clear();
   }
+#if defined(HAS_DVD_DRIVE)
   else if (execute.Equals("ejecttray"))
   {
     CIoSupport::ToggleTray();
   }
+#endif
   else if( execute.Equals("alarmclock") && params.size() > 1 )
   {
     // format is alarmclock(name,command[,seconds,true]);
