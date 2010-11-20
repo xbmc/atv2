@@ -33,8 +33,12 @@
 #include "Win32WASAPI.h"
 #include "Win32DirectSound.h"
 #endif
-#ifdef __APPLE__
-#include "CoreAudioRenderer.h"
+#if defined(__APPLE__)
+  #if !defined(__arm__)
+    #include "CoreAudioRenderer.h"
+  #else
+    //#include "iOSAudioRenderer.h"
+  #endif
 #elif defined(_LINUX)
 #include "ALSADirectSound.h"
 #endif
@@ -95,8 +99,10 @@ IAudioRenderer* CAudioRendererFactory::Create(IAudioCallback* pCallback, int iCh
     if (deviceString.Equals("custom"))
       deviceString = g_guiSettings.GetString("audiooutput.custompassthrough");
 #else
+    #if !defined(__arm__)
     // osx/win platforms do not have an "audiooutput.passthroughdevice" setting but can do passthrough
     deviceString = g_guiSettings.GetString("audiooutput.audiodevice");
+    #endif
 #endif
   }
   else
@@ -141,8 +147,10 @@ IAudioRenderer* CAudioRendererFactory::Create(IAudioCallback* pCallback, int iCh
 #ifdef WIN32
   CreateAndReturnOnValidInitialize(CWin32DirectSound);
 #endif
-#ifdef __APPLE__
-  CreateAndReturnOnValidInitialize(CCoreAudioRenderer);
+#if defined(__APPLE__)
+  #if !defined(__arm__)
+    CreateAndReturnOnValidInitialize(CCoreAudioRenderer);
+  #endif
 #elif defined(_LINUX)
   CreateAndReturnOnValidInitialize(CALSADirectSound);
 #endif
@@ -166,8 +174,10 @@ void CAudioRendererFactory::EnumerateAudioSinks(AudioSinkList& vAudioSinks, bool
   CWin32WASAPI::EnumerateAudioSinks(vAudioSinks, passthrough);
 #endif
 
-#ifdef __APPLE__
-  CCoreAudioRenderer::EnumerateAudioSinks(vAudioSinks, passthrough);
+#if defined(__APPLE__)
+  #if !defined(__arm__)
+    CCoreAudioRenderer::EnumerateAudioSinks(vAudioSinks, passthrough);
+  #endif
 #elif defined(_LINUX)
   CALSADirectSound::EnumerateAudioSinks(vAudioSinks, passthrough);
 #endif
@@ -187,9 +197,11 @@ IAudioRenderer *CAudioRendererFactory::CreateFromUri(const CStdString &soundsyst
     ReturnNewRenderer(CWin32DirectSound);
 #endif
 
-#ifdef __APPLE__
-  if (soundsystem.Equals("coreaudio"))
-    ReturnNewRenderer(CCoreAudioRenderer);
+#if defined(__APPLE__)
+  #if !defined(__arm__)
+    if (soundsystem.Equals("coreaudio"))
+      ReturnNewRenderer(CCoreAudioRenderer);
+  #endif
 #elif defined(_LINUX)
   if (soundsystem.Equals("alsa"))
     ReturnNewRenderer(CALSADirectSound);
