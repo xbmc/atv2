@@ -168,9 +168,11 @@ configure: configure.in
 	@./bootstrap
 
 # skin textures
+ifneq ($(findstring arm,$(ARCH)), arm)
 skins: tools/TexturePacker/TexturePacker force
-ifneq (arm, $(ARCH))
 	 $(MAKE) -C $(CONFLUENCE_MEDIA)
+else
+skins:
 endif
 
 guilib/guilib.a: force
@@ -280,9 +282,13 @@ lib/cpluff/libcpluff/.libs/libcpluff.a: force
 system/libcpluff-$(ARCH).so: lib/cpluff/libcpluff/.libs/libcpluff.a
 ifeq ($(findstring osx,$(ARCH)), osx)
   ifeq ($(ARCH), powerpc-osx)
-	ld -all_load -bundle -flat_namespace -undefined suppress -arch @ARCHTYPE@ -lbundle1.o -o $@ $<
-  else
-	ld -all_load -bundle -flat_namespace -undefined suppress -arch @ARCHTYPE@ -o $@ $<
+	$(CXX) $(LDFLAGS) -all_load -bundle -flat_namespace -undefined dynamic_lookup -arch i386 -lbundle1.o -o $@ $<
+  endif
+  ifeq ($(ARCH), arm-osx)
+	$(CXX) $(LDFLAGS) -all_load -bundle -flat_namespace -undefined dynamic_lookup -read_only_relocs suppress -arch armv7 -o $@ $<
+  endif
+  ifeq ($(ARCH), x86-osx)
+	$(CXX) $(LDFLAGS) -all_load -bundle -flat_namespace -undefined dynamic_lookup -arch i386 -o $@ $<
   endif
 else
 	cp lib/cpluff/libcpluff/.libs/libcpluff.so $@
@@ -291,9 +297,13 @@ lib/libmodplug/src/.libs/libmodplug.a: force
 	$(MAKE) -C lib/libmodplug
 system/players/paplayer/libmodplug-$(ARCH).so: lib/libmodplug/src/.libs/libmodplug.a
 ifeq ($(ARCH), powerpc-osx)
-	ld -all_load -bundle -flat_namespace -undefined suppress -arch @ARCHTYPE@ -lbundle1.o -o $@ $<
-else
-	ld -all_load -bundle -flat_namespace -undefined suppress -arch @ARCHTYPE@ -o $@ $<
+	$(CXX) $(LDFLAGS) -all_load -bundle -flat_namespace -undefined dynamic_lookup -arch ppc -lbundle1.o -o $@ $<
+endif
+ifeq ($(ARCH), arm-osx)
+	$(CXX) $(LDFLAGS) -all_load -bundle -flat_namespace -undefined dynamic_lookup -read_only_relocs suppress -arch armv7 -o $@ $<
+endif
+ifeq ($(ARCH), x86-osx)
+	$(CXX) $(LDFLAGS) -all_load -bundle -flat_namespace -undefined dynamic_lookup -arch i386 -o $@ $<
 endif
 lib/xbmc-dll-symbols/dll-symbols.a: force
 	$(MAKE) -C lib/xbmc-dll-symbols
@@ -307,7 +317,7 @@ exports:
 dllloader: exports
 	$(MAKE) xbmc/cores/DllLoader/dllloader.a
 visualizations: exports
-ifneq (arm, $(ARCH))
+ifneq ($(findstring arm,$(ARCH)), arm)
 	$(MAKE) -C xbmc/visualizations/OpenGLSpectrum
 	$(MAKE) -C xbmc/visualizations/WaveForm
 	$(MAKE) -C xbmc/visualizations/XBMCProjectM
@@ -321,7 +331,7 @@ endif
 endif
 endif
 screensavers: exports
-ifneq (arm, $(ARCH))
+ifneq ($(findstring arm,$(ARCH)), arm)
 	$(MAKE) -C xbmc/screensavers/rsxs-0.9/xbmc
 endif
 libpython: dllloader
@@ -337,7 +347,9 @@ ifneq (@USE_EXTERNAL_LIBASS@,1)
 endif
 eventclients:
 ifeq ($(findstring osx,$(ARCH)), osx)
+ifneq ($(findstring arm,$(ARCH)), arm)
 	$(MAKE) -C tools/EventClients/Clients/OSXRemote
+endif
 else
 	$(MAKE) -C tools/EventClients
 endif
@@ -358,7 +370,9 @@ endif
 	$(MAKE) -C xbmc/cores/paplayer/vgmstream
 	$(MAKE) -C xbmc/cores/paplayer/timidity
 	$(MAKE) -C xbmc/cores/paplayer/NSFCodec
+ifneq ($(findstring arm-osx,$(ARCH)), arm-osx)
 	$(MAKE) -C xbmc/cores/paplayer/SIDCodec
+endif
 ifeq (@USE_ASAP_CODEC@,1)
   ifneq ($(findstring osx,$(ARCH)), osx)
 	$(MAKE) -C xbmc/cores/paplayer/asap asap-xbmc
@@ -444,19 +458,20 @@ OBJSXBMC+= \
 	xbmc/lib/UnrarXLib/UnrarXLib.a
 endif
 
-ifneq (arm, $(ARCH))
+ifneq ($(findstring arm,$(ARCH)), arm)
 # Can't include libhts for arm due to GPLv3
 OBJSXBMC+= \
 	xbmc/lib/libhts/libhts.a
 endif
 
-# platform dependend objects
+# platform dependent objects
 ifeq ($(findstring osx,$(ARCH)), osx)
-OBJSXBMC += \
-	xbmc/osx/osx.a \
-	lib/libSDL-OSX/libSDL-@ARCH@.a \
-	lib/libSDL-OSX/libSDL_mixer-@ARCH@.a \
-	lib/libmicrohttpd/src/daemon/.libs/libmicrohttpd.a
+OBJSXBMC += xbmc/osx/osx.a
+OBJSXBMC += lib/libmicrohttpd/src/daemon/.libs/libmicrohttpd.a
+ifneq ($(findstring arm,$(ARCH)), arm)
+OBJSXBMC += lib/libSDL-OSX/libSDL-@ARCH@.a \
+	lib/libSDL-OSX/libSDL_mixer-@ARCH@.a
+endif
 else
 OBJSXBMC += \
 	xbmc/posix/posix.a
@@ -470,7 +485,7 @@ DYNOBJSXBMC= \
 	xbmc/cores/DllLoader/exports/util/exports_utils.a \
 	xbmc/cores/DllLoader/exports/exports.a
 
-ifeq (arm, $(ARCH))
+ifeq ($(findstring arm,$(ARCH)), arm)
 # Force external python2.5 for now!
 LIBS +=-lpython2.5
 endif

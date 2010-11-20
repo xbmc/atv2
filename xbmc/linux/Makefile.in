@@ -5,7 +5,7 @@ ifeq ($(findstring osx,$(ARCH)), osx)
 	INCLUDES+=-I../osx
 endif
 
-CXXFLAGS+=-fPIC #-DHAS_SDL
+CXXFLAGS+=#-DHAS_SDL
 
 SRCS=ConvUtils.cpp \
      ConsoleDeviceKitPowerSyscall.cpp \

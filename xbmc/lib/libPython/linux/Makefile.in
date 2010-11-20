@@ -64,6 +64,7 @@ PYO=$(addsuffix o, $(PY))
 ifeq ($(findstring osx,$(ARCH)), osx)
 all: $(SLIB)
 
+ifneq (@USE_EXTERNAL_PYTHON@,1)
 $(SLIB): $(PYWRAP) ../Python/libpython2.4.a $(PYO) ../../../../tools/Mach5/wrapper.rb
 	rm -rf $(SYSDIR)/Lib
 	rsync -a --exclude '.svn' -t ../Python/build/$(PYLIBDIR)/*.so $(SYSDIR)/Lib
@@ -77,6 +78,13 @@ $(SLIB): $(PYWRAP) ../Python/libpython2.4.a $(PYO) ../../../../tools/Mach5/wrapp
 	../../../../tools/Mach5/wrapper.rb $@ libpython;mv output.so $@
 	../../../../tools/Mach5/wrapper.rb $@;mv output.so $@
 	@rm -rf tmp
+else
+$(SLIB): $(PYWRAP) ../../../../tools/Mach5/wrapper.rb
+	$(CXX) -bundle -flat_namespace -undefined suppress -o $@ \
+		wrapper_python.o
+	../../../../tools/Mach5/wrapper.rb $@ libpython;mv output.so $@
+	../../../../tools/Mach5/wrapper.rb $@;mv output.so $@
+endif
 
 ../Python/libpython2.4.a: compile
 	$(MAKE) -C ../Python
@@ -86,7 +94,7 @@ $(SLIB): $(PYWRAP) ../Python/libpython2.4.a $(PYO) ../../../../tools/Mach5/wrapp
 	@../Python/python.exe -O ../Python/Lib/py_compile.py $<
 
 $(PYWRAP): $(PYWRAP:.o=.c)
-	 $(CC) $(CFLAGS) -fPIC -o $@ -D_FILE_DEFINED -D_REENTRANT -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -c $<
+	 $(CC) $(CFLAGS) -o $@ -c $<
 
 else
 all: $(SLIB)
