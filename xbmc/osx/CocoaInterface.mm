@@ -18,14 +18,20 @@
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
+#if !defined(__arm__)
 #import <unistd.h>
 #import <sys/mount.h>
 
 #import <Cocoa/Cocoa.h>
 #import <QuartzCore/QuartzCore.h>
+#if !defined(__arm__)
 #import <Carbon/Carbon.h>
 #import <OpenGL/OpenGL.h>
 #import <OpenGL/gl.h>
+#else
+#import <OpenGLES/ES2/gl.h>
+#import <OpenGLES/ES2/glext.h>
+#endif
 
 #import "CocoaInterface.h"
 #import "DllPaths_generated.h"
@@ -93,7 +99,6 @@ int Cocoa_GL_GetCurrentDisplayID(void)
   return((int)display_id);
 }
 
-
 /* 10.5 only
 void Cocoa_SetSystemSleep(bool enable)
 {
@@ -125,7 +130,7 @@ void Cocoa_SetDisplaySleep(bool enable)
 void Cocoa_UpdateSystemActivity(void)
 {
   // Original Author: Elan Feingold
-  UpdateSystemActivity(UsrActivity);   
+  UpdateSystemActivity(UsrActivity);
 }
 
 bool Cocoa_CVDisplayLinkCreate(void *displayLinkcallback, void *displayLinkContext)
@@ -674,3 +679,4 @@ OSStatus SendAppleEventToSystemProcess(AEEventID EventToSend)
 
   return(error); 
 }
+#endif

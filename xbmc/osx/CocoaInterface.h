@@ -23,8 +23,9 @@
 
 #include <string>
 #include "StdString.h"
-#include <Carbon/Carbon.h>
-
+#if !defined(__arm__)
+  #include <Carbon/Carbon.h>
+#endif
 class CCocoaAutoPool
 {
   public:
@@ -90,9 +91,11 @@ extern "C"
 
   const char *Cocoa_Paste() ;  
 
+#if !defined(__arm__)
   // helper from QA 1134
   // http://developer.apple.com/mac/library/qa/qa2001/qa1134.html
   OSStatus SendAppleEventToSystemProcess(AEEventID EventToSend);
+#endif
 #ifdef __cplusplus
 }
 #endif
