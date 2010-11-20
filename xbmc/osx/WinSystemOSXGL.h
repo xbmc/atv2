@@ -23,6 +23,7 @@
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
+#if !defined(__arm__)
 #include "WinSystemOSX.h"
 #include "RenderSystemGL.h"
 
