@@ -20,7 +20,7 @@
  */
 #pragma once
 #include "IDirectory.h"
-#include "Thread.h"
+#include "utils/Thread.h"
 #include "utils/CriticalSection.h"
 #include "utils/Event.h"
 #include "URL.h"
