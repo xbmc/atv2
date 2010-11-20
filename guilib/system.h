@@ -32,7 +32,6 @@
   #define HAS_SDL
 #endif
 
-//#define HAS_DVD_DRIVE
 #define HAS_DVD_SWSCALE
 #define HAS_DVDPLAYER
 #define HAS_EVENT_SERVER
@@ -53,7 +52,6 @@
 #define HAS_JSONRPC
 #define HAS_HTTPAPI
 
-//#define HAS_CDDA_RIPPER
 #ifdef USE_ASAP_CODEC
   #define HAS_ASAP_CODEC
 #endif
@@ -87,6 +85,7 @@
  *****************/
 
 #ifdef _WIN32
+  #define HAS_DVD_DRIVE
   #define HAS_SDL_JOYSTICK
   #define HAS_WIN32_NETWORK
   #define HAS_IRSERVERSUITE
@@ -251,6 +250,10 @@
     #include <GLES2/gl2.h>
     #include <GLES2/gl2ext.h>
   #endif
+#endif
+
+#ifdef HAS_DVD_DRIVE
+#define HAS_CDDA_RIPPER
 #endif
 
 #define SAFE_DELETE(p)       { delete (p);     (p)=NULL; }

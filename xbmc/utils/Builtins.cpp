@@ -767,10 +767,12 @@ int CBuiltins::Execute(const CStdString& execString)
     g_playlistPlayer.Clear();
   }
 #if defined(HAS_DVD_DRIVE)
+#ifdef HAS_DVD_DRIVE
   else if (execute.Equals("ejecttray"))
   {
     CIoSupport::ToggleTray();
   }
+#endif
 #endif
   else if( execute.Equals("alarmclock") && params.size() > 1 )
   {
