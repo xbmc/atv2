@@ -19,6 +19,7 @@
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
+#if !defined(__arm__)
 
 #include "CoreAudio.h"
 #include <PlatformDefs.h>
@@ -1102,4 +1103,5 @@ CAUMatrixMixer::~CAUMatrixMixer()
 
 
 
+#endif
 #endif

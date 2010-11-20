@@ -22,12 +22,41 @@
 #ifndef __COREAUDIO_H__
 #define __COREAUDIO_H__
 
+#if !defined(__arm__)
 #include <AudioUnit/AudioUnit.h>
 #include <AudioToolbox/AudioToolbox.h>
+#include <AudioToolbox/AudioServices.h>
 #include <StdString.h>
 #include <list>
 #include <vector>
 
+#if 0
+typedef UInt32      AudioObjectID;
+typedef AudioObjectID   AudioDeviceID;
+typedef AudioObjectID   AudioStreamID;
+struct  AudioStreamRangedDescription
+{
+    AudioStreamBasicDescription     mFormat;
+    AudioValueRange                 mSampleRateRange;
+};
+typedef struct AudioStreamRangedDescription AudioStreamRangedDescription;
+typedef OSStatus
+(*AudioDeviceIOProc)(   AudioDeviceID           inDevice,
+                        const AudioTimeStamp*   inNow,
+                        const AudioBufferList*  inInputData,
+                        const AudioTimeStamp*   inInputTime,
+                        AudioBufferList*        outOutputData,
+                        const AudioTimeStamp*   inOutputTime,
+                        void*                   inClientData);
+struct ComponentDescription {
+  OSType              componentType;          /* A unique 4-byte code indentifying the command set */
+  OSType              componentSubType;       /* Particular flavor of this instance */
+  OSType              componentManufacturer;  /* Vendor indentification */
+  unsigned long       componentFlags;         /* 8 each for Component,Type,SubType,Manuf/revision */
+  unsigned long       componentFlagsMask;     /* Mask for specifying which flags to consider in search, zero during registration */
+};
+typedef struct ComponentDescription     ComponentDescription;
+#endif
 // Forward declarations
 class CCoreAudioHardware;
 class CCoreAudioDevice;
@@ -188,5 +217,7 @@ char* UInt32ToFourCC(UInt32* val);
 const char* StreamDescriptionToString(AudioStreamBasicDescription desc, CStdString& str);
 
 #define CONVERT_OSSTATUS(x) UInt32ToFourCC((UInt32*)&ret)
+
+#endif
 
 #endif // __COREAUDIO_H__
