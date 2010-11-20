@@ -38,16 +38,18 @@
 #endif
 
 #ifdef __APPLE__
-typedef int64_t   off64_t;
-typedef off_t     __off_t;
-typedef off64_t   __off64_t;
-typedef fpos_t fpos64_t;
-#define stat64 stat
-#define statvfs64 statvfs
+  typedef int64_t   off64_t;
+  typedef off_t     __off_t;
+  typedef off64_t   __off64_t;
+  typedef fpos_t    fpos64_t;
+  #define stat64    stat
+  #define statvfs64 statvfs
+  // this is not right, fix later
+  #define _G_va_list va_list
 #endif
 
 #ifdef _LINUX
-#define _stat stat
+  #define _stat stat
 #endif
 
 struct mntent;
