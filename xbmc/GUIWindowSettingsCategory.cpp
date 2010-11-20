@@ -75,9 +75,9 @@
 #include "HALManager.h"
 #endif
 #endif
-#ifdef __APPLE__
-#include "CoreAudio.h"
-#include "XBMCHelper.h"
+#if defined(__APPLE__) && !defined(__arm__)
+  #include "CoreAudio.h"
+  #include "XBMCHelper.h"
 #endif
 #include "GUIDialogAccessPoints.h"
 #include "FileSystem/Directory.h"
@@ -685,7 +685,7 @@ void CGUIWindowSettingsCategory::UpdateSettings()
       }
     }
 #endif
-#ifdef __APPLE__
+#if defined(__APPLE__) && !defined(__arm__)
     else if (strSetting.Equals("input.appleremotemode"))
     {
       int remoteMode = g_guiSettings.GetInt("input.appleremotemode");
@@ -1704,7 +1704,7 @@ void CGUIWindowSettingsCategory::OnSettingChanged(CBaseSettingControl *pSettingC
     //restart eventserver without asking user
     if (g_application.StopEventServer(true, false))
       g_application.StartEventServer();
-#ifdef __APPLE__
+#if defined(__APPLE__) && !defined(__arm__)
     //reconfigure XBMCHelper for port changes
     XBMCHelper::GetInstance().Configure();
 #endif
@@ -2793,7 +2793,8 @@ void CGUIWindowSettingsCategory::FillInNetworkInterfaces(CSetting *pSetting)
 
 void CGUIWindowSettingsCategory::FillInAudioDevices(CSetting* pSetting, bool Passthrough)
 {
-#ifdef __APPLE__
+#if defined(__APPLE__)
+#if !defined(__arm__)
   if (Passthrough)
     return;
   CGUISpinControlEx *pControl = (CGUISpinControlEx *)GetControl(GetSetting(pSetting->GetSetting())->GetID());
@@ -2818,6 +2819,7 @@ void CGUIWindowSettingsCategory::FillInAudioDevices(CSetting* pSetting, bool Pas
     deviceList.pop_front();
   }
   pControl->SetValue(activeDevice);
+#endif
 #else
   CGUISpinControlEx *pControl = (CGUISpinControlEx *)GetControl(GetSetting(pSetting->GetSetting())->GetID());
   pControl->Clear();
