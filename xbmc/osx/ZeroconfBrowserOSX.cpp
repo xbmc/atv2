@@ -19,6 +19,7 @@
  *
  */
 
+#if !defined(__arm__)
 #include "ZeroconfBrowserOSX.h"
 #include <Log.h>
 #include <SingleLock.h>
@@ -313,3 +314,4 @@ bool CZeroconfBrowserOSX::doResolveService(CZeroconfBrowser::ZeroconfService& fr
   CFRelease(service);
   return ret;
 }
+#endif

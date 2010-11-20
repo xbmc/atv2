@@ -19,6 +19,7 @@
  *
  */
 
+#if !defined(__arm__)
 #include "ZeroconfOSX.h"
 
 #include <string>
@@ -160,4 +161,4 @@ std::string CZeroconfOSX::assemblePublishedName(const std::string& fcr_given_nam
   }
   return ss.str();
 }
-
+#endif

@@ -19,11 +19,16 @@
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
-
+#if !defined(__arm__)
 #include <memory>
-#include <Carbon/Carbon.h>
+#if 0
+  // An opaque reference representing a CFNetService.
+  typedef struct __CFNetService* CFNetServiceRef;
+#else
+  #include <Carbon/Carbon.h>
+  #include <CoreServices/CoreServices.h>
+#endif
 #include <CoreFoundation/CoreFoundation.h>
-#include <CoreServices/CoreServices.h>
 
 #include "Zeroconf.h"
 #include <CriticalSection.h>
@@ -58,3 +63,4 @@ private:
   typedef std::map<std::string, CFNetServiceRef> tServiceMap;
   tServiceMap m_services;
 };
+#endif
