@@ -56,6 +56,7 @@
 #include "LocalizeStrings.h"
 #include "utils/log.h"
 #include "utils/TimeUtils.h"
+#include "utils/AutoPtrHandle.h"
 #include "TextureCache.h"
 #include "GUIWindowAddonBrowser.h"
 
