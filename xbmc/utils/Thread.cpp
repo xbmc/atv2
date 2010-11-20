@@ -111,17 +111,18 @@ CThread::~CThread()
 }
 
 #ifdef _LINUX
-#ifdef __APPLE__
-// Use pthread-based TLS.
-#define LOCAL_THREAD ((CThread* )pthread_getspecific(tlsLocalThread))
-#else
-// Use compiler-based TLS.
-__thread CThread* pLocalThread = NULL;
-#define LOCAL_THREAD pLocalThread
+  #ifdef __APPLE__
+    // Use pthread-based TLS.
+    #define LOCAL_THREAD ((CThread* )pthread_getspecific(tlsLocalThread))
+  #else
+    // Use compiler-based TLS.
+    __thread CThread* pLocalThread = NULL;
+  #define LOCAL_THREAD pLocalThread
 #endif
 void CThread::term_handler (int signum)
 {
-  CLog::Log(LOGERROR,"thread 0x%lx (%lu) got signal %d. calling OnException and terminating thread abnormally.", pthread_self(), pthread_self(), signum);
+  CLog::Log(LOGERROR,"thread 0x%lx (%lu) got signal %d. calling OnException and terminating thread abnormally.", 
+    (long unsigned int)pthread_self(), (long unsigned int)pthread_self(), signum);
   if (LOCAL_THREAD)
   {
     LOCAL_THREAD->m_bStop = TRUE;
