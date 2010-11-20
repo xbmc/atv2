@@ -27,11 +27,11 @@
 /* Include config.h to define (or not) WORDS_BIGENDIAN
    File created by configure */
 #if defined(__linux__) || defined(__APPLE__)
-#include "../config.h"
+  #include "../config.h"
 #endif
 #ifdef _WIN32
-#define __inline__ __inline
-#include <stdint.h>
+  #define __inline__ __inline
+  #include <stdint.h>
 #endif
 
 /* Set up for C function definitions, even when using C++ */
