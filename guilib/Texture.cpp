@@ -26,6 +26,7 @@
 #include "DllImageLib.h"
 #include "DDSImage.h"
 #include "Util.h"
+#include "SpecialProtocol.h"
 
 /************************************************************************/
 /*                                                                      */
@@ -175,9 +176,9 @@ bool CBaseTexture::LoadFromFile(const CStdString& texturePath, unsigned int maxW
   unsigned int width = maxWidth ? std::min(maxWidth, g_Windowing.GetMaxTextureSize()) : g_Windowing.GetMaxTextureSize();
   unsigned int height = maxHeight ? std::min(maxHeight, g_Windowing.GetMaxTextureSize()) : g_Windowing.GetMaxTextureSize();
 
-  if(!dll.LoadImage(texturePath.c_str(), width, height, &image))
+  if(!dll.LoadImage(CSpecialProtocol::TranslatePath(texturePath).c_str(), width, height, &image))
   {
-    CLog::Log(LOGERROR, "Texture manager unable to load file: %s", texturePath.c_str());
+    CLog::Log(LOGERROR, "Texture manager unable to load file: %s", CSpecialProtocol::TranslatePath(texturePath).c_str());
     return false;
   }
 
