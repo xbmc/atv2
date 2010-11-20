@@ -1,0 +1,11 @@
+diff -ruN libmms-0.6/src/mmsio.h libmms-0.6-new/src/mmsio.h
+--- libmms-0.6/src/mmsio.h	2010-05-30 07:28:25.000000000 -0400
++++ libmms-0.6-new/src/mmsio.h	2010-11-06 20:41:03.000000000 -0400
+@@ -1,6 +1,7 @@
+ #ifndef __MMS_IO_H__
+ #define __MMS_IO_H__
+ 
++#include <sys/types.h>
+ #include "mms_config.h"
+ 
+ /* On 64 bit file offset capable systems, libmms' configure script adds

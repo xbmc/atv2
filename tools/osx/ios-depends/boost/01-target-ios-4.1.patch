@@ -1,0 +1,12 @@
+--- boost.sh.org	2010-10-30 15:54:07.000000000 -0400
++++ boost.sh	2010-10-30 15:55:08.000000000 -0400
+@@ -21,7 +21,7 @@
+ 
+ : ${BOOST_VERSION:=1_44_0}
+ : ${BOOST_LIBS:="thread signals filesystem regex program_options system"}
+-: ${IPHONE_SDKVERSION:=4.2}
++: ${IPHONE_SDKVERSION:=4.1}
+ : ${EXTRA_CPPFLAGS:="-DBOOST_AC_USE_PTHREADS -DBOOST_SP_USE_PTHREADS"}
+ 
+ # The EXTRA_CPPFLAGS definition works around a thread race issue in
+
