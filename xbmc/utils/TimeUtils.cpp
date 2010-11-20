@@ -23,17 +23,17 @@
 #include "DateTime.h"
 
 #ifdef __APPLE__
-#ifdef __ppc__
-#include <mach/mach_time.h>
-#include <CoreVideo/CVHostTime.h>
-#else
-#include <time.h>
-#include "posix-realtime-stub.h"
-#endif
+  #if defined(__ppc__)
+    #include <mach/mach_time.h>
+    #include <CoreVideo/CVHostTime.h>
+  #else
+    #include <time.h>
+    #include "posix-realtime-stub.h"
+  #endif
 #elif defined(_LINUX)
-#include <time.h>
+  #include <time.h>
 #elif defined(_WIN32)
-#include <windows.h>
+  #include <windows.h>
 #endif
 
 int64_t CurrentHostCounter(void)
