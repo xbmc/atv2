@@ -8,8 +8,10 @@
   SDLMain.m and SDLMain.h carry neither a copyright or license. They are in the
   public domain.
 */
+#if !defined(__arm__)
 
 #import <Cocoa/Cocoa.h>
 
 @interface XBMCDelegate : NSObject
 @end
+#endif
