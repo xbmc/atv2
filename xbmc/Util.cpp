@@ -73,7 +73,11 @@
 #include "WIN32Util.h"
 #endif
 #if defined(__APPLE__)
-#include "CocoaInterface.h"
+  #if defined(__arm__)
+    #include "iOS_Utils.h"
+  #else
+    #include "CocoaInterface.h"
+  #endif
 #endif
 #include "GUIDialogYesNo.h"
 #include "GUIUserMessages.h"
@@ -711,19 +715,14 @@ void CUtil::GetHomePath(CStdString& strPath, const CStdString& strTarget)
   {
 #ifdef __APPLE__
     int      result = -1;
-    char     given_path[2*MAXPATHLEN];
     uint32_t path_size = 2*MAXPATHLEN;
+    char     given_path[2*MAXPATHLEN];
 
-    result = _NSGetExecutablePath(given_path, &path_size);
-    if (result == 0)
-    {
-      // Move backwards to last /.
-      for (int n=strlen(given_path)-1; given_path[n] != '/'; n--)
-        given_path[n] = '\0';
-
-      // Assume local path inside application bundle.
-      strcat(given_path, "../Resources/XBMC/");
-
+    #if defined(__arm__)
+      result = GetFrappBundlePath(given_path, &path_size);
+      strcat(given_path, "../XBMCData/XBMCHome/");
+      strcpy(given_path, "/private/var/stash/Applications/Lowtide.app/Appliances/XBMC.frappliance/XBMCData/XBMCHome");
+      /*
       // Convert to real path.
       char real_path[2*MAXPATHLEN];
       if (realpath(given_path, real_path) != NULL)
@@ -731,7 +730,34 @@ void CUtil::GetHomePath(CStdString& strPath, const CStdString& strTarget)
         strPath = real_path;
         return;
       }
-    }
+      */
+    #else
+      result = _NSGetExecutablePath(given_path, &path_size);
+      // Convert to real path.
+      char real_path[2*MAXPATHLEN];
+      if (realpath(given_path, real_path) != NULL)
+      {
+        strPath = real_path;
+        return;
+      }
+      if (result == 0)
+      {
+        // Move backwards to last /.
+        for (int n=strlen(given_path)-1; given_path[n] != '/'; n--)
+          given_path[n] = '\0';
+
+        // Assume local path inside application bundle.
+        strcat(given_path, "../Resources/XBMC/");
+
+        // Convert to real path.
+        char real_path[2*MAXPATHLEN];
+        if (realpath(given_path, real_path) != NULL)
+        {
+          strPath = real_path;
+          return;
+        }
+      }
+    #endif
 #endif
     size_t last_sep = strHomePath.find_last_of(PATH_SEPARATOR_CHAR);
     if (last_sep != string::npos)
@@ -1939,7 +1965,7 @@ bool CUtil::ThumbCached(const CStdString& strFileName)
 
 void CUtil::PlayDVD(const CStdString& strProtocol)
 {
-#ifdef HAS_DVDPLAYER
+#if defined(HAS_DVDPLAYER) && defined(HAS_DVD_DRIVE)
   CIoSupport::Dismount("Cdrom0");
   CIoSupport::RemapDriveLetter('D', "Cdrom0");
   CStdString strPath;
@@ -3416,8 +3442,12 @@ CStdString CUtil::ResolveExecutablePath()
   char     given_path[2*MAXPATHLEN];
   char     real_given_path[2*MAXPATHLEN];
   uint32_t path_size = 2*MAXPATHLEN;
-
-  result = _NSGetExecutablePath(given_path, &path_size);
+  #if defined(__arm__)
+    result = GetFrappBundlePath(given_path, &path_size);
+    strcpy(given_path, "/private/var/stash/Applications/Lowtide.app/Appliances/XBMC.frappliance/XBMC");
+  #else
+    result = _NSGetExecutablePath(given_path, &path_size);
+  #endif
   if (result == 0)
     realpath(given_path, real_given_path);
   strExecutablePath = real_given_path;
