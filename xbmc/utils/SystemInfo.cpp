@@ -22,9 +22,9 @@
 #include "system.h"
 #include "SystemInfo.h"
 #ifndef _LINUX
-#include <conio.h>
+  #include <conio.h>
 #else
-#include <sys/utsname.h>
+  #include <sys/utsname.h>
 #endif
 #include "utils/GUIInfoManager.h"
 #include "FileSystem/FileCurl.h"
@@ -38,10 +38,10 @@
 #include "utils/TimeUtils.h"
 #include "log.h"
 #ifdef _WIN32
-#include "dwmapi.h"
+  #include "dwmapi.h"
 #endif
 #ifdef __APPLE__
-#include "osx/CocoaInterface.h"
+  #include "osx/CocoaInterface.h"
 #endif
 
 CSysInfo g_sysinfo;
@@ -671,8 +671,11 @@ CStdString CSysInfo::GetUserAgent()
 #if defined(_WIN32)
   result += "Windows; ";
   result += GetKernelVersion();
-#elif defined(__APPLE__)
+#elif defined(__APPLE__) && !defined(__arm__)
   result += "Mac OS X; ";
+  result += GetUnameVersion();
+#elif defined(__APPLE__) && defined(__arm__)
+  result += "iOS; ";
   result += GetUnameVersion();
 #elif defined(_LINUX)
   result += "Linux; ";
@@ -706,7 +709,7 @@ bool CSysInfo::HasVDADecoder()
 {
   bool        result = false;
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) && defined(HAVE_LIBVDADECODER)
   result = Cocoa_HasVDADecoder();
 #endif
   return result;
