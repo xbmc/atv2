@@ -26,7 +26,9 @@
 #include "LocalizeStrings.h"
 
 #include <sys/mount.h>
+#if !defined(__arm__)
 #include <DiskArbitration/DiskArbitration.h>
+#endif
 #include "CocoaInterface.h"
 
 bool CDarwinStorageProvider::m_event = false;
@@ -58,6 +60,8 @@ void CDarwinStorageProvider::GetLocalDrives(VECSOURCES &localDrives)
   share.strName = "Volumes";
   share.m_ignore = true;
   localDrives.push_back(share);
+
+#if !defined(__arm__)
 
   // This will pick up all local non-removable disks including the Root Disk.
   DASessionRef session = DASessionCreate(kCFAllocatorDefault);
@@ -96,10 +100,12 @@ void CDarwinStorageProvider::GetLocalDrives(VECSOURCES &localDrives)
 
     CFRelease(session);
   }
+#endif
 }
 
 void CDarwinStorageProvider::GetRemovableDrives(VECSOURCES &removableDrives)
 {
+#if !defined(__arm__)
   DASessionRef session = DASessionCreate(kCFAllocatorDefault);
   if (session)
   {
@@ -136,6 +142,7 @@ void CDarwinStorageProvider::GetRemovableDrives(VECSOURCES &removableDrives)
 
     CFRelease(session);
   }
+#endif
 }
 
 std::vector<CStdString> CDarwinStorageProvider::GetDiskUsage()
