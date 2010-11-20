@@ -29,14 +29,14 @@
  * All platforms
  *****************/
 #ifndef HAS_SDL
-#define HAS_SDL
+  #define HAS_SDL
 #endif
 
-#define HAS_DVD_DRIVE
+//#define HAS_DVD_DRIVE
 #define HAS_DVD_SWSCALE
 #define HAS_DVDPLAYER
 #define HAS_EVENT_SERVER
-#define HAS_KARAOKE
+//#define HAS_KARAOKE
 #define HAS_SCREENSAVER
 #define HAS_PYTHON
 #define HAS_SHOUTCAST
@@ -46,16 +46,16 @@
 #define HAS_VISUALISATION
 
 #ifdef HAVE_LIBMICROHTTPD
-#define HAS_WEB_SERVER
-#define HAS_WEB_INTERFACE
+//#define HAS_WEB_SERVER
+//#define HAS_WEB_INTERFACE
 #endif
 
 #define HAS_JSONRPC
 #define HAS_HTTPAPI
 
-#define HAS_CDDA_RIPPER
+//#define HAS_CDDA_RIPPER
 #ifdef USE_ASAP_CODEC
-#define HAS_ASAP_CODEC
+  #define HAS_ASAP_CODEC
 #endif
 
 #define HAS_FILESYSTEM
@@ -87,16 +87,16 @@
  *****************/
 
 #ifdef _WIN32
-#define HAS_SDL_JOYSTICK
-#define HAS_WIN32_NETWORK
-#define HAS_IRSERVERSUITE
-#define HAS_AUDIO
-#define HAVE_LIBCRYSTALHD 1
-#define HAS_WEB_SERVER
-#define HAS_WEB_INTERFACE
-#define HAVE_LIBSSH
-#define HAS_LIBRTMP
-#define HAVE_LIBBLURAY
+  #define HAS_SDL_JOYSTICK
+  #define HAS_WIN32_NETWORK
+  #define HAS_IRSERVERSUITE
+  #define HAS_AUDIO
+  #define HAVE_LIBCRYSTALHD 1
+  #define HAS_WEB_SERVER
+  #define HAS_WEB_INTERFACE
+  #define HAVE_LIBSSH
+  #define HAS_LIBRTMP
+  #define HAVE_LIBBLURAY
 #endif
 
 /*****************
@@ -104,12 +104,19 @@
  *****************/
 
 #ifdef __APPLE__
-#define HAS_ZEROCONF
-#define HAS_GL
-#define HAS_LINUX_NETWORK
-#define HAS_SDL_AUDIO
-#define HAS_SDL_OPENGL
-#define HAS_SDL_WIN_EVENTS
+  #if defined(__arm__)
+    #undef HAS_GL
+    #undef HAS_SDL
+    #define HAVE_LIBEGL
+    #define HAVE_LIBGLESV2
+  #else
+    #define HAS_ZEROCONF
+    #define HAS_GL
+    #define HAS_SDL_AUDIO
+    #define HAS_SDL_OPENGL
+    #define HAS_SDL_WIN_EVENTS
+  #endif
+  #define HAS_LINUX_NETWORK
 #endif
 
 /*****************
@@ -117,32 +124,32 @@
  *****************/
 
 #if defined(_LINUX) && !defined(__APPLE__)
-#ifndef HAS_SDL_OPENGL
-#define HAS_SDL_OPENGL
-#endif
-#if defined(HAVE_LIBAVAHI_COMMON) && defined(HAVE_LIBAVAHI_CLIENT)
-#define HAS_ZEROCONF
-#define HAS_AVAHI
-#endif
-#define HAS_LCD
-#define HAS_DBUS
-#define HAS_DBUS_SERVER
-#define HAS_GL
-#define HAS_GLX
-#define HAS_LINUX_NETWORK
-#define HAS_SDL_AUDIO
-#define HAS_LIRC
-#define HAS_SDL_WIN_EVENTS
-#ifdef HAVE_LIBPULSE
-#define HAS_PULSEAUDIO
-#endif
-#ifdef HAVE_LIBXRANDR
-#define HAS_XRANDR
-#endif
+  #ifndef HAS_SDL_OPENGL
+    #define HAS_SDL_OPENGL
+  #endif
+  #if defined(HAVE_LIBAVAHI_COMMON) && defined(HAVE_LIBAVAHI_CLIENT)
+    #define HAS_ZEROCONF
+    #define HAS_AVAHI
+  #endif
+  #define HAS_LCD
+  #define HAS_DBUS
+  #define HAS_DBUS_SERVER
+  #define HAS_GL
+  #define HAS_GLX
+  #define HAS_LINUX_NETWORK
+  #define HAS_SDL_AUDIO
+  #define HAS_LIRC
+  #define HAS_SDL_WIN_EVENTS
+  #ifdef HAVE_LIBPULSE
+    #define HAS_PULSEAUDIO
+  #endif
+  #ifdef HAVE_LIBXRANDR
+    #define HAS_XRANDR
+  #endif
 #endif
 
 #ifdef HAVE_LIBSSH
-#define HAS_FILESYSTEM_SFTP
+  #define HAS_FILESYSTEM_SFTP
 #endif
 
 /*****************
@@ -150,11 +157,11 @@
  *****************/
 
 #ifdef __APPLE__
-#include "../svn_revision.h"
+  #include "../svn_revision.h"
 #endif
 
 #ifndef SVN_REV
-#define SVN_REV "Unknown"
+  #define SVN_REV "Unknown"
 #endif
 
 /****************************************
@@ -162,90 +169,88 @@
  ****************************************/
 
 #ifdef _WIN32
-#if !(defined(_WINSOCKAPI_) || defined(_WINSOCK_H))
-#include <winsock2.h>
-#endif
-#include <windows.h>
-#define DIRECTINPUT_VERSION 0x0800
-#include "mmsystem.h"
-#include "DInput.h"
-#include "DSound.h"
-#define DSSPEAKER_USE_DEFAULT DSSPEAKER_STEREO
-#define LPDIRECTSOUND8 LPDIRECTSOUND
-#undef GetFreeSpace
-#include "PlatformInclude.h"
-#include "D3D9.h"   // On Win32, we're always using DirectX for something, whether it be the actual rendering
-#include "D3DX9.h"  // or the reference video clock.
-#ifdef HAS_SDL
-#include "SDL\SDL.h"
-#endif
+  #if !(defined(_WINSOCKAPI_) || defined(_WINSOCK_H))
+    #include <winsock2.h>
+  #endif
+  #include <windows.h>
+  #define DIRECTINPUT_VERSION 0x0800
+  #include "mmsystem.h"
+  #include "DInput.h"
+  #include "DSound.h"
+  #define DSSPEAKER_USE_DEFAULT DSSPEAKER_STEREO
+  #define LPDIRECTSOUND8 LPDIRECTSOUND
+  #undef GetFreeSpace
+  #include "PlatformInclude.h"
+  #include "D3D9.h"   // On Win32, we're always using DirectX for something, whether it be the actual rendering
+  #include "D3DX9.h"  // or the reference video clock.
+  #ifdef HAS_SDL
+    #include "SDL\SDL.h"
+  #endif
 #endif
 
 #ifdef _LINUX
-#include <unistd.h>
-#include <time.h>
-#include <sys/time.h>
-#include <netdb.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <errno.h>
-#include "PlatformInclude.h"
+  #include <unistd.h>
+  #include <time.h>
+  #include <sys/time.h>
+  #include <netdb.h>
+  #include <arpa/inet.h>
+  #include <netinet/in.h>
+  #include <sys/socket.h>
+  #include <sys/types.h>
+  #include <errno.h>
+  #include "PlatformInclude.h"
 #endif
 
 // ARM does not support certain features... disable them here!
 #ifdef _ARMEL
-#undef HAS_AVAHI
-#undef HAS_ZEROCONF
-#undef HAS_VISUALISATION
-#undef HAS_FILESYSTEM_HTSP
+  #undef HAS_AVAHI
+  #undef HAS_ZEROCONF
+  #undef HAS_VISUALISATION
+  #undef HAS_FILESYSTEM_HTSP
 #endif
 
 // EGL detected. Dont use GLX!
 #ifdef HAVE_LIBEGL
-#undef HAS_GLX
-#define HAS_EGL
+  #undef HAS_GLX
+  #define HAS_EGL
 #endif
 
 // GLES2.0 detected. Dont use GL!
 #ifdef HAVE_LIBGLESV2
-#undef HAS_GL
-#define HAS_GLES 2
+  #undef HAS_GL
+  #define HAS_GLES 2
 #endif
 
 // GLES1.0 detected. Dont use GL!
 #ifdef HAVE_LIBGLES
-#undef HAS_GL
-#define HAS_GLES 1
+  #undef HAS_GL
+  #define HAS_GLES 1
 #endif
 
 
 #ifdef HAS_GL
-#ifdef _WIN32
-#include "GL/glew.h"
-#include <GL/gl.h>
-#include <GL/glu.h>
-//#include <GL/wglext.h>
-#elif defined(__APPLE__)
-#include <GL/glew.h>
-#include <OpenGL/gl.h>
-#elif defined(_LINUX)
-#include <GL/glew.h>
-#include <GL/gl.h>
-#endif
+  #ifdef _WIN32
+    #include "GL/glew.h"
+    #include <GL/gl.h>
+    #include <GL/glu.h>
+    //#include <GL/wglext.h>
+  #elif defined(__APPLE__)
+    #include <GL/glew.h>
+    #include <OpenGL/gl.h>
+  #elif defined(_LINUX)
+    #include <GL/glew.h>
+    #include <GL/gl.h>
+  #endif
 #endif
 
 #if HAS_GLES == 2
-#ifdef _ARMEL	// PowerVR SGX Header
-// not sure about this one tg2 (arm) does not have gl2extimg.h
-//#include <GLES2/gl2extimg.h>
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
-#else
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
-#endif
+  #if defined(__APPLE__)
+    #include <OpenGLES/ES2/gl.h>
+    #include <OpenGLES/ES2/glext.h>
+  #else
+    #include <GLES2/gl2.h>
+    #include <GLES2/gl2ext.h>
+  #endif
 #endif
 
 #define SAFE_DELETE(p)       { delete (p);     (p)=NULL; }
