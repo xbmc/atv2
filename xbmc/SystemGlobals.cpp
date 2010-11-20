@@ -59,8 +59,12 @@
   CWinSystemWin32DX  g_Windowing;
 #endif
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) && !defined(__arm__)
   CWinSystemOSXGL    g_Windowing;
+#endif
+
+#if defined(__APPLE__) && defined(__arm__)
+  CWinSystemIOS   g_Windowing;
 #endif
 
 #if defined(HAS_GLX)
