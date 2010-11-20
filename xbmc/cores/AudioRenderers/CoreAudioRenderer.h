@@ -21,9 +21,10 @@
 
 #ifndef __COREAUDIO_RENDERER_H__
 #define __COREAUDIO_RENDERER_H__
-
+#if !defined(__arm__)
 #include <osx/CoreAudio.h>
 #include "IAudioRenderer.h"
+#include <utils/Event.h>
 #include <utils/LockFree.h>
 
 struct audio_slice
@@ -163,8 +164,9 @@ class CCoreAudioRenderer : public IAudioRenderer
     CCoreAudioPerformance m_PerfMon;
 #endif
     // Thread synchronization
-    MPEventID m_RunoutEvent;
+    CEvent m_RunoutEvent;
     long m_DoRunout;
   };
 
+#endif
 #endif
