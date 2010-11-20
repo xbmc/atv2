@@ -27,37 +27,39 @@
 #include "Settings.h"
 #include "utils/log.h"
 #ifdef _WIN32
-#include "my_ntddcdrm.h"
-#include "WIN32Util.h"
-#include "CharsetConverter.h"
+  #include "my_ntddcdrm.h"
+  #include "WIN32Util.h"
+  #include "CharsetConverter.h"
 #endif
 #if defined (_LINUX) && !defined(__APPLE__)
-#include <linux/limits.h>
-#include <sys/types.h>
-#include <sys/ioctl.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <linux/cdrom.h>
+  #include <linux/limits.h>
+  #include <sys/types.h>
+  #include <sys/ioctl.h>
+  #include <unistd.h>
+  #include <fcntl.h>
+  #include <linux/cdrom.h>
 #endif
-#ifdef __APPLE__
-#include <sys/param.h>
-#include <mach-o/dyld.h>
-#include <IOKit/IOKitLib.h>
-#include <IOKit/IOBSD.h>
-#include <IOKit/storage/IOCDTypes.h>
-#include <IOKit/storage/IODVDTypes.h>
-#include <IOKit/storage/IOMedia.h>
-#include <IOKit/storage/IOCDMedia.h>
-#include <IOKit/storage/IODVDMedia.h>
-#include <IOKit/storage/IOCDMediaBSDClient.h>
-#include <IOKit/storage/IODVDMediaBSDClient.h>
-#include <IOKit/storage/IOStorageDeviceCharacteristics.h>
+#if defined(__APPLE__)
+  #include <sys/param.h>
+  #include <mach-o/dyld.h>
+  #if !defined(__arm__)
+    #include <IOKit/IOKitLib.h>
+    #include <IOKit/IOBSD.h>
+    #include <IOKit/storage/IOCDTypes.h>
+    #include <IOKit/storage/IODVDTypes.h>
+    #include <IOKit/storage/IOMedia.h>
+    #include <IOKit/storage/IOCDMedia.h>
+    #include <IOKit/storage/IODVDMedia.h>
+    #include <IOKit/storage/IOCDMediaBSDClient.h>
+    #include <IOKit/storage/IODVDMediaBSDClient.h>
+    #include <IOKit/storage/IOStorageDeviceCharacteristics.h>
+  #endif
 #endif
 #include "../FileSystem/cdioSupport.h"
 #include "../FileSystem/iso9660.h"
 #include "../MediaManager.h"
 #ifdef _LINUX
-#include "XHandle.h"
+  #include "XHandle.h"
 #endif
 
 #define NT_STATUS_OBJECT_NAME_NOT_FOUND long(0xC0000000 | 0x0034)
@@ -407,7 +409,7 @@ INT CIoSupport::ReadSector(HANDLE hDevice, DWORD dwSector, LPSTR lpczBuffer)
   DWORD dwRead;
   DWORD dwSectorSize = 2048;
 
-#ifdef __APPLE__
+#if defined(__APPLE__) && HAS_DVD_DRIVE
   dk_cd_read_t cd_read;
   memset( &cd_read, 0, sizeof(cd_read) );
 
