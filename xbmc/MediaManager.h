@@ -27,6 +27,7 @@
 #endif
 #include "URL.h"
 #include "utils/Job.h"
+#include "utils/CriticalSection.h"
 #include "IStorageProvider.h"
 
 #ifdef HAS_DVD_DRIVE
@@ -90,6 +91,7 @@ protected:
   std::vector<CNetworkLocation> m_locations;
 
   CCriticalSection m_muAutoSource, m_CritSecStorageProvider;
+
 #ifdef HAS_DVD_DRIVE
   std::map<CStdString,CCdInfo*> m_mapCdInfo;
 #endif
