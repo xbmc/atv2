@@ -32,9 +32,14 @@ extern CWinSystemWin32GL g_Windowing;
 extern CWinSystemWin32DX g_Windowing;
 #endif
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) && !defined(__arm__)
 #include "WinSystemOSXGL.h"
 extern CWinSystemOSXGL g_Windowing;
+#endif
+
+#if defined(__APPLE__) && defined(__arm__)
+#include "WinSystemIOS.h"
+extern CWinSystemIOS g_Windowing;
 #endif
 
 #if defined(HAS_GLX)
@@ -42,7 +47,7 @@ extern CWinSystemOSXGL g_Windowing;
 extern CWinSystemX11GL g_Windowing;
 #endif
 
-#if defined(HAS_EGL)
+#if defined(HAS_EGL) && !defined(__APPLE__)
 #include "WinSystemEGL.h"
 extern CWinSystemEGL g_Windowing;
 #endif
