@@ -34,7 +34,17 @@
 #include "FileSystem/SpecialProtocol.h"
 #include "Settings.h"
 
+#ifndef HAS_SDL
+#define SDL_memset4(dst, val, len) memset(dst, val, (len)*4)
+#define SDL_memcpy4(dst, src, len) memcpy(dst, src, (len)*4)
+#endif
+
 using namespace std;
+
+#ifndef HAS_SDL
+  #define SDL_memcpy4(dst, src, len) memcpy(dst, src, (len)*4)
+  #define SDL_memset4(dst, val, len) memset(dst, val, (len)*4)
+#endif
 
 static const char *TeletextFont = "special://xbmc/media/Fonts/teletext.ttf";
 
