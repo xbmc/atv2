@@ -877,7 +877,7 @@
 		F589AD9D1288C96100D8079E /* XBMC_mutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589AD9A1288C96100D8079E /* XBMC_mutex.cpp */; };
 		F589ADC31288CC6100D8079E /* XBMCEAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = F589ADB91288CC6100D8079E /* XBMCEAGLView.mm */; };
 		F589AE171288DDE400D8079E /* libfontconfig.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE161288DDE400D8079E /* libfontconfig.dylib */; };
-		F589AE191288DDFD00D8079E /* libsmbclient.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE181288DDFD00D8079E /* libsmbclient.dylib */; };
+		F589AE191288DDFD00D8079E /* libsmbclient.dylib.0 in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE181288DDFD00D8079E /* libsmbclient.dylib.0 */; };
 		F589AE1B1288DE0800D8079E /* libsamplerate.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE1A1288DE0800D8079E /* libsamplerate.dylib */; };
 		F589AE1D1288DE1B00D8079E /* libcdio.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE1C1288DE1B00D8079E /* libcdio.dylib */; };
 		F589AE211288DE6400D8079E /* libfribidi.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE201288DE6400D8079E /* libfribidi.dylib */; };
@@ -924,7 +924,7 @@
 
 /* Begin PBXFileReference section */
 		8D576316048677EA00EA77CD /* XBMC.frappliance */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XBMC.frappliance; sourceTree = BUILT_PRODUCTS_DIR; };
-		F5653BB4128B9441009C7ABB /* libcurl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.dylib; path = "/usr/local/xbmc-ios-4.1/lib/libcurl.dylib"; sourceTree = "<absolute>"; };
+		F5653BB4128B9441009C7ABB /* libcurl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.dylib; path = "tools/osx/ios-depends/build/lib/libcurl.dylib"; sourceTree = "<group>"; };
 		F5899DCA1287212700D8079E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		F5899DCB1287212700D8079E /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		F5899DCC1287212700D8079E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -2821,26 +2821,25 @@
 		F589AD9B1288C96100D8079E /* XBMC_mutex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XBMC_mutex.h; sourceTree = "<group>"; };
 		F589ADB81288CC6100D8079E /* XBMCEAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XBMCEAGLView.h; path = xbmc/osx/atv2/XBMCEAGLView.h; sourceTree = "<group>"; };
 		F589ADB91288CC6100D8079E /* XBMCEAGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = XBMCEAGLView.mm; path = xbmc/osx/atv2/XBMCEAGLView.mm; sourceTree = "<group>"; };
-		F589AE161288DDE400D8079E /* libfontconfig.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfontconfig.dylib; path = "/usr/local/xbmc-ios-4.1/lib/libfontconfig.dylib"; sourceTree = "<absolute>"; };
-		F589AE181288DDFD00D8079E /* libsmbclient.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsmbclient.dylib; path = "/usr/local/xbmc-ios-4.1/lib/libsmbclient.dylib"; sourceTree = "<absolute>"; };
-		F589AE1A1288DE0800D8079E /* libsamplerate.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsamplerate.dylib; path = "/usr/local/xbmc-ios-4.1/lib/libsamplerate.dylib"; sourceTree = "<absolute>"; };
-		F589AE1C1288DE1B00D8079E /* libcdio.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcdio.dylib; path = "/usr/local/xbmc-ios-4.1/lib/libcdio.dylib"; sourceTree = "<absolute>"; };
-		F589AE1E1288DE2700D8079E /* libfreetype.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfreetype.dylib; path = "/usr/local/xbmc-ios-4.1/lib/libfreetype.dylib"; sourceTree = "<absolute>"; };
-		F589AE201288DE6400D8079E /* libfribidi.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfribidi.dylib; path = "/usr/local/xbmc-ios-4.1/lib/libfribidi.dylib"; sourceTree = "<absolute>"; };
-		F589AE221288DE7200D8079E /* libvorbis.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libvorbis.dylib; path = "/usr/local/xbmc-ios-4.1/lib/libvorbis.dylib"; sourceTree = "<absolute>"; };
-		F589AE241288DE7D00D8079E /* libmms.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libmms.dylib; path = "/usr/local/xbmc-ios-4.1/lib/libmms.dylib"; sourceTree = "<absolute>"; };
-		F589AE261288DE8A00D8079E /* libwavpack.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libwavpack.dylib; path = "/usr/local/xbmc-ios-4.1/lib/libwavpack.dylib"; sourceTree = "<absolute>"; };
-		F589AE281288DE9600D8079E /* libmpeg2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libmpeg2.dylib; path = "/usr/local/xbmc-ios-4.1/lib/libmpeg2.dylib"; sourceTree = "<absolute>"; };
-		F589AE2A1288DEA400D8079E /* libmad.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libmad.dylib; path = "/usr/local/xbmc-ios-4.1/lib/libmad.dylib"; sourceTree = "<absolute>"; };
-		F589AE2C1288DEB000D8079E /* libogg.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libogg.dylib; path = "/usr/local/xbmc-ios-4.1/lib/libogg.dylib"; sourceTree = "<absolute>"; };
-		F589AE2E1288DEC900D8079E /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = "/usr/local/xbmc-ios-4.1/lib/libcrypto.dylib"; sourceTree = "<absolute>"; };
-		F589AE301288DEE000D8079E /* libpcre.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpcre.dylib; path = "/usr/local/xbmc-ios-4.1/lib/libpcre.dylib"; sourceTree = "<absolute>"; };
-		F589AE321288DEE900D8079E /* libpcrecpp.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpcrecpp.dylib; path = "/usr/local/xbmc-ios-4.1/lib/libpcrecpp.dylib"; sourceTree = "<absolute>"; };
-		F589AE341288DEF900D8079E /* liblzo2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = liblzo2.dylib; path = "/usr/local/xbmc-ios-4.1/lib/liblzo2.dylib"; sourceTree = "<absolute>"; };
-		F589AE361288DEFE00D8079E /* liblzo.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = liblzo.dylib; path = "/usr/local/xbmc-ios-4.1/lib/liblzo.dylib"; sourceTree = "<absolute>"; };
-		F589AE381288DF1F00D8079E /* libmysqlclient.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libmysqlclient.dylib; path = "/usr/local/xbmc-ios-4.1/lib/mysql/libmysqlclient.dylib"; sourceTree = "<absolute>"; };
-		F589AE3A1288DF2A00D8079E /* libvorbisenc.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libvorbisenc.dylib; path = "/usr/local/xbmc-ios-4.1/lib/libvorbisenc.dylib"; sourceTree = "<absolute>"; };
-		F589AE3C1288DF4A00D8079E /* libpython2.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpython2.5.dylib; path = "/usr/local/xbmc-ios-4.1/lib/libpython2.5.dylib"; sourceTree = "<absolute>"; };
+		F589AE161288DDE400D8079E /* libfontconfig.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfontconfig.dylib; path = "tools/osx/ios-depends/build/lib/libfontconfig.dylib"; sourceTree = "<group>"; };
+		F589AE181288DDFD00D8079E /* libsmbclient.dylib.0 */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsmbclient.dylib.0; path = "tools/osx/ios-depends/build/lib/libsmbclient.dylib.0"; sourceTree = "<group>"; };
+		F589AE1A1288DE0800D8079E /* libsamplerate.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsamplerate.dylib; path = "tools/osx/ios-depends/build/lib/libsamplerate.dylib"; sourceTree = "<group>"; };
+		F589AE1C1288DE1B00D8079E /* libcdio.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcdio.dylib; path = "tools/osx/ios-depends/build/lib/libcdio.dylib"; sourceTree = "<group>"; };
+		F589AE1E1288DE2700D8079E /* libfreetype.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfreetype.dylib; path = "tools/osx/ios-depends/build/lib/libfreetype.dylib"; sourceTree = "<group>"; };
+		F589AE201288DE6400D8079E /* libfribidi.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfribidi.dylib; path = "tools/osx/ios-depends/build/lib/libfribidi.dylib"; sourceTree = "<group>"; };
+		F589AE221288DE7200D8079E /* libvorbis.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libvorbis.dylib; path = "tools/osx/ios-depends/build/lib/libvorbis.dylib"; sourceTree = "<group>"; };
+		F589AE261288DE8A00D8079E /* libwavpack.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libwavpack.dylib; path = "tools/osx/ios-depends/build/lib/libwavpack.dylib"; sourceTree = "<group>"; };
+		F589AE281288DE9600D8079E /* libmpeg2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libmpeg2.dylib; path = "tools/osx/ios-depends/build/lib/libmpeg2.dylib"; sourceTree = "<group>"; };
+		F589AE2A1288DEA400D8079E /* libmad.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libmad.dylib; path = "tools/osx/ios-depends/build/lib/libmad.dylib"; sourceTree = "<group>"; };
+		F589AE2C1288DEB000D8079E /* libogg.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libogg.dylib; path = "tools/osx/ios-depends/build/lib/libogg.dylib"; sourceTree = "<group>"; };
+		F589AE2E1288DEC900D8079E /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = "tools/osx/ios-depends/build/lib/libcrypto.dylib"; sourceTree = "<group>"; };
+		F589AE301288DEE000D8079E /* libpcre.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpcre.dylib; path = "tools/osx/ios-depends/build/lib/libpcre.dylib"; sourceTree = "<group>"; };
+		F589AE321288DEE900D8079E /* libpcrecpp.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpcrecpp.dylib; path = "tools/osx/ios-depends/build/lib/libpcrecpp.dylib"; sourceTree = "<group>"; };
+		F589AE341288DEF900D8079E /* liblzo2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = liblzo2.dylib; path = "tools/osx/ios-depends/build/lib/liblzo2.dylib"; sourceTree = "<group>"; };
+		F589AE361288DEFE00D8079E /* liblzo.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = liblzo.dylib; path = "tools/osx/ios-depends/build/lib/liblzo.dylib"; sourceTree = "<group>"; };
+		F589AE381288DF1F00D8079E /* libmysqlclient.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libmysqlclient.dylib; path = "tools/osx/ios-depends/build/lib/mysql/libmysqlclient.dylib"; sourceTree = "<group>"; };
+		F589AE3A1288DF2A00D8079E /* libvorbisenc.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libvorbisenc.dylib; path = "tools/osx/ios-depends/build/lib/libvorbisenc.dylib"; sourceTree = "<group>"; };
+		F589AE3C1288DF4A00D8079E /* libpython2.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpython2.5.dylib; path = "tools/osx/ios-depends/build/lib/libpython2.5.dylib"; sourceTree = "<group>"; };
 		F589AE421288E02000D8079E /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		F589AE441288E06100D8079E /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = usr/lib/libbz2.dylib; sourceTree = SDKROOT; };
 		F589AE461288E07400D8079E /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -2884,7 +2883,7 @@
 				F5899DD01287212700D8079E /* UIKit.framework in Frameworks */,
 				F5899DD11287212700D8079E /* Foundation.framework in Frameworks */,
 				F589AE171288DDE400D8079E /* libfontconfig.dylib in Frameworks */,
-				F589AE191288DDFD00D8079E /* libsmbclient.dylib in Frameworks */,
+				F589AE191288DDFD00D8079E /* libsmbclient.dylib.0 in Frameworks */,
 				F589AE1B1288DE0800D8079E /* libsamplerate.dylib in Frameworks */,
 				F589AE1D1288DE1B00D8079E /* libcdio.dylib in Frameworks */,
 				F589AE211288DE6400D8079E /* libfribidi.dylib in Frameworks */,
@@ -5722,7 +5721,6 @@
 				F589AE2A1288DEA400D8079E /* libmad.dylib */,
 				F589AE281288DE9600D8079E /* libmpeg2.dylib */,
 				F589AE261288DE8A00D8079E /* libwavpack.dylib */,
-				F589AE241288DE7D00D8079E /* libmms.dylib */,
 				F589AE2C1288DEB000D8079E /* libogg.dylib */,
 				F589AE221288DE7200D8079E /* libvorbis.dylib */,
 				F589AE3A1288DF2A00D8079E /* libvorbisenc.dylib */,
@@ -5730,7 +5728,7 @@
 				F589AE1C1288DE1B00D8079E /* libcdio.dylib */,
 				F589AE1A1288DE0800D8079E /* libsamplerate.dylib */,
 				F5653BB4128B9441009C7ABB /* libcurl.dylib */,
-				F589AE181288DDFD00D8079E /* libsmbclient.dylib */,
+				F589AE181288DDFD00D8079E /* libsmbclient.dylib.0 */,
 				F589AE1E1288DE2700D8079E /* libfreetype.dylib */,
 				F589AE161288DDE400D8079E /* libfontconfig.dylib */,
 				F589AE381288DF1F00D8079E /* libmysqlclient.dylib */,
@@ -6803,11 +6801,11 @@
 					lib/jsoncpp/jsoncpp/include,
 					lib/cpluff/libcpluff,
 					lib/libmicrohttpd/src/include,
-					"/usr/local/xbmc-ios-4.1/include",
-					"/usr/local/xbmc-ios-4.1/include/freetype2",
-					"/usr/local/xbmc-ios-4.1/lib/glib-2.0/include",
-					"/usr/local/xbmc-ios-4.1/include/glib-2.0",
-					"/usr/local/xbmc-ios-4.1/include/mysql",
+					"tools/osx/ios-depends/include",
+					"tools/osx/ios-depends/include/freetype2",
+					"tools/osx/ios-depends/lib/glib-2.0/include",
+					"tools/osx/ios-depends/include/glib-2.0",
+					"tools/osx/ios-depends/include/mysql",
 				);
 				INFOPLIST_FILE = "$SRCROOT/xbmc/osx/atv2/XBMCATV2-Info.plist";
 				INFOPLIST_OUTPUT_FORMAT = binary;
@@ -6825,8 +6823,8 @@
 					xbmc/lib/libhttpapi,
 					lib/jsoncpp/jsoncpp/src/lib_json,
 					lib/libmicrohttpd/src/daemon/.libs,
-					"/usr/local/xbmc-ios-4.1/lib",
-					"/usr/local/xbmc-ios-4.1/lib/mysql",
+					"tools/osx/ios-depends/lib",
+					"tools/osx/ios-depends/lib/mysql",
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/xbmc/lib/cmyth/libcmyth\"",
 					"\"$(SRCROOT)/xbmc/lib/cmyth/librefmem\"",
@@ -6848,7 +6846,7 @@
 				PLIST_FILE_OUTPUT_FORMAT = xml;
 				PRODUCT_NAME = XBMC;
 				TARGETED_DEVICE_FAMILY = "2,3";
-				USER_HEADER_SEARCH_PATHS = ". /usr/local/xbmc-ios-4.1/include /usr/local/xbmc-ios-4.1/include/freetype2 /usr/local/xbmc-ios-4.1/include/mysql /usr/local/xbmc-ios-4.1/lib/glib-2.0/include /usr/local/xbmc-ios-4.1/include/glib-2.0 xbmc/cores/dvdplayer/Codecs/ffmpeg";
+				USER_HEADER_SEARCH_PATHS = ". tools/osx/ios-depends/include tools/osx/ios-depends/include/freetype2 tools/osx/ios-depends/include/mysql tools/osx/ios-depends/lib/glib-2.0/include tools/osx/ios-depends/include/glib-2.0 xbmc/cores/dvdplayer/Codecs/ffmpeg";
 				WRAPPER_EXTENSION = frappliance;
 			};
 			name = Debug;
@@ -6889,11 +6887,11 @@
 					lib/jsoncpp/jsoncpp/include,
 					lib/cpluff/libcpluff,
 					lib/libmicrohttpd/src/include,
-					"/usr/local/xbmc-ios-4.1/include",
-					"/usr/local/xbmc-ios-4.1/include/freetype2",
-					"/usr/local/xbmc-ios-4.1/lib/glib-2.0/include",
-					"/usr/local/xbmc-ios-4.1/include/glib-2.0",
-					"/usr/local/xbmc-ios-4.1/include/mysql",
+					"tools/osx/ios-depends/include",
+					"tools/osx/ios-depends/include/freetype2",
+					"tools/osx/ios-depends/lib/glib-2.0/include",
+					"tools/osx/ios-depends/include/glib-2.0",
+					"tools/osx/ios-depends/include/mysql",
 				);
 				INFOPLIST_FILE = "$SRCROOT/xbmc/osx/atv2/XBMCATV2-Info.plist";
 				INFOPLIST_OUTPUT_FORMAT = binary;
@@ -6911,8 +6909,8 @@
 					xbmc/lib/libhttpapi,
 					lib/jsoncpp/jsoncpp/src/lib_json,
 					lib/libmicrohttpd/src/daemon/.libs,
-					"/usr/local/xbmc-ios-4.1/lib",
-					"/usr/local/xbmc-ios-4.1/lib/mysql",
+					"tools/osx/ios-depends/lib",
+					"tools/osx/ios-depends/lib/mysql",
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/xbmc/lib/cmyth/libcmyth\"",
 					"\"$(SRCROOT)/xbmc/lib/cmyth/librefmem\"",
@@ -6934,7 +6932,7 @@
 				PLIST_FILE_OUTPUT_FORMAT = xml;
 				PRODUCT_NAME = XBMC;
 				TARGETED_DEVICE_FAMILY = "2,3";
-				USER_HEADER_SEARCH_PATHS = ". /usr/local/xbmc-ios-4.1/include /usr/local/xbmc-ios-4.1/include/freetype2 /usr/local/xbmc-ios-4.1/include/mysql /usr/local/xbmc-ios-4.1/lib/glib-2.0/include /usr/local/xbmc-ios-4.1/include/glib-2.0 xbmc/cores/dvdplayer/Codecs/ffmpeg";
+				USER_HEADER_SEARCH_PATHS = ". tools/osx/ios-depends/include tools/osx/ios-depends/include/freetype2 tools/osx/ios-depends/include/mysql tools/osx/ios-depends/lib/glib-2.0/include tools/osx/ios-depends/include/glib-2.0 xbmc/cores/dvdplayer/Codecs/ffmpeg";
 				WRAPPER_EXTENSION = frappliance;
 			};
 			name = Release;
