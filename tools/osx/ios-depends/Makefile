@@ -29,12 +29,13 @@ $(SUBDIRS):
 gettext: expat
 fontconfig: freetype2
 
-#clean:
-#for d in $(DEPLIBS); do if test -f $$d/Makefile; then $(MAKE) -C $$d clean; fi; done
-#rm -rf ../build/xbmc-ios-4.1
 
-#distclean::
-#	rm -rf $(SOURCE)
+clean:
+	for d in $(DEPLIBS); $(MAKE) -C $$d clean; done
+
+distclean::
+	for d in $(DEPLIBS); rm -rf $(SOURCE); done
+	rm -rf build
 
 
 

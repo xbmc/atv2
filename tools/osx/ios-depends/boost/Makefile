@@ -6,12 +6,16 @@
 
 include ../config.mk
 
-LIBNAME=boostoniphone
-VERSION=1.44.0
-SOURCE=$(LIBNAME)-$(VERSION)
+LIBNAME=boost
+VERSION=1_44_0
+SOURCE=$(LIBNAME)_$(VERSION)
 # download location and format
 # git clone git://gitorious.org/boostoniphone/boostoniphone.git
-ARCHIVE=$(SOURCE).tar.gz
+BASE_URL=http://voxel.dl.sourceforge.net/project/boost/boost/1.44.0
+
+RETRIEVE_TOOL=curl
+RETRIEVE_TOOL_FLAGS=-Ls --output $(ARCHIVE)
+ARCHIVE=$(SOURCE).tar.bz2
 ARCHIVE_TOOL=tar
 ARCHIVE_TOOL_FLAGS=xf
 
@@ -21,20 +25,21 @@ CLEAN_FILES=$(SOURCE)
 
 all: $(LIBDYLIB)
 
-$(SOURCE): $(ARCHIVE)
-	-rm -rf $(SOURCE)
-	$(ARCHIVE_TOOL) $(ARCHIVE_TOOL_FLAGS) $(ARCHIVE)
-	echo $(ARCHIVE) > .gitignore
-	echo $(SOURCE) >> .gitignore
-	cd $(SOURCE); patch -p0 <../01-target-ios-4.1.patch
+$(ARCHIVE):
+	$(RETRIEVE_TOOL) $(RETRIEVE_TOOL_FLAGS) $(BASE_URL)/$(ARCHIVE)
 
-$(LIBDYLIB): $(SOURCE)
-	cd $(SOURCE); ./boost.sh
+$(LIBDYLIB): $(ARCHIVE)
+	rm -rf src build prefix framework
+	echo src > .gitignore
+	echo build >> .gitignore
+	echo prefix >> .gitignore
+	echo framework >> .gitignore
+	sh ./boost.sh
 
 install:
-	cp -rf $(SOURCE)/prefix/* $(PREFIX) 
+	cp -rf prefix/* $(PREFIX) 
 
 clean:
 distclean::
-	rm -rf $(SOURCE)
+	rm -rf src build prefix framework
 
