@@ -14,7 +14,7 @@ SOURCE=$(LIBNAME)-$(VERSION)
 BASE_URL=http://ftp.gnome.org/pub/gnome/sources/glib/2.20
 ARCHIVE=$(SOURCE).tar.gz
 
-RETRIEVE_TOOL=curl
+RETRIEVE_TOOL=/usr/bin/curl
 RETRIEVE_TOOL_FLAGS=-Ls --output $(ARCHIVE)
 ARCHIVE_TOOL=tar
 ARCHIVE_TOOL_FLAGS=xf

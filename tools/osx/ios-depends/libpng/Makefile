@@ -15,7 +15,7 @@ SOURCE=$(LIBNAME)-$(VERSION)
 BASE_URL=ftp://ftp.simplesystems.org/pub/libpng/png/src
 ARCHIVE=$(SOURCE).tar.gz
 
-RETRIEVE_TOOL=curl
+RETRIEVE_TOOL=/usr/bin/curl
 RETRIEVE_TOOL_FLAGS=-Ls --output $(ARCHIVE)
 ARCHIVE_TOOL=tar
 ARCHIVE_TOOL_FLAGS=xf

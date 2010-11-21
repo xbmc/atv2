@@ -13,7 +13,7 @@ SOURCE=$(LIBNAME)_$(VERSION)
 # git clone git://gitorious.org/boostoniphone/boostoniphone.git
 BASE_URL=http://voxel.dl.sourceforge.net/project/boost/boost/1.44.0
 
-RETRIEVE_TOOL=curl
+RETRIEVE_TOOL=/usr/bin/curl
 RETRIEVE_TOOL_FLAGS=-Ls --output $(ARCHIVE)
 ARCHIVE=$(SOURCE).tar.bz2
 ARCHIVE_TOOL=tar
@@ -34,6 +34,7 @@ $(LIBDYLIB): $(ARCHIVE)
 	echo build >> .gitignore
 	echo prefix >> .gitignore
 	echo framework >> .gitignore
+	echo $(ARCHIVE) >> .gitignore
 	sh ./boost.sh
 
 install:

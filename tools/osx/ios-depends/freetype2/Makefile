@@ -14,7 +14,7 @@ SOURCE=$(LIBNAME)-$(VERSION)
 BASE_URL=http://download.savannah.gnu.org/releases/freetype
 ARCHIVE=$(SOURCE).tar.bz2
 
-RETRIEVE_TOOL=curl
+RETRIEVE_TOOL=/usr/bin/curl
 RETRIEVE_TOOL_FLAGS=-Ls --output $(ARCHIVE)
 ARCHIVE_TOOL=tar
 ARCHIVE_TOOL_FLAGS=xf

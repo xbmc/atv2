@@ -14,7 +14,7 @@ SOURCE=$(LIBNAME)-$(VERSION)
 BASE_URL=http://ftp.gnu.org/pub/gnu/gettext
 ARCHIVE=$(SOURCE).tar.gz
 
-RETRIEVE_TOOL=curl
+RETRIEVE_TOOL=/usr/bin/curl
 RETRIEVE_TOOL_FLAGS=-Ls --output $(ARCHIVE)
 ARCHIVE_TOOL=tar
 ARCHIVE_TOOL_FLAGS=xf
@@ -39,6 +39,7 @@ $(SOURCE): $(ARCHIVE)
 	$(ARCHIVE_TOOL) $(ARCHIVE_TOOL_FLAGS) $(ARCHIVE)
 	echo $(ARCHIVE) > .gitignore
 	echo $(SOURCE) >> .gitignore
+	cd $(SOURCE); patch -p0 <../01-gettext-tools-Makefile.in.patch
 	cd $(SOURCE); $(CONFIGURE)
 
 $(LIBDYLIB): $(SOURCE)

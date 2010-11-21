@@ -3,12 +3,12 @@ include config.mk
 SUBDIRS = \
 	pcre expat gettext readline \
 	liblzo liblzo2 freetype2 fontconfig \
-	boost curl \
 	jpeg tiff libpng libogg \
 	libvorbis libmad fribidi \
-	glib2 libmms \
+	curl glib2 libmms \
 	libwavpack libmpeg2 \
-	libcdio openssl libssh libsamplerate
+	libcdio openssl libssh libsamplerate \
+	boost \
 
 #	samba
 #	smbclient
