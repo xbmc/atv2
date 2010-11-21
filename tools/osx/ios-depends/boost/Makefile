@@ -30,7 +30,7 @@ $(LIBDYLIB): $(SOURCE)
 	cd $(SOURCE); ./boost.sh
 
 install:
-	sudo cp -rf $(SOURCE)/prefix/* $(PREFIX) 
+	cp -rf $(SOURCE)/prefix/* $(PREFIX) 
 
 clean:
 distclean::

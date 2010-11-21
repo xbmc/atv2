@@ -34,7 +34,7 @@ $(SOURCE): $(ARCHIVE)
 	$(ARCHIVE_TOOL) $(ARCHIVE_TOOL_FLAGS) $(ARCHIVE)
 
 install:
-	sudo cp -rf $(SOURCE)/* /usr/local/xbmc-ios-4.1/ 
+	cp -rf $(SOURCE)/* /usr/local/xbmc-ios-4.1/ 
 
 clean:
 distclean::

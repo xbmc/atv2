@@ -45,7 +45,7 @@ $(LIBDYLIB): $(SOURCE)
 	make -C $(SOURCE)/source
 
 install:
-	sudo make -C $(SOURCE)/source install
+	make -C $(SOURCE)/source install
 
 clean:
 	make -C $(SOURCE)source clean

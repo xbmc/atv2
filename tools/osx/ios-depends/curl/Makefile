@@ -46,7 +46,7 @@ configure:
 	cd $(SOURCE); $(CONFIGURE)
 
 install:
-	sudo make -C $(SOURCE) install
+	make -C $(SOURCE) install
 
 clean:
 	make -C $(SOURCE) clean

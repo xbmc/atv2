@@ -79,7 +79,7 @@ $(LIBDYLIB): $(SOURCE)
 	make -C $(SOURCE)
 
 install:
-	sudo make -C $(SOURCE) install
+	make -C $(SOURCE) install
 
 clean:
 	make -C $(SOURCE) clean
