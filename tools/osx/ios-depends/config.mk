@@ -1,3 +1,6 @@
+# Find where this Makefile is located
+TOP := $(dir $(lastword $(MAKEFILE_LIST)))
+
 platform_os=iPhoneOS
 platform_os_version=4.1
 platform_gcc_version=4.2.1
@@ -6,7 +9,9 @@ platform_path=/Developer/Platforms/iPhoneOS.platform/Developer
 platform_os_min=iphoneos-version-min=${platform_os_version}
 platform_os_cflags=-march=armv7 -mcpu=cortex-a8 -mfpu=neon -ftree-vectorize -mfloat-abi=softfp -mdynamic-no-pic -pipe -Wno-trigraphs -fpascal-strings -O0 -Wreturn-type -Wunused-variable -fmessage-length=0 -gdwarf-2
 platform_os_ldflags=-march=armv7 -mcpu=cortex-a8
-prefix_path=`pwd`/../../../build/xbmc-ios-${platform_os_version}
+prefix_path=$(shell cd $(TOP); pwd)/build
+#prefix_path:=$(shell cd ../../../build/xbmc-ios-${platform_os_version}; pwd)
+#prefix_path=`pwd`/../../../build/xbmc-ios-${platform_os_version}
 platform_sdk_path=${platform_path}/SDKs/${platform_os}${platform_os_version}.sdk
 platform_bin_path=${platform_path}/usr/bin
 
