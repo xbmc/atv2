@@ -21,7 +21,7 @@ ARCHIVE_TOOL_FLAGS=xf
 
 # configuration settings
 export LDFLAGS+=-Wl,-read_only_relocs,suppress -Wl,-undefined,dynamic_lookup
-CONFIGURE=./configure --prefix=$(PREFIX) --host=$(HOST) --enable-shared=yes 
+CONFIGURE=./configure --prefix=$(PREFIX) --host=$(HOST) --enable-shared=yes lt_cv_sys_lib_dlsearch_path_spec="$(SDKROOT)/usr/lib $(DEVROOT)/usr/lib" lt_cv_sys_lib_search_path_spec=$(SDKROOT)System/Library/Frameworks
 
 LIBDYLIB=$(SOURCE)/.libs/$(LIBNAME).dylib
 
