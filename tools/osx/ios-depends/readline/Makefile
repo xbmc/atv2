@@ -23,7 +23,7 @@ ARCHIVE_TOOL_FLAGS=xf
 export CFLAGS+=-undefined dynamic_lookup
 export CXXFLAGS+=-undefined dynamic_lookup
 export LDFLAGS+=-Wl,-read_only_relocs,suppress
-CONFIGURE=./configure --prefix=$(PREFIX) --host=$(HOST) --enable-shared=yes --with-curses
+CONFIGURE=./configure --prefix=$(PREFIX) --host=$(HOST) --enable-shared=yes ac_cv_func_strcoll_works=yes bash_cv_func_sigsetjmp=present bash_cv_func_ctype_nonascii=no bash_cv_must_reinstall_sighandlers=no bash_cv_func_strcoll_broken=yes
 
 LIBDYLIB=$(SOURCE)/shlib/(LIBNAME).dylib
 
@@ -37,6 +37,7 @@ $(ARCHIVE):
 $(SOURCE): $(ARCHIVE)
 	-rm -rf $(SOURCE)
 	$(ARCHIVE_TOOL) $(ARCHIVE_TOOL_FLAGS) $(ARCHIVE)
+	cd $(SOURCE); autoconf
 	cd $(SOURCE); $(CONFIGURE)
 
 $(LIBDYLIB): $(SOURCE)
