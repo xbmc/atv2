@@ -71,6 +71,8 @@ $(ARCHIVE):
 $(SOURCE): $(ARCHIVE)
 	-rm -rf $(SOURCE)
 	$(ARCHIVE_TOOL) $(ARCHIVE_TOOL_FLAGS) $(ARCHIVE)
+	echo $(ARCHIVE) > .gitignore
+	echo $(SOURCE) >> .gitignore
 	cd $(SOURCE); patch -p1 < ../01-libvorbis-fix-libtool-flags.patch
 	cd $(SOURCE); patch -p1 < ../02-libvorbis-only-build-lib.patch
 	cd $(SOURCE); $(CONFIGURE)

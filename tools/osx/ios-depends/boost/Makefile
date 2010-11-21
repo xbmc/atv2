@@ -24,6 +24,8 @@ all: $(LIBDYLIB)
 $(SOURCE): $(ARCHIVE)
 	-rm -rf $(SOURCE)
 	$(ARCHIVE_TOOL) $(ARCHIVE_TOOL_FLAGS) $(ARCHIVE)
+	echo $(ARCHIVE) > .gitignore
+	echo $(SOURCE) >> .gitignore
 	cd $(SOURCE); patch -p0 <../01-target-ios-4.1.patch
 
 $(LIBDYLIB): $(SOURCE)

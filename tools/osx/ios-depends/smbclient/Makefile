@@ -19,6 +19,8 @@ all: $(SOURCE)
 
 $(SOURCE): $(ARCHIVE)
 	-rm -rf $(SOURCE); mkdir $(SOURCE)
+	echo $(ARCHIVE) > .gitignore
+	echo $(SOURCE) >> .gitignore
 	cd $(SOURCE); $(ARCHIVE_TOOL) $(ARCHIVE_TOOL_FLAGS) ../$(ARCHIVE)
 	cd $(SOURCE); mkdir data; tar -xzf data.tar.gz -C data
 

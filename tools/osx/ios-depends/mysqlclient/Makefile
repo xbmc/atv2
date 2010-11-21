@@ -32,6 +32,8 @@ all: $(SOURCE)
 $(SOURCE): $(ARCHIVE)
 	-rm -rf $(SOURCE)
 	$(ARCHIVE_TOOL) $(ARCHIVE_TOOL_FLAGS) $(ARCHIVE)
+	echo $(ARCHIVE) > .gitignore
+	echo $(SOURCE) >> .gitignore
 
 install:
 	cp -rf $(SOURCE)/* /usr/local/xbmc-ios-4.1/ 

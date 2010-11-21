@@ -36,6 +36,8 @@ $(SOURCE): $(ARCHIVE)
 	-rm -rf $(SOURCE)
 	$(ARCHIVE_TOOL) $(ARCHIVE_TOOL_FLAGS) $(ARCHIVE)
 	cd $(SOURCE); patch -p1 < ../01-libmms-06-off_t.patch
+	echo $(ARCHIVE) > .gitignore
+	echo $(SOURCE) >> .gitignore
 	cd $(SOURCE); $(CONFIGURE)
 
 $(LIBDYLIB): $(SOURCE)
