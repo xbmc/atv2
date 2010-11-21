@@ -8,7 +8,7 @@ include ../config.mk
 
 # lib name, version
 LIBNAME=gettext
-VERSION=0.18.1
+VERSION=0.17
 SOURCE=$(LIBNAME)-$(VERSION)
 # download location and format
 BASE_URL=http://ftp.gnu.org/pub/gnu/gettext
@@ -22,8 +22,8 @@ ARCHIVE_TOOL_FLAGS=xf
 # configuration settings
 export CFLAGS+=-undefined dynamic_lookup
 export CXXFLAGS+=-undefined dynamic_lookup
-export LDFLAGS+=-Wl,-read_only_relocs,suppress
-CONFIGURE=./configure --prefix=$(PREFIX) --host=$(HOST) --enable-shared --disable-csharp --disable-native-java --without-emacs --disable-java --disable-libasprintf --without-git --without-cvs
+export LDFLAGS+=-Wl,-read_only_relocs,suppress -Wl,-undefined,dynamic_lookup
+CONFIGURE=./configure --prefix=$(PREFIX) --host=$(HOST) --enable-shared --disable-csharp --disable-native-java --without-emacs --disable-java --disable-libasprintf --disable-csharp --disable-openmp --without-emacs --with-included-gettext --without-git --without-cvs ac_cv_func___fsetlocking=no
 
 LIBDYLIB=$(SOURCE)/.libs/lib$(LIBNAME).dylib
 
