@@ -1355,17 +1355,17 @@ if test "$use_liba52" = "yes"; then
     USE_INTERNAL_LIBA52=1
     SKIP_CONFIG_LIBA52=0
   fi
+  final_message="$final_message\n  Deprecated liba52:\tYes"
+else
+  USE_INTERNAL_LIBA52=0
+  SKIP_CONFIG_LIBA52=1
+  final_message="$final_message\n  Deprecated liba52:\tNo"
 fi
 
 if test "$use_optical_drive" = "yes"; then
   final_message="$final_message\n  Optical drive:\tYes"
 else
   final_message="$final_message\n  Optical drive:\tNo"
-  final_message="$final_message\n  Deprecated liba52:\tYes"
-else
-  USE_INTERNAL_LIBA52=0
-  SKIP_CONFIG_LIBA52=1
-  final_message="$final_message\n  Deprecated liba52:\tNo"
 fi
 
 ### External libraries messages
