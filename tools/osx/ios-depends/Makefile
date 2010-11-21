@@ -7,13 +7,10 @@ SUBDIRS = \
 	jpeg tiff libpng libogg \
 	libvorbis libmad fribidi \
 	curl glib2 libwavpack libmpeg2 \
-	libcdio openssl libssh libsamplerate \
+	libcdio openssl libsamplerate \
 	boost \
-
-#	samba
-#	smbclient
-#	mysqlclient
-#	python5
+	mysqlclient smbclient python5 \
+	
 
 .PHONY: setup subdirs $(SUBDIRS)
 
