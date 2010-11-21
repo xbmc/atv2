@@ -1,6 +1,7 @@
 include config.mk
 
 SUBDIRS = \
+	gas-preprocessor \
 	pcre expat gettext readline \
 	liblzo liblzo2 freetype2 fontconfig \
 	jpeg tiff libpng libogg \
@@ -28,6 +29,7 @@ $(SUBDIRS):
 libmms: glib2
 gettext: expat
 fontconfig: freetype2
+libmad: gas-preprocessor
 
 
 clean:
