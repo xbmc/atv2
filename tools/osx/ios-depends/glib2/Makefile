@@ -20,10 +20,10 @@ ARCHIVE_TOOL=tar
 ARCHIVE_TOOL_FLAGS=xf
 
 # configuration settings
-export CFLAGS+=-undefined dynamic_lookup
-export CXXFLAGS+=-undefined dynamic_lookup
+export CFLAGS+=-undefined dynamic_lookup -mno-thumb -Dasm=__asm__
+export CXXFLAGS+=-undefined dynamic_lookup -mno-thumb -Dasm=__asm__
 export LDFLAGS+=-Wl,-read_only_relocs,suppress
-CONFIGURE=./configure --prefix=$(PREFIX) --host=$(HOST) --enable-shared glib_cv_stack_grows=no glib_cv_uscore=yes ac_cv_func_posix_getpwuid_r=yes ac_cv_func_posix_getgrgid_r=yes --with-libiconv=native
+CONFIGURE=./configure --prefix=$(PREFIX) --host=$(HOST) --enable-shared glib_cv_stack_grows=no glib_cv_uscore=yes ac_cv_func_posix_getpwuid_r=yes ac_cv_func_posix_getgrgid_r=yes ac_cv_func_pipe2=no ac_cv_func__NSGetEnviron=no ac_cv_header_crt_externs_h=no --with-libiconv=native
 
 LIBDYLIB=$(SOURCE)/.libs/lib$(LIBNAME).dylib
 
