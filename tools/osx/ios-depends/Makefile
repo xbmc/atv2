@@ -1,42 +1,33 @@
 include config.mk
 
-DEPLIBS = \
-	pcre \
-	expat \
-	gettext \
-	readline
-
-# liblzo liblzo2
-# freetype2 fontconfig
-# boost curl
-# jpeg tiff libpng libogg
-# libvorbis libmad fribidi
-# glib2 libmms
-# libwavpack libmpeg2
-# libcdio openssl libssh libsamplerate
+SUBDIRS = \
+	pcre expat gettext readline \
+	liblzo liblzo2 freetype2 fontconfig \
+	boost curl \
+	jpeg tiff libpng libogg \
+	libvorbis libmad fribidi \
+	glib2 libmms \
+	libwavpack libmpeg2 \
+	libcdio openssl libssh libsamplerate
 
 #	samba
 #	smbclient
 #	mysqlclient
 #	python5
 
-.PHONY: $(DEPLIBS)
+.PHONY: setup subdirs $(SUBDIRS)
 
-pcre:
-	make -C pcre
-	make -C pcre install
+all: $(SUBDIRS)
 
-expat:
-	make -C expat
-	make -C expat install
+subdirs:
+	$(SUBDIRS)
 
-gettext:
-	make -C gettext
-	make -C gettext install
+$(SUBDIRS):
+	$(MAKE) -C $@
+	$(MAKE) -C $@ install
 
-readline:
-	make -C readline
-	make -C readline install
+gettext: expat
+fontconfig: freetype2
 
 #clean:
 #for d in $(DEPLIBS); do if test -f $$d/Makefile; then $(MAKE) -C $$d clean; fi; done
