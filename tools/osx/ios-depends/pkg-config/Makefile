@@ -8,10 +8,10 @@ include ../config.mk
 
 # lib name, version
 LIBNAME=pkg-config
-VERSION=0.25
+VERSION=0.23
 SOURCE=$(LIBNAME)-$(VERSION)
 # download location and format
-BASE_URL=http://downloads.xiph.org/releases/vorbis
+BASE_URL=http://pkgconfig.freedesktop.org/releases
 ARCHIVE=$(SOURCE).tar.gz
 
 RETRIEVE_TOOL=/usr/bin/curl
@@ -23,7 +23,8 @@ ARCHIVE_TOOL_FLAGS=xf
 export CFLAGS+=-undefined dynamic_lookup
 export CXXFLAGS+=-undefined dynamic_lookup
 export LDFLAGS+=-Wl,-read_only_relocs,suppress
-CONFIGURE=./configure --prefix=$(PREFIX) --host=$(HOST) 
+CONFIGURE=./configure --prefix=$(PREFIX) --host=$(HOST) --enable-indirect-deps --with-pc-path=$(PREFIX)/lib/pkgconfig:$(PREFIX)/share/pkgconfig
+
 LIBDYLIB=$(SOURCE)/.libs/$(LIBNAME).dylib
 
 CLEAN_FILES=$(ARCHIVE) $(SOURCE)
