@@ -23,7 +23,6 @@ SOURCE=$(LIBNAME)-$(VERSION)
 #  /* #define HAVE_FDATASYNC 1 */
 
 ARCHIVE=$(SOURCE)-ios.tar.gz
-
 ARCHIVE_TOOL=tar
 ARCHIVE_TOOL_FLAGS=xf
 
@@ -32,11 +31,10 @@ all: $(SOURCE)
 $(SOURCE): $(ARCHIVE)
 	-rm -rf $(SOURCE)
 	$(ARCHIVE_TOOL) $(ARCHIVE_TOOL_FLAGS) $(ARCHIVE)
-	echo $(ARCHIVE) > .gitignore
-	echo $(SOURCE) >> .gitignore
+	echo $(SOURCE) > .gitignore
 
 install:
-	cp -rf $(SOURCE)/* /usr/local/xbmc-ios-4.1/ 
+	cp -rf $(SOURCE)/* $(PREFIX) 
 
 clean:
 distclean::
