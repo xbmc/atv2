@@ -5,8 +5,7 @@ SUBDIRS = \
 	liblzo liblzo2 freetype2 fontconfig \
 	jpeg tiff libpng libogg \
 	libvorbis libmad fribidi \
-	curl glib2 libmms \
-	libwavpack libmpeg2 \
+	curl glib2 libmms libwavpack libmpeg2 \
 	libcdio openssl libssh libsamplerate \
 	boost \
 
@@ -26,6 +25,7 @@ $(SUBDIRS):
 	$(MAKE) -C $@
 	$(MAKE) -C $@ install
 
+libmms: glib2
 gettext: expat
 fontconfig: freetype2
 
