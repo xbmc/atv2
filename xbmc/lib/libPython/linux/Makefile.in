@@ -72,7 +72,7 @@ $(SLIB): $(PYWRAP) ../Python/libpython2.4.a $(PYO) ../../../../tools/Mach5/wrapp
 	for dirs in $(PYDIRS); do rsync -a --exclude 'test*'  --exclude '.svn' ../Python/Lib/$$dirs $(SYSDIR)/Lib; done
 	(mkdir -p tmp && rm -rf tmp/*)
 	(cd ./tmp && ar x ../../Python/libpython2.4.a)
-	$(CXX) -bundle -flat_namespace -undefined suppress -shared -o $@ \
+	$(CC) $(LDFLAGS) -bundle -flat_namespace -undefined suppress -o $@ \
 		tmp/*.o \
 		wrapper_python.o
 	../../../../tools/Mach5/wrapper.rb $@ libpython;mv output.so $@
@@ -80,7 +80,7 @@ $(SLIB): $(PYWRAP) ../Python/libpython2.4.a $(PYO) ../../../../tools/Mach5/wrapp
 	@rm -rf tmp
 else
 $(SLIB): $(PYWRAP) ../../../../tools/Mach5/wrapper.rb
-	$(CXX) -bundle -flat_namespace -undefined suppress -o $@ \
+	$(CC) $(LDFLAGS) -bundle -flat_namespace -undefined suppress -o $@ \
 		wrapper_python.o
 	../../../../tools/Mach5/wrapper.rb $@ libpython;mv output.so $@
 	../../../../tools/Mach5/wrapper.rb $@;mv output.so $@
