@@ -34,7 +34,8 @@ $(SOURCE): $(ARCHIVE)
 	echo $(SOURCE) > .gitignore
 
 install:
-	cp -rf $(SOURCE)/* $(PREFIX) 
+	cp -rf $(SOURCE)/* $(PREFIX)
+	install_name_tool -id $(PREFIX)/lib/mysql/libmysqlclient.15.dylib $(PREFIX)/lib/mysql/libmysqlclient.dylib
 
 clean:
 distclean::

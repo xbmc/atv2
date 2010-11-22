@@ -32,6 +32,8 @@ $(SOURCE): $(ARCHIVE)
 
 install:
 	cp -rf $(SOURCE)/data/usr/* $(PREFIX)/
+	chmod +w $(PREFIX)/lib/libpython2.5.dylib
+	install_name_tool -id $(PREFIX)/lib/libpython2.5.dylib.1.0 $(PREFIX)/lib/libpython2.5.dylib
 
 clean:
 
