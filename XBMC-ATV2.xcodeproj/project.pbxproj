@@ -507,7 +507,6 @@
 		F589AAC112879A9E00D8079E /* GUIWindowWeather.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A5CA12879A9B00D8079E /* GUIWindowWeather.cpp */; };
 		F589AAC212879A9E00D8079E /* Id3Tag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A5CC12879A9B00D8079E /* Id3Tag.cpp */; };
 		F589AAC312879A9E00D8079E /* karaokelyricstextustar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A5D212879A9B00D8079E /* karaokelyricstextustar.cpp */; };
-		F589AAC412879A9E00D8079E /* Cdg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A5D412879A9B00D8079E /* Cdg.cpp */; };
 		F589AAC512879A9E00D8079E /* GUIDialogKaraokeSongSelector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A5D612879A9B00D8079E /* GUIDialogKaraokeSongSelector.cpp */; };
 		F589AAC612879A9E00D8079E /* GUIWindowKaraokeLyrics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A5D912879A9B00D8079E /* GUIWindowKaraokeLyrics.cpp */; };
 		F589AAC712879A9E00D8079E /* karaokelyrics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A5DA12879A9B00D8079E /* karaokelyrics.cpp */; };
@@ -748,7 +747,6 @@
 		F589ABCC12879A9E00D8079E /* MusicInfoTagLoaderNSF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A82412879A9D00D8079E /* MusicInfoTagLoaderNSF.cpp */; };
 		F589ABCD12879A9E00D8079E /* MusicInfoTagLoaderOgg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A82612879A9D00D8079E /* MusicInfoTagLoaderOgg.cpp */; };
 		F589ABCE12879A9E00D8079E /* MusicInfoTagLoaderShn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A82812879A9D00D8079E /* MusicInfoTagLoaderShn.cpp */; };
-		F589ABCF12879A9E00D8079E /* MusicInfoTagLoaderSid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A82A12879A9D00D8079E /* MusicInfoTagLoaderSid.cpp */; };
 		F589ABD012879A9E00D8079E /* MusicInfoTagLoaderSPC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A82C12879A9D00D8079E /* MusicInfoTagLoaderSPC.cpp */; };
 		F589ABD112879A9E00D8079E /* MusicInfoTagLoaderWav.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A82E12879A9D00D8079E /* MusicInfoTagLoaderWav.cpp */; };
 		F589ABD212879A9E00D8079E /* MusicInfoTagLoaderWavPack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A83012879A9D00D8079E /* MusicInfoTagLoaderWavPack.cpp */; };
@@ -815,7 +813,6 @@
 		F589AC0F12879A9E00D8079E /* fastmemcpy.c in Sources */ = {isa = PBXBuildFile; fileRef = F589A8AF12879A9D00D8079E /* fastmemcpy.c */; };
 		F589AC1012879A9E00D8079E /* FileOperationJob.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A8B112879A9D00D8079E /* FileOperationJob.cpp */; };
 		F589AC1112879A9E00D8079E /* FileUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A8B312879A9D00D8079E /* FileUtils.cpp */; };
-		F589AC1212879A9E00D8079E /* fstrcmp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A8B512879A9D00D8079E /* fstrcmp.cpp */; };
 		F589AC1312879A9E00D8079E /* GUIInfoManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A8B712879A9D00D8079E /* GUIInfoManager.cpp */; };
 		F589AC1412879A9E00D8079E /* HTMLTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A8B912879A9D00D8079E /* HTMLTable.cpp */; };
 		F589AC1512879A9E00D8079E /* HTMLUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A8BB12879A9D00D8079E /* HTMLUtil.cpp */; };
@@ -920,6 +917,7 @@
 		F589AFC5128A21E900D8079E /* GUIShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589AFC3128A21E900D8079E /* GUIShader.cpp */; };
 		F589AFDB128A2E6000D8079E /* WinSystemIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = F589AFD9128A2E6000D8079E /* WinSystemIOS.mm */; };
 		F589B0BF128A5FE200D8079E /* iOS_Utils.mm in Sources */ = {isa = PBXBuildFile; fileRef = F589B0BE128A5FE200D8079E /* iOS_Utils.mm */; };
+		F59E2BF1129A0C5B00F6AB7A /* fstrcmp.c in Sources */ = {isa = PBXBuildFile; fileRef = F59E2BF0129A0C5B00F6AB7A /* fstrcmp.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -2014,8 +2012,6 @@
 		F589A5D012879A9B00D8079E /* IProgressCallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IProgressCallback.h; sourceTree = "<group>"; };
 		F589A5D212879A9B00D8079E /* karaokelyricstextustar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = karaokelyricstextustar.cpp; path = karaoke/karaokelyricstextustar.cpp; sourceTree = "<group>"; };
 		F589A5D312879A9B00D8079E /* karaokelyricstextustar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = karaokelyricstextustar.h; path = karaoke/karaokelyricstextustar.h; sourceTree = "<group>"; };
-		F589A5D412879A9B00D8079E /* Cdg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Cdg.cpp; path = karaoke/Cdg.cpp; sourceTree = "<group>"; };
-		F589A5D512879A9B00D8079E /* Cdg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Cdg.h; path = karaoke/Cdg.h; sourceTree = "<group>"; };
 		F589A5D612879A9B00D8079E /* GUIDialogKaraokeSongSelector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GUIDialogKaraokeSongSelector.cpp; path = karaoke/GUIDialogKaraokeSongSelector.cpp; sourceTree = "<group>"; };
 		F589A5D712879A9B00D8079E /* GUIDialogKaraokeSongSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GUIDialogKaraokeSongSelector.h; path = karaoke/GUIDialogKaraokeSongSelector.h; sourceTree = "<group>"; };
 		F589A5D812879A9B00D8079E /* GUIWindowKaraokeLyrics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GUIWindowKaraokeLyrics.h; path = karaoke/GUIWindowKaraokeLyrics.h; sourceTree = "<group>"; };
@@ -2559,8 +2555,6 @@
 		F589A82712879A9D00D8079E /* MusicInfoTagLoaderOgg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MusicInfoTagLoaderOgg.h; sourceTree = "<group>"; };
 		F589A82812879A9D00D8079E /* MusicInfoTagLoaderShn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MusicInfoTagLoaderShn.cpp; sourceTree = "<group>"; };
 		F589A82912879A9D00D8079E /* MusicInfoTagLoaderShn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MusicInfoTagLoaderShn.h; sourceTree = "<group>"; };
-		F589A82A12879A9D00D8079E /* MusicInfoTagLoaderSid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MusicInfoTagLoaderSid.cpp; sourceTree = "<group>"; };
-		F589A82B12879A9D00D8079E /* MusicInfoTagLoaderSid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MusicInfoTagLoaderSid.h; sourceTree = "<group>"; };
 		F589A82C12879A9D00D8079E /* MusicInfoTagLoaderSPC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MusicInfoTagLoaderSPC.cpp; sourceTree = "<group>"; };
 		F589A82D12879A9D00D8079E /* MusicInfoTagLoaderSPC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MusicInfoTagLoaderSPC.h; sourceTree = "<group>"; };
 		F589A82E12879A9D00D8079E /* MusicInfoTagLoaderWav.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MusicInfoTagLoaderWav.cpp; sourceTree = "<group>"; };
@@ -2695,7 +2689,6 @@
 		F589A8B212879A9D00D8079E /* FileOperationJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileOperationJob.h; sourceTree = "<group>"; };
 		F589A8B312879A9D00D8079E /* FileUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileUtils.cpp; sourceTree = "<group>"; };
 		F589A8B412879A9D00D8079E /* FileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileUtils.h; sourceTree = "<group>"; };
-		F589A8B512879A9D00D8079E /* fstrcmp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fstrcmp.cpp; sourceTree = "<group>"; };
 		F589A8B612879A9D00D8079E /* fstrcmp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fstrcmp.h; sourceTree = "<group>"; };
 		F589A8B712879A9D00D8079E /* GUIInfoManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GUIInfoManager.cpp; sourceTree = "<group>"; };
 		F589A8B812879A9D00D8079E /* GUIInfoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GUIInfoManager.h; sourceTree = "<group>"; };
@@ -2871,6 +2864,7 @@
 		F589AFDA128A2E6000D8079E /* WinSystemIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WinSystemIOS.h; sourceTree = "<group>"; };
 		F589B0BD128A5FE200D8079E /* iOS_Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iOS_Utils.h; path = xbmc/osx/atv2/iOS_Utils.h; sourceTree = "<group>"; };
 		F589B0BE128A5FE200D8079E /* iOS_Utils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = iOS_Utils.mm; path = xbmc/osx/atv2/iOS_Utils.mm; sourceTree = "<group>"; };
+		F59E2BF0129A0C5B00F6AB7A /* fstrcmp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fstrcmp.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -3602,8 +3596,6 @@
 				F589A82712879A9D00D8079E /* MusicInfoTagLoaderOgg.h */,
 				F589A82812879A9D00D8079E /* MusicInfoTagLoaderShn.cpp */,
 				F589A82912879A9D00D8079E /* MusicInfoTagLoaderShn.h */,
-				F589A82A12879A9D00D8079E /* MusicInfoTagLoaderSid.cpp */,
-				F589A82B12879A9D00D8079E /* MusicInfoTagLoaderSid.h */,
 				F589A82C12879A9D00D8079E /* MusicInfoTagLoaderSPC.cpp */,
 				F589A82D12879A9D00D8079E /* MusicInfoTagLoaderSPC.h */,
 				F589A82E12879A9D00D8079E /* MusicInfoTagLoaderWav.cpp */,
@@ -4653,8 +4645,6 @@
 			children = (
 				F589A5D212879A9B00D8079E /* karaokelyricstextustar.cpp */,
 				F589A5D312879A9B00D8079E /* karaokelyricstextustar.h */,
-				F589A5D412879A9B00D8079E /* Cdg.cpp */,
-				F589A5D512879A9B00D8079E /* Cdg.h */,
 				F589A5D612879A9B00D8079E /* GUIDialogKaraokeSongSelector.cpp */,
 				F589A5D712879A9B00D8079E /* GUIDialogKaraokeSongSelector.h */,
 				F589A5D812879A9B00D8079E /* GUIWindowKaraokeLyrics.h */,
@@ -5574,7 +5564,7 @@
 				F589A8B212879A9D00D8079E /* FileOperationJob.h */,
 				F589A8B312879A9D00D8079E /* FileUtils.cpp */,
 				F589A8B412879A9D00D8079E /* FileUtils.h */,
-				F589A8B512879A9D00D8079E /* fstrcmp.cpp */,
+				F59E2BF0129A0C5B00F6AB7A /* fstrcmp.c */,
 				F589A8B612879A9D00D8079E /* fstrcmp.h */,
 				F589A8B712879A9D00D8079E /* GUIInfoManager.cpp */,
 				F589A8B812879A9D00D8079E /* GUIInfoManager.h */,
@@ -6372,7 +6362,6 @@
 				F589AAC112879A9E00D8079E /* GUIWindowWeather.cpp in Sources */,
 				F589AAC212879A9E00D8079E /* Id3Tag.cpp in Sources */,
 				F589AAC312879A9E00D8079E /* karaokelyricstextustar.cpp in Sources */,
-				F589AAC412879A9E00D8079E /* Cdg.cpp in Sources */,
 				F589AAC512879A9E00D8079E /* GUIDialogKaraokeSongSelector.cpp in Sources */,
 				F589AAC612879A9E00D8079E /* GUIWindowKaraokeLyrics.cpp in Sources */,
 				F589AAC712879A9E00D8079E /* karaokelyrics.cpp in Sources */,
@@ -6613,7 +6602,6 @@
 				F589ABCC12879A9E00D8079E /* MusicInfoTagLoaderNSF.cpp in Sources */,
 				F589ABCD12879A9E00D8079E /* MusicInfoTagLoaderOgg.cpp in Sources */,
 				F589ABCE12879A9E00D8079E /* MusicInfoTagLoaderShn.cpp in Sources */,
-				F589ABCF12879A9E00D8079E /* MusicInfoTagLoaderSid.cpp in Sources */,
 				F589ABD012879A9E00D8079E /* MusicInfoTagLoaderSPC.cpp in Sources */,
 				F589ABD112879A9E00D8079E /* MusicInfoTagLoaderWav.cpp in Sources */,
 				F589ABD212879A9E00D8079E /* MusicInfoTagLoaderWavPack.cpp in Sources */,
@@ -6680,7 +6668,6 @@
 				F589AC0F12879A9E00D8079E /* fastmemcpy.c in Sources */,
 				F589AC1012879A9E00D8079E /* FileOperationJob.cpp in Sources */,
 				F589AC1112879A9E00D8079E /* FileUtils.cpp in Sources */,
-				F589AC1212879A9E00D8079E /* fstrcmp.cpp in Sources */,
 				F589AC1312879A9E00D8079E /* GUIInfoManager.cpp in Sources */,
 				F589AC1412879A9E00D8079E /* HTMLTable.cpp in Sources */,
 				F589AC1512879A9E00D8079E /* HTMLUtil.cpp in Sources */,
@@ -6746,6 +6733,7 @@
 				F589AFC5128A21E900D8079E /* GUIShader.cpp in Sources */,
 				F589AFDB128A2E6000D8079E /* WinSystemIOS.mm in Sources */,
 				F589B0BF128A5FE200D8079E /* iOS_Utils.mm in Sources */,
+				F59E2BF1129A0C5B00F6AB7A /* fstrcmp.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6801,11 +6789,11 @@
 					lib/jsoncpp/jsoncpp/include,
 					lib/cpluff/libcpluff,
 					lib/libmicrohttpd/src/include,
-					"tools/osx/ios-depends/include",
-					"tools/osx/ios-depends/include/freetype2",
-					"tools/osx/ios-depends/lib/glib-2.0/include",
-					"tools/osx/ios-depends/include/glib-2.0",
-					"tools/osx/ios-depends/include/mysql",
+					"tools/osx/ios-depends/build/include",
+					"tools/osx/ios-depends/build/include/freetype2",
+					"tools/osx/ios-depends/build/lib/glib-2.0/include",
+					"tools/osx/ios-depends/build/include/glib-2.0",
+					"tools/osx/ios-depends/build/include/mysql",
 				);
 				INFOPLIST_FILE = "$SRCROOT/xbmc/osx/atv2/XBMCATV2-Info.plist";
 				INFOPLIST_OUTPUT_FORMAT = binary;
@@ -6823,8 +6811,8 @@
 					xbmc/lib/libhttpapi,
 					lib/jsoncpp/jsoncpp/src/lib_json,
 					lib/libmicrohttpd/src/daemon/.libs,
-					"tools/osx/ios-depends/lib",
-					"tools/osx/ios-depends/lib/mysql",
+					"tools/osx/ios-depends/build/lib",
+					"tools/osx/ios-depends/build/lib/mysql",
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/xbmc/lib/cmyth/libcmyth\"",
 					"\"$(SRCROOT)/xbmc/lib/cmyth/librefmem\"",
@@ -6846,7 +6834,7 @@
 				PLIST_FILE_OUTPUT_FORMAT = xml;
 				PRODUCT_NAME = XBMC;
 				TARGETED_DEVICE_FAMILY = "2,3";
-				USER_HEADER_SEARCH_PATHS = ". tools/osx/ios-depends/include tools/osx/ios-depends/include/freetype2 tools/osx/ios-depends/include/mysql tools/osx/ios-depends/lib/glib-2.0/include tools/osx/ios-depends/include/glib-2.0 xbmc/cores/dvdplayer/Codecs/ffmpeg";
+				USER_HEADER_SEARCH_PATHS = ". tools/osx/ios-depends/build/include tools/osx/ios-depends/build/include/freetype2 tools/osx/ios-depends/build/include/mysql tools/osx/ios-depends/build/lib/glib-2.0/include tools/osx/ios-depends/build/include/glib-2.0 xbmc/cores/dvdplayer/Codecs/ffmpeg";
 				WRAPPER_EXTENSION = frappliance;
 			};
 			name = Debug;
@@ -6887,11 +6875,11 @@
 					lib/jsoncpp/jsoncpp/include,
 					lib/cpluff/libcpluff,
 					lib/libmicrohttpd/src/include,
-					"tools/osx/ios-depends/include",
-					"tools/osx/ios-depends/include/freetype2",
-					"tools/osx/ios-depends/lib/glib-2.0/include",
-					"tools/osx/ios-depends/include/glib-2.0",
-					"tools/osx/ios-depends/include/mysql",
+					"tools/osx/ios-depends/build/include",
+					"tools/osx/ios-depends/build/include/freetype2",
+					"tools/osx/ios-depends/build/lib/glib-2.0/include",
+					"tools/osx/ios-depends/build/include/glib-2.0",
+					"tools/osx/ios-depends/build/include/mysql",
 				);
 				INFOPLIST_FILE = "$SRCROOT/xbmc/osx/atv2/XBMCATV2-Info.plist";
 				INFOPLIST_OUTPUT_FORMAT = binary;
@@ -6909,8 +6897,8 @@
 					xbmc/lib/libhttpapi,
 					lib/jsoncpp/jsoncpp/src/lib_json,
 					lib/libmicrohttpd/src/daemon/.libs,
-					"tools/osx/ios-depends/lib",
-					"tools/osx/ios-depends/lib/mysql",
+					"tools/osx/ios-depends/build/lib",
+					"tools/osx/ios-depends/build/lib/mysql",
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/xbmc/lib/cmyth/libcmyth\"",
 					"\"$(SRCROOT)/xbmc/lib/cmyth/librefmem\"",
@@ -6932,7 +6920,7 @@
 				PLIST_FILE_OUTPUT_FORMAT = xml;
 				PRODUCT_NAME = XBMC;
 				TARGETED_DEVICE_FAMILY = "2,3";
-				USER_HEADER_SEARCH_PATHS = ". tools/osx/ios-depends/include tools/osx/ios-depends/include/freetype2 tools/osx/ios-depends/include/mysql tools/osx/ios-depends/lib/glib-2.0/include tools/osx/ios-depends/include/glib-2.0 xbmc/cores/dvdplayer/Codecs/ffmpeg";
+				USER_HEADER_SEARCH_PATHS = ". tools/osx/ios-depends/build/include tools/osx/ios-depends/build/include/freetype2 tools/osx/ios-depends/build/include/mysql tools/osx/ios-depends/build/lib/glib-2.0/include tools/osx/ios-depends/build/include/glib-2.0 xbmc/cores/dvdplayer/Codecs/ffmpeg";
 				WRAPPER_EXTENSION = frappliance;
 			};
 			name = Release;
