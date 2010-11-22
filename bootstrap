@@ -6,7 +6,6 @@ autoreconf -vif
 autoreconf -vif lib/cpluff
 # we must autoreconf libass as we don't know till later if it's used.
 [ -d lib/libass ] && \
-  rm xbmc/cores/paplayer/FLACCodec/flac-1.2.1/config.cache && \
   autoreconf -vif lib/libass
 # order matters with libbdnav and friends
 [ -d xbmc/cores/dvdplayer/Codecs/libdvd/libdvdcss ] && \
