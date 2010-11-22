@@ -80,8 +80,8 @@ $(SLIB): $(PYWRAP) ../Python/libpython2.4.a $(PYO) ../../../../tools/Mach5/wrapp
 	@rm -rf tmp
 else
 $(SLIB): $(PYWRAP) ../../../../tools/Mach5/wrapper.rb
-	$(CC) $(LDFLAGS) -bundle -flat_namespace -undefined suppress -o $@ \
-		wrapper_python.o
+	$(CC) $(LDFLAGS) -bundle -flat_namespace -undefined dynamic_lookup -o $@ \
+		-l$(PYVERSION) wrapper_python.o
 	../../../../tools/Mach5/wrapper.rb $@ libpython;mv output.so $@
 	../../../../tools/Mach5/wrapper.rb $@;mv output.so $@
 endif
