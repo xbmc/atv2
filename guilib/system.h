@@ -64,7 +64,7 @@
 #define HAS_FILESYSTEM_SAP
 #define HAS_FILESYSTEM_VTP
 #define HAS_FILESYSTEM_HTSP
-#define HAS_FILESYSTEM_MMS
+//#define HAS_FILESYSTEM_MMS
 
 /**********************
  * Non-free Components
