@@ -1,6 +1,7 @@
 include config.mk
 
 SUBDIRS = \
+	Backrow \
 	gas-preprocessor \
 	pcre expat gettext readline \
 	liblzo liblzo2 freetype2 fontconfig \
@@ -17,6 +18,10 @@ SUBDIRS = \
 all: $(SUBDIRS)
 
 subdirs:
+	mkdir -p build/bin
+	mkdir -p build/lib
+	mkdir -p build/slib
+	mkdir -p build/include
 	$(SUBDIRS)
 
 $(SUBDIRS):
