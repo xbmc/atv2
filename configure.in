@@ -637,6 +637,7 @@ if test "$host_vendor" = "apple" ; then
   fi
   AC_CHECK_LIB([iconv],     [main],, AC_MSG_ERROR($missing_library))
   AC_CHECK_LIB([mysqlclient], [main],, AC_MSG_ERROR($missing_library))
+  AC_CHECK_LIB([faad],       [main],, AC_MSG_ERROR($missing_library))
   AC_CHECK_LIB([smbclient], [main],, AC_MSG_ERROR($missing_library))
   PKG_CHECK_MODULES([VORBISFILE],     [vorbisfile],
     [INCLUDES="$INCLUDES $VORBISFILE_CFLAGS"; LIBS="$LIBS $VORBISFILE_LIBS"],
@@ -1803,18 +1804,6 @@ XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/libdvd/libdvdnav], [
       --cc="$CC"
   fi
 ], [0])
-
-XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/libfaad2], [
-  if test "$host_vendor" = "apple" ; then
-    CFLAGS="$CFLAGS -O3 -fno-common -undefined dynamic_lookup" \
-    LDFLAGS="-Wl,-read_only_relocs,suppress" \
-    ./configure \
-      --host=$host_alias \
-      --build=$build_alias \
-      --target=$target_alias \
-      --with-pic
-  fi
-], [$HOST_NOT_APPLE])
 
 XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/liba52], [
   if test "$host_vendor" = "apple" ; then
