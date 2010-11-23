@@ -7,11 +7,11 @@
 include ../config.mk
 
 # lib name, version
-LIBNAME=libssh
-VERSION=0.4.6
+LIBNAME=libssh2
+VERSION=1.2.7
 SOURCE=$(LIBNAME)-$(VERSION)
 # download location and format
-BASE_URL=http://www.libssh.org/files
+BASE_URL=http://www.libssh2.org/download/
 ARCHIVE=$(SOURCE).tar.gz
 
 RETRIEVE_TOOL=/usr/bin/curl
@@ -23,7 +23,8 @@ ARCHIVE_TOOL_FLAGS=xf
 export CFLAGS+=-undefined dynamic_lookup
 export CXXFLAGS+=-undefined dynamic_lookup
 export LDFLAGS+=-Wl,-read_only_relocs,suppress
-CONFIGURE=./configure --prefix=$(PREFIX) --host=$(HOST) --enable-shared=yes
+CONFIGURE=./configure --prefix=$(PREFIX) --host=$(HOST) --enable-shared=yes \
+  --with-openssl --without-libgcrypt ac_cv_func_EVP_aes_128_ctr=no
 
 SHELL := /bin/bash
 RM    := rm -rf
@@ -42,13 +43,10 @@ $(SOURCE): $(ARCHIVE)
 	$(ARCHIVE_TOOL) $(ARCHIVE_TOOL_FLAGS) $(ARCHIVE)
 	echo $(ARCHIVE) > .gitignore
 	echo $(SOURCE) >> .gitignore
+	cd $(SOURCE); $(CONFIGURE)
 
-$(LIBDYLIB): $(SOURCE) $(SOURCE)/build/Makefile
-	make -C $(SOURCE)/build
-
-$(SOURCE)/build/Makefile:
-	mkdir -p $(SOURCE)/build
-	@ (cd $(SOURCE)/build >/dev/null 2>&1 && cmake ..)
+$(LIBDYLIB): $(SOURCE)
+	make -C $(SOURCE)
 
 install:
 	make -C $(SOURCE) install
@@ -58,3 +56,4 @@ clean:
 
 distclean::
 	rm -rf $(SOURCE)
+
