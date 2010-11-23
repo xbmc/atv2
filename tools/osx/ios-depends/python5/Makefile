@@ -18,7 +18,7 @@ ARCHIVE=$(SOURCE).deb
 ARCHIVE_TOOL=ar
 ARCHIVE_TOOL_FLAGS=-x
 
-all: $(SOURCE)
+all: $(SOURCE) .installed
 
 $(ARCHIVE):
 	$(RETRIEVE_TOOL) $(RETRIEVE_TOOL_FLAGS) $(BASE_URL)/$(ARCHIVE)
@@ -30,13 +30,13 @@ $(SOURCE): $(ARCHIVE)
 	cd $(SOURCE); $(ARCHIVE_TOOL) $(ARCHIVE_TOOL_FLAGS) ../$(ARCHIVE)
 	cd $(SOURCE); mkdir data; tar -xzf data.tar.gz -C data
 
-install:
+.installed:
 	cp -rf $(SOURCE)/data/usr/* $(PREFIX)/
 	chmod +w $(PREFIX)/lib/libpython2.5.dylib
 	install_name_tool -id $(PREFIX)/lib/libpython2.5.dylib.1.0 $(PREFIX)/lib/libpython2.5.dylib
+	touch $@
 
 clean:
-
 distclean::
-	rm -rf $(SOURCE)
+	rm -rf $(SOURCE) .installed
 

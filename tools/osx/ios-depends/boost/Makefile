@@ -23,7 +23,7 @@ LIBDYLIB=$(SOURCE)/prefix/lib/libboost_system.a
 
 CLEAN_FILES=$(SOURCE)
 
-all: $(LIBDYLIB)
+all: $(LIBDYLIB) .compiled .installed
 
 $(ARCHIVE):
 	$(RETRIEVE_TOOL) $(RETRIEVE_TOOL_FLAGS) $(BASE_URL)/$(ARCHIVE)
@@ -35,12 +35,16 @@ $(LIBDYLIB): $(ARCHIVE)
 	echo prefix >> .gitignore
 	echo framework >> .gitignore
 	echo $(ARCHIVE) >> .gitignore
-	sh ./boost.sh
 
-install:
+.compiled:
+	sh ./boost.sh
+	touch $@
+
+.installed:
 	cp -rf prefix/* $(PREFIX) 
+	touch $@
 
 clean:
 distclean::
-	rm -rf src build prefix framework
+	rm -rf src build prefix framework .compiled .installed
 

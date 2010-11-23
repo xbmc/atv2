@@ -18,7 +18,7 @@ ARCHIVE=$(SOURCE).deb
 ARCHIVE_TOOL=ar
 ARCHIVE_TOOL_FLAGS=-x
 
-all: $(SOURCE)
+all: $(SOURCE) .installed
 
 $(ARCHIVE):
 	$(RETRIEVE_TOOL) $(RETRIEVE_TOOL_FLAGS) $(BASE_URL)/$(ARCHIVE)
@@ -30,18 +30,19 @@ $(SOURCE): $(ARCHIVE)
 	cd $(SOURCE); $(ARCHIVE_TOOL) $(ARCHIVE_TOOL_FLAGS) ../$(ARCHIVE)
 	cd $(SOURCE); mkdir data; tar -xzf data.tar.gz -C data
 
-install:
+.installed:
 	cp -rf $(SOURCE)/data/usr/include/* $(PREFIX)/include/
 	cp -rf $(SOURCE)/data/usr/samba/bin/* $(PREFIX)/bin
 	cp -rf $(SOURCE)/data/usr/samba/lib/* $(PREFIX)/lib
 	cp -rf $(SOURCE)/data/usr/samba/sbin/* $(PREFIX)/lib
-	ln -s $(PREFIX)/lib/libsmbclient.dylib.0 $(PREFIX)/lib/libsmbclient.dylib
+	ln -sf $(PREFIX)/lib/libsmbclient.dylib.0 $(PREFIX)/lib/libsmbclient.dylib
 	install_name_tool -change bin/libtalloc.dylib.1 $(PREFIX)/lib/libtalloc.dylib.1 \
 		-id $(PREFIX)/lib/libsmbclient.dylib $(PREFIX)/lib/libsmbclient.dylib.0
 	install_name_tool -change bin/libtdb.dylib.1 $(PREFIX)/lib/libtdb.dylib.1 \
                 -id $(PREFIX)/lib/libsmbclient.dylib $(PREFIX)/lib/libsmbclient.dylib.0
-clean:
+	touch $@
 
+clean:
 distclean::
-	rm -rf $(SOURCE)
+	rm -rf $(SOURCE) .installed
 

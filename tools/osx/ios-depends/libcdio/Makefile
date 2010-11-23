@@ -30,7 +30,7 @@ LIBDYLIB=$(SOURCE)/.libs/(LIBNAME).dylib
 
 CLEAN_FILES=$(ARCHIVE) $(SOURCE)
 
-all: $(LIBDYLIB)
+all: $(LIBDYLIB) .installed
 
 $(ARCHIVE):
 	$(RETRIEVE_TOOL) $(RETRIEVE_TOOL_FLAGS) $(BASE_URL)/$(ARCHIVE)
@@ -46,15 +46,14 @@ $(SOURCE): $(ARCHIVE)
 $(LIBDYLIB): $(SOURCE)
 	make -C $(SOURCE)
 
-configure:
-	cd $(SOURCE); $(CONFIGURE)
-
-install:
+.installed:
 	make -C $(SOURCE) install
 	cp $(SOURCE)/include/cdio/cdtext.h $(PREFIX)/include/cdio/
+	touch $@
 
 clean:
 	make -C $(SOURCE) clean
+	rm  .installed
 
 distclean::
-	rm -rf $(SOURCE)
+	rm -rf $(SOURCE) .installed

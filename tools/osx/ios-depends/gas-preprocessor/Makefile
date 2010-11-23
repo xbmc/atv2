@@ -8,13 +8,12 @@ include ../config.mk
 
 GASBIN=$(PREFIX)/bin/gas-preprocessor.pl
 
-all:
+all: .installed
 
-install:
+.installed:
 	cp gas-preprocessor.pl $(GASBIN)
+	touch $@
 
 clean:
-	rm $(GASBIN)
-
 distclean::
-	rm $(GASBIN)
+	rm $(GASBIN) .installed

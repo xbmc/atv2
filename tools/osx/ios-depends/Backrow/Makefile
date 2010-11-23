@@ -18,7 +18,7 @@ ARCHIVE=$(SOURCE).tar.gz
 ARCHIVE_TOOL=tar
 ARCHIVE_TOOL_FLAGS=xf
 
-all: $(SOURCE)
+all: $(SOURCE) .installed
 
 $(ARCHIVE):
 	$(RETRIEVE_TOOL) $(RETRIEVE_TOOL_FLAGS) $(BASE_URL)/$(ARCHIVE)
@@ -28,11 +28,11 @@ $(SOURCE): $(ARCHIVE)
 	echo $(ARCHIVE) > .gitignore
 	echo $(SOURCE) >> .gitignore
 
-install:
+.installed:
 	cp -rf $(SOURCE) $(PREFIX)/includes/
+	touch $@
 
 clean:
-
 distclean::
-	rm -rf $(SOURCE)
+	rm -rf $(SOURCE) .installed
 

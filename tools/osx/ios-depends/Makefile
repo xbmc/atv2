@@ -27,7 +27,6 @@ subdirs:
 
 $(SUBDIRS):
 	$(MAKE) -C $@
-	$(MAKE) -C $@ install
 
 libmms: glib2
 gettext: expat
