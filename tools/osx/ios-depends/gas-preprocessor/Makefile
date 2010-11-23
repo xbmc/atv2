@@ -11,6 +11,7 @@ GASBIN=$(PREFIX)/bin/gas-preprocessor.pl
 all: .installed
 
 .installed:
+	mkdir -p $(PREFIX)/bin
 	cp gas-preprocessor.pl $(GASBIN)
 	touch $@
 

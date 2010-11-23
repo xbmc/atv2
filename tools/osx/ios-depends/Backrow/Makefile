@@ -29,7 +29,8 @@ $(SOURCE): $(ARCHIVE)
 	echo $(SOURCE) >> .gitignore
 
 .installed:
-	cp -rf $(SOURCE) $(PREFIX)/includes/
+	mkdir -p $(PREFIX)/include
+	cp -rf $(SOURCE) $(PREFIX)/include/
 	touch $@
 
 clean:
