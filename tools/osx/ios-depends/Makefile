@@ -35,10 +35,10 @@ libmad: gas-preprocessor
 
 
 clean:
-	for d in $(SUBDIRS); $(MAKE) -C $$d clean; done
+	for d in $(SUBDIRS); do $(MAKE) -C $$d clean; done
 
 distclean::
-	for d in $(SUBDIRS);  $(MAKE) -C $$d distclean; done
+	for d in $(SUBDIRS); do $(MAKE) -C $$d distclean; done
 	rm -rf build
 
 
