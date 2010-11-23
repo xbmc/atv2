@@ -8,7 +8,7 @@ SUBDIRS = \
 	openssl libssh2 curl \
 	jpeg tiff libpng libogg \
 	libvorbis libmad fribidi \
-	glib2 libwavpack libmpeg2 \
+	glib2 libmms libwavpack libmpeg2 \
 	libcdio libsamplerate \
 	boost \
 	mysqlclient smbclient python5 \
