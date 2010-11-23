@@ -21,22 +21,20 @@ ARCHIVE_TOOL_FLAGS=xf
 
 LIBDYLIB=$(SOURCE)/prefix/lib/libboost_system.a
 
-CLEAN_FILES=$(SOURCE)
-
 all: $(LIBDYLIB) .compiled .installed
 
 $(ARCHIVE):
 	$(RETRIEVE_TOOL) $(RETRIEVE_TOOL_FLAGS) $(BASE_URL)/$(ARCHIVE)
+	echo $(ARCHIVE) > .gitignore
 
 $(LIBDYLIB): $(ARCHIVE)
+
+.compiled:
 	rm -rf src build prefix framework
-	echo src > .gitignore
+	echo src >> .gitignore
 	echo build >> .gitignore
 	echo prefix >> .gitignore
 	echo framework >> .gitignore
-	echo $(ARCHIVE) >> .gitignore
-
-.compiled:
 	sh ./boost.sh
 	touch $@
 

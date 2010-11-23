@@ -22,10 +22,10 @@ all: $(SOURCE) .installed
 
 $(ARCHIVE):
 	$(RETRIEVE_TOOL) $(RETRIEVE_TOOL_FLAGS) $(BASE_URL)/$(ARCHIVE)
+	echo $(ARCHIVE) > .gitignore
 
 $(SOURCE): $(ARCHIVE)
 	-rm -rf $(SOURCE); mkdir $(SOURCE)
-	echo $(ARCHIVE) > .gitignore
 	echo $(SOURCE) >> .gitignore
 	cd $(SOURCE); $(ARCHIVE_TOOL) $(ARCHIVE_TOOL_FLAGS) ../$(ARCHIVE)
 	cd $(SOURCE); mkdir data; tar -xzf data.tar.gz -C data

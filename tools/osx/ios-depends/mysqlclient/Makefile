@@ -28,6 +28,9 @@ ARCHIVE_TOOL_FLAGS=xf
 
 all: $(SOURCE) .installed
 
+$(ARCHIVE):
+	touch $@
+
 $(SOURCE): $(ARCHIVE)
 	-rm -rf $(SOURCE)
 	$(ARCHIVE_TOOL) $(ARCHIVE_TOOL_FLAGS) $(ARCHIVE)
