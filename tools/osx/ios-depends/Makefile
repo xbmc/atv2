@@ -5,10 +5,11 @@ SUBDIRS = \
 	gas-preprocessor \
 	pcre expat gettext readline \
 	liblzo liblzo2 freetype2 fontconfig \
+	openssl libssh2 curl \
 	jpeg tiff libpng libogg \
 	libvorbis libmad fribidi \
-	curl glib2 libwavpack libmpeg2 \
-	libcdio openssl libsamplerate \
+	glib2 libwavpack libmpeg2 \
+	libcdio libsamplerate \
 	boost \
 	mysqlclient smbclient python5 \
 	
