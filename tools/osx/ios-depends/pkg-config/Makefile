@@ -18,9 +18,7 @@ ARCHIVE_TOOL=tar
 ARCHIVE_TOOL_FLAGS=xf
 
 # configuration settings
-export CFLAGS+=-undefined dynamic_lookup
-export CXXFLAGS+=-undefined dynamic_lookup
-export LDFLAGS+=-Wl,-read_only_relocs,suppress
+PREFIX=$(shell cd ../build; pwd;)
 CONFIGURE=./configure --prefix=$(PREFIX) --enable-indirect-deps --with-pc-path=$(PREFIX)/lib/pkgconfig:$(PREFIX)/share/pkgconfig
 
 LIBDYLIB=$(SOURCE)/.libs/$(LIBNAME).dylib
