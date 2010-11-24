@@ -2,7 +2,7 @@ include config.mk
 
 SUBDIRS = \
 	Backrow \
-	gas-preprocessor \
+	gas-preprocessor pkg-config \
 	pcre expat gettext readline \
 	liblzo liblzo2 freetype2 fontconfig \
 	openssl libssh2 curl \
@@ -11,8 +11,7 @@ SUBDIRS = \
 	glib2 libmms libwavpack libmpeg2 \
 	libcdio libsamplerate \
 	boost \
-	mysqlclient smbclient python5 \
-	
+	mysqlclient smbclient python5
 
 .PHONY: setup subdirs $(SUBDIRS)
 
