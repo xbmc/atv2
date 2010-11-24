@@ -18,7 +18,7 @@ ARCHIVE_TOOL=tar
 ARCHIVE_TOOL_FLAGS=xf
 
 # configuration settings
-PREFIX=$(shell cd ../build; pwd;)
+PREFIX:=$(shell cd $(CURDIR)/../build; pwd;)
 CONFIGURE=./configure --prefix=$(PREFIX) --enable-indirect-deps --with-pc-path=$(PREFIX)/lib/pkgconfig:$(PREFIX)/share/pkgconfig
 
 LIBDYLIB=$(SOURCE)/.libs/$(LIBNAME).dylib
