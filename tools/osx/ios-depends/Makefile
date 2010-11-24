@@ -1,4 +1,3 @@
-include config.mk
 
 SUBDIRS = \
 	Backrow \
@@ -7,11 +6,12 @@ SUBDIRS = \
 	liblzo liblzo2 freetype2 fontconfig \
 	openssl libssh2 curl \
 	jpeg tiff libpng libogg \
-	libvorbis libmad fribidi \
-	glib2 libmms libwavpack libmpeg2 \
+	libvorbis libmad fribidi libwavpack libmpeg2 \
 	libcdio libsamplerate \
 	boost \
 	mysqlclient smbclient python5
+
+	#glib2 libmms /
 
 .PHONY: setup subdirs $(SUBDIRS)
 
