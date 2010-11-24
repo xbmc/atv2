@@ -4,8 +4,6 @@
 #    make
 #    sudo make install
 
-include ../config.mk
-
 # lib name, version
 LIBNAME=pkg-config
 VERSION=0.23
@@ -23,7 +21,7 @@ ARCHIVE_TOOL_FLAGS=xf
 export CFLAGS+=-undefined dynamic_lookup
 export CXXFLAGS+=-undefined dynamic_lookup
 export LDFLAGS+=-Wl,-read_only_relocs,suppress
-CONFIGURE=./configure --prefix=$(PREFIX) --host=$(HOST) --enable-indirect-deps --with-pc-path=$(PREFIX)/lib/pkgconfig:$(PREFIX)/share/pkgconfig
+CONFIGURE=./configure --prefix=$(PREFIX) --enable-indirect-deps --with-pc-path=$(PREFIX)/lib/pkgconfig:$(PREFIX)/share/pkgconfig
 
 LIBDYLIB=$(SOURCE)/.libs/$(LIBNAME).dylib
 
