@@ -19,10 +19,10 @@ SUBDIRS = \
 all: $(SUBDIRS)
 
 subdirs:
-	mkdir -p build/bin
-	mkdir -p build/lib
-	mkdir -p build/slib
-	mkdir -p build/include
+	mkdir -p $(CURDIR)/build/bin
+	mkdir -p $(CURDIR)/build/lib
+	mkdir -p $(CURDIR)/build/slib
+	mkdir -p $(CURDIR)/build/include
 	$(SUBDIRS)
 
 $(SUBDIRS):
