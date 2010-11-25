@@ -1073,10 +1073,10 @@ if test "$host_vendor" != "apple" ; then
   fi
 fi
 
-AC_CHECK_PROG(HAVE_CMAKE,cmake,"yes","no",)
-if test "$HAVE_CMAKE" = "no" ; then
-  AC_MSG_ERROR($missing_program)
-fi
+#AC_CHECK_PROG(HAVE_CMAKE,cmake,"yes","no",)
+#if test "$HAVE_CMAKE" = "no" ; then
+#  AC_MSG_ERROR($missing_program)
+#fi
 
 AC_CHECK_PROG(HAVE_GPERF,gperf,"yes","no",)
 if test "$HAVE_GPERF" = "no" ; then
@@ -1655,7 +1655,7 @@ XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/ffmpeg], [
       --enable-memalign-hack \
       --enable-runtime-cpudetect \
       --cc="$CC" \
-      --as="gas-preprocessor.pl $CC" &&
+      --as="$AS" &&
     sed -i "" -e "s# -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 # #" config.mak &&
     sed -i "" -e "s#libswscale_VERSION_MAJOR=0#libswscale_VERSION_MAJOR=0.7.1#" config.mak &&
     sed -i "" -e "s#libavfilter_VERSION_MAJOR=0#libavfilter_VERSION_MAJOR=0.4.0#" config.mak
