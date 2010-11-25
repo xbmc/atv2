@@ -21,7 +21,7 @@ ARCHIVE_TOOL_FLAGS=xf
 PREFIX:=$(shell cd $(CURDIR)/../build; pwd;)
 CONFIGURE=./configure --prefix=$(PREFIX) --enable-indirect-deps --with-pc-path=$(PREFIX)/lib/pkgconfig:$(PREFIX)/share/pkgconfig
 
-LIBDYLIB=$(SOURCE)/.libs/$(LIBNAME).dylib
+LIBDYLIB=$(SOURCE)/bin/pkg-config
 
 CLEAN_FILES=$(ARCHIVE) $(SOURCE)
 
