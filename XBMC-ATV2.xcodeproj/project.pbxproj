@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		18A0B34F129FC3A5007BB966 /* XBMC.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A0B34E129FC3A5007BB966 /* XBMC.png */; };
 		F5899DCE1287212700D8079E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5899DCA1287212700D8079E /* QuartzCore.framework */; };
 		F5899DCF1287212700D8079E /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5899DCB1287212700D8079E /* OpenGLES.framework */; };
 		F5899DD01287212700D8079E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5899DCC1287212700D8079E /* UIKit.framework */; };
@@ -921,6 +922,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		18A0B34E129FC3A5007BB966 /* XBMC.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = XBMC.png; path = xbmc/osx/atv2/XBMC.png; sourceTree = "<group>"; };
 		8D576316048677EA00EA77CD /* XBMC.frappliance */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XBMC.frappliance; sourceTree = BUILT_PRODUCTS_DIR; };
 		F5653BB4128B9441009C7ABB /* libcurl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.dylib; path = "tools/osx/ios-depends/build/lib/libcurl.dylib"; sourceTree = "<group>"; };
 		F5899DCA1287212700D8079E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -2962,6 +2964,7 @@
 		F5899E0E128724AC00D8079E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				18A0B34E129FC3A5007BB966 /* XBMC.png */,
 				F589ACB61287A70C00D8079E /* XBMCATV2-Info.plist */,
 				F589ACB81287A72900D8079E /* English.lproj */,
 			);
@@ -5808,6 +5811,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F589ACBB1287A72900D8079E /* InfoPlist.strings in Resources */,
+				18A0B34F129FC3A5007BB966 /* XBMC.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
