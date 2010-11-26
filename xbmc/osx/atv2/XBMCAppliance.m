@@ -30,15 +30,15 @@
 //--------------------------------------------------------------
 @interface BRTopShelfView (specialAdditions)
 //
-//- (BRImageControl *)productImage;
+- (BRImageControl *)productImage;
 
 @end
 //
 @implementation BRTopShelfView (specialAdditions)
-//- (BRImageControl *)productImage
-//{
-//	return MSHookIvar<BRImageControl *>(self, "_productImage");
-//}
+- (BRImageControl *)productImage
+{
+	return nil; //MSHookIvar<BRImageControl *>(self, "_productImage");
+}
 @end
 
 //--------------------------------------------------------------
@@ -56,12 +56,12 @@
 }
 
 - (BRTopShelfView *)topShelfView {
-//	BRTopShelfView *topShelf = [[BRTopShelfView alloc] init];
-//	BRImageControl *imageControl = [topShelf productImage];
-//	BRImage *gpImage = [BRImage imageWithPath:[[NSBundle bundleForClass:[XBMCSettings class]] pathForResource:@"openegldemo" ofType:@"png"]];
-//	[imageControl setImage:gpImage];
-//	
-	return nil;
+	BRTopShelfView *topShelf = [[BRTopShelfView alloc] init];
+	BRImageControl *imageControl = [topShelf productImage];
+	BRImage *gpImage = [BRImage imageWithPath:[[NSBundle bundleForClass:[XBMCAppliance class]] pathForResource:@"XBMC" ofType:@"png"]];
+	[imageControl setImage:gpImage];
+	
+	return topShelf;
 }
 @end
 
