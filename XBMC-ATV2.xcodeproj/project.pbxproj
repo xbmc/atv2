@@ -710,7 +710,6 @@
 		F589ABA412879A9E00D8079E /* CocoaPowerSyscall.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A7D012879A9C00D8079E /* CocoaPowerSyscall.cpp */; };
 		F589ABA512879A9E00D8079E /* XBMCHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A7D212879A9C00D8079E /* XBMCHelper.cpp */; };
 		F589ABA612879A9E00D8079E /* OSXGNUReplacements.c in Sources */ = {isa = PBXBuildFile; fileRef = F589A7D412879A9C00D8079E /* OSXGNUReplacements.c */; };
-		F589ABA712879A9E00D8079E /* posix-realtime-stub.c in Sources */ = {isa = PBXBuildFile; fileRef = F589A7D612879A9C00D8079E /* posix-realtime-stub.c */; };
 		F589ABA812879A9E00D8079E /* SemaphoreDarwin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A7D812879A9C00D8079E /* SemaphoreDarwin.cpp */; };
 		F589ABA912879A9E00D8079E /* DarwinStorageProvider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A7DA12879A9C00D8079E /* DarwinStorageProvider.cpp */; };
 		F589ABAC12879A9E00D8079E /* ZeroconfBrowserOSX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A7E012879A9C00D8079E /* ZeroconfBrowserOSX.cpp */; };
@@ -811,7 +810,6 @@
 		F589AC0C12879A9E00D8079E /* EventPacket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A8A912879A9D00D8079E /* EventPacket.cpp */; };
 		F589AC0D12879A9E00D8079E /* EventServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A8AB12879A9D00D8079E /* EventServer.cpp */; };
 		F589AC0E12879A9E00D8079E /* Fanart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A8AD12879A9D00D8079E /* Fanart.cpp */; };
-		F589AC0F12879A9E00D8079E /* fastmemcpy.c in Sources */ = {isa = PBXBuildFile; fileRef = F589A8AF12879A9D00D8079E /* fastmemcpy.c */; };
 		F589AC1012879A9E00D8079E /* FileOperationJob.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A8B112879A9D00D8079E /* FileOperationJob.cpp */; };
 		F589AC1112879A9E00D8079E /* FileUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A8B312879A9D00D8079E /* FileUtils.cpp */; };
 		F589AC1312879A9E00D8079E /* GUIInfoManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A8B712879A9D00D8079E /* GUIInfoManager.cpp */; };
@@ -919,6 +917,7 @@
 		F589AFDB128A2E6000D8079E /* WinSystemIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = F589AFD9128A2E6000D8079E /* WinSystemIOS.mm */; };
 		F589B0BF128A5FE200D8079E /* iOS_Utils.mm in Sources */ = {isa = PBXBuildFile; fileRef = F589B0BE128A5FE200D8079E /* iOS_Utils.mm */; };
 		F59E2BF1129A0C5B00F6AB7A /* fstrcmp.c in Sources */ = {isa = PBXBuildFile; fileRef = F59E2BF0129A0C5B00F6AB7A /* fstrcmp.c */; };
+		F5A29BDF12A044E7003A610C /* fastmemcpy-arm.S in Sources */ = {isa = PBXBuildFile; fileRef = F5A29BDE12A044E7003A610C /* fastmemcpy-arm.S */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -2478,8 +2477,6 @@
 		F589A7D312879A9C00D8079E /* XBMCHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XBMCHelper.h; sourceTree = "<group>"; };
 		F589A7D412879A9C00D8079E /* OSXGNUReplacements.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = OSXGNUReplacements.c; sourceTree = "<group>"; };
 		F589A7D512879A9C00D8079E /* OSXGNUReplacements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSXGNUReplacements.h; sourceTree = "<group>"; };
-		F589A7D612879A9C00D8079E /* posix-realtime-stub.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "posix-realtime-stub.c"; sourceTree = "<group>"; };
-		F589A7D712879A9C00D8079E /* posix-realtime-stub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "posix-realtime-stub.h"; sourceTree = "<group>"; };
 		F589A7D812879A9C00D8079E /* SemaphoreDarwin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SemaphoreDarwin.cpp; sourceTree = "<group>"; };
 		F589A7D912879A9C00D8079E /* SemaphoreDarwin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SemaphoreDarwin.h; sourceTree = "<group>"; };
 		F589A7DA12879A9C00D8079E /* DarwinStorageProvider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DarwinStorageProvider.cpp; sourceTree = "<group>"; };
@@ -2685,7 +2682,6 @@
 		F589A8AC12879A9D00D8079E /* EventServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventServer.h; sourceTree = "<group>"; };
 		F589A8AD12879A9D00D8079E /* Fanart.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Fanart.cpp; sourceTree = "<group>"; };
 		F589A8AE12879A9D00D8079E /* Fanart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fanart.h; sourceTree = "<group>"; };
-		F589A8AF12879A9D00D8079E /* fastmemcpy.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fastmemcpy.c; sourceTree = "<group>"; };
 		F589A8B012879A9D00D8079E /* fastmemcpy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fastmemcpy.h; sourceTree = "<group>"; };
 		F589A8B112879A9D00D8079E /* FileOperationJob.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileOperationJob.cpp; sourceTree = "<group>"; };
 		F589A8B212879A9D00D8079E /* FileOperationJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileOperationJob.h; sourceTree = "<group>"; };
@@ -2867,6 +2863,7 @@
 		F589B0BD128A5FE200D8079E /* iOS_Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iOS_Utils.h; path = xbmc/osx/atv2/iOS_Utils.h; sourceTree = "<group>"; };
 		F589B0BE128A5FE200D8079E /* iOS_Utils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = iOS_Utils.mm; path = xbmc/osx/atv2/iOS_Utils.mm; sourceTree = "<group>"; };
 		F59E2BF0129A0C5B00F6AB7A /* fstrcmp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fstrcmp.c; sourceTree = "<group>"; };
+		F5A29BDE12A044E7003A610C /* fastmemcpy-arm.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = "fastmemcpy-arm.S"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -5448,8 +5445,6 @@
 				F589A7D312879A9C00D8079E /* XBMCHelper.h */,
 				F589A7D412879A9C00D8079E /* OSXGNUReplacements.c */,
 				F589A7D512879A9C00D8079E /* OSXGNUReplacements.h */,
-				F589A7D612879A9C00D8079E /* posix-realtime-stub.c */,
-				F589A7D712879A9C00D8079E /* posix-realtime-stub.h */,
 				F589A7D812879A9C00D8079E /* SemaphoreDarwin.cpp */,
 				F589A7D912879A9C00D8079E /* SemaphoreDarwin.h */,
 				F589AFD9128A2E6000D8079E /* WinSystemIOS.mm */,
@@ -5561,7 +5556,7 @@
 				F589A8AC12879A9D00D8079E /* EventServer.h */,
 				F589A8AD12879A9D00D8079E /* Fanart.cpp */,
 				F589A8AE12879A9D00D8079E /* Fanart.h */,
-				F589A8AF12879A9D00D8079E /* fastmemcpy.c */,
+				F5A29BDE12A044E7003A610C /* fastmemcpy-arm.S */,
 				F589A8B012879A9D00D8079E /* fastmemcpy.h */,
 				F589A8B112879A9D00D8079E /* FileOperationJob.cpp */,
 				F589A8B212879A9D00D8079E /* FileOperationJob.h */,
@@ -6567,7 +6562,6 @@
 				F589ABA412879A9E00D8079E /* CocoaPowerSyscall.cpp in Sources */,
 				F589ABA512879A9E00D8079E /* XBMCHelper.cpp in Sources */,
 				F589ABA612879A9E00D8079E /* OSXGNUReplacements.c in Sources */,
-				F589ABA712879A9E00D8079E /* posix-realtime-stub.c in Sources */,
 				F589ABA812879A9E00D8079E /* SemaphoreDarwin.cpp in Sources */,
 				F589ABA912879A9E00D8079E /* DarwinStorageProvider.cpp in Sources */,
 				F589ABAC12879A9E00D8079E /* ZeroconfBrowserOSX.cpp in Sources */,
@@ -6668,7 +6662,6 @@
 				F589AC0C12879A9E00D8079E /* EventPacket.cpp in Sources */,
 				F589AC0D12879A9E00D8079E /* EventServer.cpp in Sources */,
 				F589AC0E12879A9E00D8079E /* Fanart.cpp in Sources */,
-				F589AC0F12879A9E00D8079E /* fastmemcpy.c in Sources */,
 				F589AC1012879A9E00D8079E /* FileOperationJob.cpp in Sources */,
 				F589AC1112879A9E00D8079E /* FileUtils.cpp in Sources */,
 				F589AC1312879A9E00D8079E /* GUIInfoManager.cpp in Sources */,
@@ -6737,6 +6730,7 @@
 				F589AFDB128A2E6000D8079E /* WinSystemIOS.mm in Sources */,
 				F589B0BF128A5FE200D8079E /* iOS_Utils.mm in Sources */,
 				F59E2BF1129A0C5B00F6AB7A /* fstrcmp.c in Sources */,
+				F5A29BDF12A044E7003A610C /* fastmemcpy-arm.S in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6761,7 +6755,6 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = NO;
 				EXECUTABLE_EXTENSION = "";
-				EXECUTABLE_SUFFIX = "";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
@@ -6849,7 +6842,6 @@
 				DEAD_CODE_STRIPPING = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EXECUTABLE_EXTENSION = "";
-				EXECUTABLE_SUFFIX = "";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_MODEL_TUNING = G5;
