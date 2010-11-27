@@ -54,6 +54,11 @@ public:
 
   virtual bool BeginRender();
   virtual bool EndRender();
+  
+          void InitDisplayLink(void);
+          void DeinitDisplayLink(void);
+          double GetDisplayLinkFPS(void);
+
 protected:
   virtual bool PresentRenderImpl();
   virtual void SetVSyncImpl(bool enable);

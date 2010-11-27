@@ -43,6 +43,7 @@
 #import <OpenGLES/ES2/glext.h>
 #import "XBMCController.h"
 #import "XBMCEAGLView.h"
+#import <dlfcn.h>
 
 CWinSystemIOS::CWinSystemIOS() : CWinSystemBase()
 {
@@ -116,7 +117,7 @@ void CWinSystemIOS::UpdateResolutions()
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   int w = [BRWindow interfaceFrame].size.width;
   int h = [BRWindow interfaceFrame].size.height;
-  UpdateDesktopResolution(g_settings.m_ResInfo[RES_DESKTOP], 0, w, h, 0.0);
+  UpdateDesktopResolution(g_settings.m_ResInfo[RES_DESKTOP], 0, w, h, 60.0);
   [pool release];
 }
 
@@ -158,6 +159,29 @@ bool CWinSystemIOS::EndRender()
   return rtn;
 }
 
+void CWinSystemIOS::InitDisplayLink(void)
+{
+  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+  
+  [[[XBMCController sharedInstance] getEGLView] initDisplayLink];
+  [pool release];
+}
+void CWinSystemIOS::DeinitDisplayLink(void)
+{
+  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+  
+  [[[XBMCController sharedInstance] getEGLView] deinitDisplayLink];
+  [pool release];
+}
+double CWinSystemIOS::GetDisplayLinkFPS(void)
+{
+  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+  
+  double fps = [[[XBMCController sharedInstance] getEGLView] getDisplayLinkFPS];
+  [pool release];
+  return fps;
+}
+
 bool CWinSystemIOS::PresentRenderImpl()
 {
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
@@ -174,7 +198,16 @@ bool CWinSystemIOS::PresentRenderImpl()
 
 void CWinSystemIOS::SetVSyncImpl(bool enable)
 {
-  m_iVSyncMode = 10;
+  #if 0	
+    // set swapinterval if possible
+    void *eglSwapInterval;	
+    eglSwapInterval = dlsym( RTLD_DEFAULT, "eglSwapInterval" );
+    if ( eglSwapInterval )
+    {
+      ((void(*)(int))eglSwapInterval)( 1 ) ;
+    }
+  #endif
+  //m_iVSyncMode = 10;
 }
 
 void CWinSystemIOS::ShowOSMouse(bool show)
