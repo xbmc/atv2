@@ -30,7 +30,9 @@
 #include "FileItem.h"
 #include "Application.h"
 #include "WindowingFactory.h"
+#include "VideoReferenceClock.h"
 #include "utils/log.h"
+#include "utils/TimeUtils.h"
 #include "Util.h"
 #undef BOOL
 
@@ -83,9 +85,10 @@ enum {
     
     eaglLayer.opaque = TRUE;
     eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
-      [NSNumber numberWithBool:FALSE], 
-      kEAGLDrawablePropertyRetainedBacking, 
-      kEAGLColorFormatRGBA8, 
+      [NSNumber numberWithBool:FALSE],
+      kEAGLDrawablePropertyRetainedBacking,
+      kEAGLColorFormatRGB565,
+      //kEAGLColorFormatRGBA8,
       kEAGLDrawablePropertyColorFormat, nil];
 		
     EAGLContext *aContext = [[EAGLContext alloc] 
@@ -190,10 +193,12 @@ enum {
 {
   if (context)
   {
-    [EAGLContext setCurrentContext:context];
+    if ([EAGLContext currentContext] != context)
+      [EAGLContext setCurrentContext:context];
     
     glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebuffer);
     glViewport(0, 0, framebufferWidth, framebufferHeight);
+    glScissor(0, 0, framebufferWidth, framebufferHeight);
   }
 }
 //--------------------------------------------------------------
@@ -203,7 +208,8 @@ enum {
   
   if (context)
   {
-    [EAGLContext setCurrentContext:context];
+    if ([EAGLContext currentContext] != context)
+      [EAGLContext setCurrentContext:context];
     
     glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
     success = [context presentRenderbuffer:GL_RENDERBUFFER];
@@ -243,6 +249,25 @@ enum {
 {
   NSAutoreleasePool* outerpool = [[NSAutoreleasePool alloc] init];
 
+  // Changing to SCHED_RR is safe under OSX, you don't need elevated privileges and the
+  // OSX scheduler will monitor SCHED_RR threads and drop to SCHED_OTHER if it detects
+  // the thread running away. OSX automatically does this with the CoreAudio audio
+  // device handler thread.
+  int32_t result;
+  thread_extended_policy_data_t theFixedPolicy;
+
+  // make thread fixed, set to 'true' for a non-fixed thread
+  theFixedPolicy.timeshare = false;
+  result = thread_policy_set(pthread_mach_thread_np(pthread_self()), THREAD_EXTENDED_POLICY, 
+    (thread_policy_t)&theFixedPolicy, THREAD_EXTENDED_POLICY_COUNT);
+
+  int policy;
+  struct sched_param param;
+  result = pthread_getschedparam(pthread_self(), &policy, &param );
+  // change from default SCHED_OTHER to SCHED_RR
+  policy = SCHED_RR;
+  result = pthread_setschedparam(pthread_self(), policy, &param );
+
   // signal we are alive
   NSConditionLock* myLock = arg;
   [myLock lock];
@@ -254,6 +279,8 @@ enum {
     g_advancedSettings.m_logLevel     = LOG_LEVEL_NORMAL;
     g_advancedSettings.m_logLevelHint = LOG_LEVEL_NORMAL;
   #endif
+
+  [self initDisplayLink];
 
   // Prevent child processes from becoming zombies on exit if not waited upon. See also Util::Command
   struct sigaction sa;
@@ -290,6 +317,9 @@ enum {
   {
     NSLog(@"%sUnable to create application", __PRETTY_FUNCTION__);
   }
+
+  [self deinitDisplayLink];
+
   // signal we are dead
   [myLock unlockWithCondition:TRUE];
 
@@ -301,6 +331,10 @@ enum {
 //--------------------------------------------------------------
 - (void) runDisplayLink
 {
+  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+  
+  //g_VideoReferenceClock.VblankHandler(CurrentHostCounter(), displayFPS);
+  [pool release];
 }
 //--------------------------------------------------------------
 - (void) initDisplayLink
@@ -308,6 +342,8 @@ enum {
   displayLink = [NSClassFromString(@"CADisplayLink") 
     displayLinkWithTarget:self
     selector:@selector(runDisplayLink:)];
+  //displayFPS = 1.0 / displayLink.duration;
+  displayFPS = 60.0;
   [displayLink setFrameInterval:1];
   [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 }
@@ -317,5 +353,9 @@ enum {
   [displayLink invalidate];
   displayLink = nil;
 }
-
+//--------------------------------------------------------------
+- (double) getDisplayLinkFPS;
+{
+  return displayFPS;
+}
 @end

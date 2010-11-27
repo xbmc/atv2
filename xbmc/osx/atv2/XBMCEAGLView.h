@@ -46,11 +46,15 @@
 
 	// Use of the CADisplayLink class is the preferred method for controlling the animation timing.
 	// CADisplayLink will link to the main display and fire every vsync when added to a given run-loop.
-	id displayLink;
+	CADisplayLink *displayLink;
+  CFTimeInterval displayFPS;
 	BOOL displayLinkSupported;
 }
 @property (readonly, nonatomic, getter=isAnimating) BOOL animating;
 
+- (void) initDisplayLink;
+- (void) deinitDisplayLink;
+- (double) getDisplayLinkFPS;
 - (void) startAnimation;
 - (void) stopAnimation;
 - (void) setFramebuffer;
