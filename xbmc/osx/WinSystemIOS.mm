@@ -117,7 +117,8 @@ void CWinSystemIOS::UpdateResolutions()
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   int w = [BRWindow interfaceFrame].size.width;
   int h = [BRWindow interfaceFrame].size.height;
-  UpdateDesktopResolution(g_settings.m_ResInfo[RES_DESKTOP], 0, w, h, 60.0);
+  double fps = [[[XBMCController sharedInstance] getEGLView] getDisplayLinkFPS];
+  UpdateDesktopResolution(g_settings.m_ResInfo[RES_DESKTOP], 0, w, h, fps);
   [pool release];
 }
 
@@ -161,17 +162,21 @@ bool CWinSystemIOS::EndRender()
 
 void CWinSystemIOS::InitDisplayLink(void)
 {
+/*
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   
   [[[XBMCController sharedInstance] getEGLView] initDisplayLink];
   [pool release];
+*/
 }
 void CWinSystemIOS::DeinitDisplayLink(void)
 {
+/*
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   
   [[[XBMCController sharedInstance] getEGLView] deinitDisplayLink];
   [pool release];
+*/
 }
 double CWinSystemIOS::GetDisplayLinkFPS(void)
 {
@@ -186,9 +191,6 @@ bool CWinSystemIOS::PresentRenderImpl()
 {
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   
-  //glClearColor(0.5f, 0.0f, 0.5f, 1.0f);
-  //glClear(GL_COLOR_BUFFER_BIT);
-
   //glFlush;
   //glFinish();
   [[[XBMCController sharedInstance] getEGLView] presentFramebuffer];
@@ -207,7 +209,7 @@ void CWinSystemIOS::SetVSyncImpl(bool enable)
       ((void(*)(int))eglSwapInterval)( 1 ) ;
     }
   #endif
-  //m_iVSyncMode = 10;
+  m_iVSyncMode = 10;
 }
 
 void CWinSystemIOS::ShowOSMouse(bool show)
