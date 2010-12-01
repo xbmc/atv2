@@ -236,6 +236,9 @@ config.log
 /lib/libmicrohttpd/src/testzzuf/Makefile
 /lib/libmicrohttpd/stamp-h1
 /lib/libmicrohttpd/autom4te.cache/
+/lib/libmicrohttpd/MHD_config.h.in
+/lib/libmicrohttpd/aclocal.m4
+/lib/libmicrohttpd/configure
 
 # /lib/libmodplug/
 /lib/libmodplug/libtool
