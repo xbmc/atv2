@@ -415,7 +415,7 @@ int main (int argc, char * const argv[])
   
   {
     OSStatus status;
-    int byte_count, total = 0;
+    int frame_count, byte_count, total = 0;
     uint8_t* data;
     uint64_t dts, pts;
 
@@ -427,9 +427,11 @@ int main (int argc, char * const argv[])
     }
 
     usleep(10000);
-    while (!g_signal_abort && byte_count) {
+    frame_count = 0;
+    while (!g_signal_abort && byte_count && (frame_count < 1000)) {
       status = vtdec_decode_buffer(&ctx, data, byte_count);
       free(data);
+      frame_count++;
       usleep(10000);
       ctx.demuxer->Read(&data, &byte_count, &dts, &pts);
       printf("byte_count(%d), dts(%llu), pts(%llu)\n", byte_count, dts, pts);
