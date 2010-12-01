@@ -1836,19 +1836,6 @@ XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/liba52], [
   fi
 ], [$SKIP_CONFIG_LIBA52])
 
-XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/libmad], [
-  if test "$host_vendor" = "apple" ; then
-    CFLAGS="$CFLAGS -fno-common" \
-    LDFLAGS="-Wl,-read_only_relocs,suppress" \
-    ./configure \
-      --host=$host_alias \
-      --build=$build_alias \
-      --target=$target_alias \
-      --enable-fpm=default \
-      --with-pic
-  fi
-], [$HOST_NOT_APPLE])
-
 XB_CONFIG_MODULE([xbmc/lib/cximage-6.0/zlib], [
   if test "$host_vendor" = "apple" ; then
     CFLAGS="$CFLAGS -fno-common" \
@@ -2008,6 +1995,7 @@ XB_CONFIG_MODULE([lib/libmodplug], [
 
 XB_CONFIG_MODULE([lib/libmicrohttpd], [
   if test "$host_vendor" = "apple" ; then
+    autoreconfig -vif
     CFLAGS="$CFLAGS -fno-common" \
     CXXFLAGS="$CXXFLAGS -fno-common" \
     ./configure --with-pic --disable-shared --enable-static --with-libgcrypt-prefix=/dev/null \
