@@ -86,7 +86,7 @@
 #define DLL_PATH_LIBMAD        "@MAD_SONAME@"
 #else
 #define DLL_PATH_LIBFAAD       "libfaad.2.dylib"
-#define DLL_PATH_LIBMAD        "special://xbmcbin/system/players/dvdplayer/libmad-@ARCH@.so"
+#define DLL_PATH_LIBMAD        "libmad.0.2.1.dylib"
 #endif
 
 /* ffmpeg */

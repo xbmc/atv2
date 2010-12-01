@@ -41,11 +41,6 @@ ifeq (@USE_INTERNAL_LIBDTS@,1)
   LIBS+=libdts-$(ARCH).so
 endif
 
-ifeq ($(findstring osx,$(ARCH)),osx)
-	DIRS+=libmad
-	LIBS+=libmad-$(ARCH).so
-endif
-
 ifneq (,$(findstring powerpc,$(ARCH)))
   ARCH_DIR=ppc
 else
@@ -119,11 +114,6 @@ $(SYSDIR)/libdts-$(ARCH).so:  $(WRAPPER_OSX) libdts/libdts/libdts.a
 	$(WRAPPER_OSX) $@;mv output.so $@
 	chmod +x $@
 
-$(SYSDIR)/libmad-$(ARCH).so: $(WRAPPER_OSX) libmad/libmad.la
-	$(CC) $(SYSROOT) $(LDFLAGS) -o $@ \
-		libmad/.libs/*.o $(BUNDLE1_O)
-	$(WRAPPER_OSX) $@;mv output.so $@
-
 $(SYSDIR)/liba52-$(ARCH).so: $(WRAPPER_OSX) liba52/liba52/liba52.la
 	$(CC) $(SYSROOT) $(LDFLAGS) -o $@ \
 		liba52/liba52/.libs/*.o $(BUNDLE1_O)
@@ -136,10 +126,6 @@ $(SYSDIR)/libao-$(ARCH).so: $(WRAPPER_OSX) liba52/libao/libao.a
 
 libdts/libdts/libdts.a : libdts;
 libdts:
-	$(MAKE) -C $@
-
-libmad/libmad.la: libmad;
-libmad:
 	$(MAKE) -C $@
 
 liba52/liba52/liba52.la: liba52
