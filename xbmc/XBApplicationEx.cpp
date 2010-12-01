@@ -153,6 +153,7 @@ INT CXBApplicationEx::Run()
         throw;
       }
     }
+    ::Sleep(10);
 #endif
   } // while (!m_bStop)
   Destroy();
