@@ -39,7 +39,9 @@ enum _VTFormat
   //kCMVideoCodecType_MPEG4Video       = 'mp4v', // MPEG-4 Part 2 video format.
   //kCMVideoCodecType_MPEG2Video       = 'mp2v',
 };
-
+enum {
+  kVDADecoderDecoderFlags_DontEmitFrame = 1 << 0
+};
 struct _VTDecompressionOutputCallback
 {
   VTDecompressionOutputCallbackFunc func;
@@ -57,7 +59,7 @@ extern OSStatus VTDecompressionSessionCreate(
 extern OSStatus VTDecompressionSessionDecodeFrame(
   VTDecompressionSessionRef session,
   CMSampleBufferRef sbuf,
-  uint32_t unk1, uint32_t unk2, uint32_t unk3);
+  uint32_t decoderFlags, CFDictionaryRef frameInfo, uint32_t unk1);
 
 extern void VTDecompressionSessionInvalidate(VTDecompressionSessionRef session);
 extern void VTDecompressionSessionRelease(VTDecompressionSessionRef session);
@@ -212,14 +214,20 @@ vtdec_create_format_description_from_codec_data(AppContext *ctx)
 void
 vtdec_output_frame(void *data, CFDictionaryRef frameInfo, OSStatus result, uint32_t infoFlags, CVBufferRef cvbuf)
 {
-  //AppContext *ctx = (AppContext*)data;
-
   if (!result) {
     OSType format_type = CVPixelBufferGetPixelFormatType(cvbuf);
-    int width = CVPixelBufferGetWidthOfPlane(cvbuf, 0);
-    int height = CVPixelBufferGetHeightOfPlane(cvbuf, 0);
-    printf("buffer format(0x%x), width(%d), height(%d), (%p), (%d)\n",
-      (unsigned int)format_type, width, height, frameInfo, infoFlags);
+    int width, height;
+    if (CVPixelBufferIsPlanar(cvbuf) ) {
+      width  = CVPixelBufferGetWidthOfPlane(cvbuf, 0);
+      height = CVPixelBufferGetHeightOfPlane(cvbuf, 0);
+    } else {
+      width  = CVPixelBufferGetWidth(cvbuf);
+      height = CVPixelBufferGetHeight(cvbuf);
+    }
+    uint64_t pts = GetFrameDisplayTimeFromDictionary(frameInfo);
+    printf("format(%c%c%c%c), width(%d), height(%d), cvbuf(%p), frameInfo(%p), infoFlags(%d), pts(%llu)\n",
+      (int)((format_type >>24) & 0xff), (int)((format_type >> 16) & 0xff), (int)((format_type >>8) & 0xff), (int)(format_type & 0xff),
+      width, height, cvbuf, frameInfo, infoFlags, pts);
   }
 }
 
@@ -237,12 +245,12 @@ vtdec_create_session(AppContext *ctx)
     &kCFTypeDictionaryKeyCallBacks,
     &kCFTypeDictionaryValueCallBacks);
 
-  // On iPhone 3G, the recommended pixel format choices are 
-  //  kCVPixelFormatType_422YpCbCr8 or kCVPixelFormatType_32BGRA.
-  //  TODO: figure out what we need.
+  // The recommended pixel format choices are 
+  //  kCVPixelFormatType_32BGRA or kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange
   CFDictionarySetSInt32(destinationPixelBufferAttributes,
     kCVPixelBufferPixelFormatTypeKey, 
-    kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange);
+    kCVPixelFormatType_32BGRA);
+    //kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange);
   CFDictionarySetSInt32(destinationPixelBufferAttributes,
     kCVPixelBufferWidthKey,
     ctx->sourceWidth);
@@ -268,6 +276,7 @@ vtdec_create_session(AppContext *ctx)
 
   CFRelease(destinationPixelBufferAttributes);
 
+  printf("vtdec session created\n");
   return session;
 }
 
@@ -277,6 +286,7 @@ vtdec_destroy_session(VTDecompressionSessionRef *session)
   VTDecompressionSessionInvalidate(*session);
   VTDecompressionSessionRelease(*session);
   *session = NULL;
+  printf("vtdec session destroyed\n");
 }
 
 CMSampleBufferRef
@@ -319,14 +329,18 @@ vtdec_sample_buffer_from(AppContext *ctx, void *demux_buff, size_t demux_size)
 }
 
 OSStatus
-vtdec_decode_buffer(AppContext *ctx, void *demux_buff, size_t demux_size)
+vtdec_decode_buffer(AppContext *ctx, void *demux_buff, size_t demux_size, uint64_t dts, uint64_t pts)
 {
   CMSampleBufferRef sample_buff;
+  CFDictionaryRef frameinfo;
+  uint32_t decoderFlags;
   OSStatus status;
 
   sample_buff = vtdec_sample_buffer_from(ctx, demux_buff, demux_size);
 
-  status = VTDecompressionSessionDecodeFrame(ctx->session, sample_buff, 0, 0, 0);
+  frameinfo = MakeDictionaryWithDisplayTime(pts);
+  decoderFlags = 0;
+  status = VTDecompressionSessionDecodeFrame(ctx->session, sample_buff, decoderFlags, frameinfo, 0);
   if (status != 0) {
     printf("VTDecompressionSessionDecodeFrame returned %d\n", (int)status);
   }
@@ -336,6 +350,7 @@ vtdec_decode_buffer(AppContext *ctx, void *demux_buff, size_t demux_size)
     printf("VTDecompressionSessionWaitForAsynchronousFrames returned %d\n", (int)status);
   }
 
+  CFRelease(frameinfo);
   FigSampleBufferRelease(sample_buff);
 
   return status;
@@ -410,7 +425,6 @@ int main (int argc, char * const argv[])
     fprintf(stderr, "ERROR: vtdec_create_session\n");
     goto fail;
   }
-  printf("vtdec session created\n");
   
   
   {
@@ -428,18 +442,19 @@ int main (int argc, char * const argv[])
 
     usleep(10000);
     frame_count = 0;
-    while (!g_signal_abort && byte_count && (frame_count < 1000)) {
-      status = vtdec_decode_buffer(&ctx, data, byte_count);
+    while (!g_signal_abort && byte_count && (frame_count < 100)) {
+      status = vtdec_decode_buffer(&ctx, data, byte_count, dts, pts);
       free(data);
       frame_count++;
       usleep(10000);
       ctx.demuxer->Read(&data, &byte_count, &dts, &pts);
-      printf("byte_count(%d), dts(%llu), pts(%llu)\n", byte_count, dts, pts);
       total += byte_count;
+      /*
       if (byte_count) {
-        fprintf(stdout, "Read from input: total bytes(%d) byte_count(%d), dts(%llu), pts(%llu)\n",
-          total, byte_count, dts, pts);
+        fprintf(stdout, "frame_count(%d), total(%d) byte_count(%d), dts(%llu), pts(%llu)\n",
+          frame_count, total, byte_count, dts, pts);
       }
+      */
     }
   }
 
