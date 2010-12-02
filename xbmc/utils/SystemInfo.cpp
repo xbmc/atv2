@@ -715,6 +715,16 @@ bool CSysInfo::HasVDADecoder()
   return result;
 }
 
+bool CSysInfo::HasVideoToolBoxDecoder()
+{
+  bool        result = false;
+
+#if defined(__APPLE__) && defined(__arm__)
+  result = true;
+#endif
+  return result;
+}
+
 CJob *CSysInfo::GetJob() const
 {
   return new CSysInfoJob();

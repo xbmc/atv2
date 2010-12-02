@@ -918,6 +918,9 @@
 		F589B0BF128A5FE200D8079E /* iOS_Utils.mm in Sources */ = {isa = PBXBuildFile; fileRef = F589B0BE128A5FE200D8079E /* iOS_Utils.mm */; };
 		F59E2BF1129A0C5B00F6AB7A /* fstrcmp.c in Sources */ = {isa = PBXBuildFile; fileRef = F59E2BF0129A0C5B00F6AB7A /* fstrcmp.c */; };
 		F5A29BDF12A044E7003A610C /* fastmemcpy-arm.S in Sources */ = {isa = PBXBuildFile; fileRef = F5A29BDE12A044E7003A610C /* fastmemcpy-arm.S */; };
+		F5A29DCF12A70EA3003A610C /* DVDVideoCodecVideoToolBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F5A29DCD12A70EA3003A610C /* DVDVideoCodecVideoToolBox.cpp */; };
+		F5A29EC312A7221B003A610C /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5A29EC212A7221B003A610C /* CoreMedia.framework */; };
+		F5A29F2712A72246003A610C /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5A29F2612A72246003A610C /* VideoToolbox.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -2864,6 +2867,10 @@
 		F589B0BE128A5FE200D8079E /* iOS_Utils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = iOS_Utils.mm; path = xbmc/osx/atv2/iOS_Utils.mm; sourceTree = "<group>"; };
 		F59E2BF0129A0C5B00F6AB7A /* fstrcmp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fstrcmp.c; sourceTree = "<group>"; };
 		F5A29BDE12A044E7003A610C /* fastmemcpy-arm.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = "fastmemcpy-arm.S"; sourceTree = "<group>"; };
+		F5A29DCD12A70EA3003A610C /* DVDVideoCodecVideoToolBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DVDVideoCodecVideoToolBox.cpp; sourceTree = "<group>"; };
+		F5A29DCE12A70EA3003A610C /* DVDVideoCodecVideoToolBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVDVideoCodecVideoToolBox.h; sourceTree = "<group>"; };
+		F5A29EC212A7221B003A610C /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		F5A29F2612A72246003A610C /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/PrivateFrameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2913,6 +2920,8 @@
 				F589AE8412890BEF00D8079E /* libxbms-arm-osx.a in Frameworks */,
 				F589AE8512890BEF00D8079E /* libxdaap-arm-osx.a in Frameworks */,
 				F589AE8612890BF000D8079E /* libshout-arm-osx.a in Frameworks */,
+				F5A29EC312A7221B003A610C /* CoreMedia.framework in Frameworks */,
+				F5A29F2712A72246003A610C /* VideoToolbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2954,6 +2963,8 @@
 				F5899DCC1287212700D8079E /* UIKit.framework */,
 				F5899DCA1287212700D8079E /* QuartzCore.framework */,
 				F5899DCB1287212700D8079E /* OpenGLES.framework */,
+				F5A29EC212A7221B003A610C /* CoreMedia.framework */,
+				F5A29F2612A72246003A610C /* VideoToolbox.framework */,
 			);
 			name = "System Libs and Frameworks";
 			sourceTree = "<group>";
@@ -4066,6 +4077,8 @@
 				F589A31612879A9900D8079E /* DVDVideoCodecCrystalHD.h */,
 				F589A31712879A9900D8079E /* DVDVideoCodecVDA.cpp */,
 				F589A31812879A9900D8079E /* DVDVideoCodecVDA.h */,
+				F5A29DCD12A70EA3003A610C /* DVDVideoCodecVideoToolBox.cpp */,
+				F5A29DCE12A70EA3003A610C /* DVDVideoCodecVideoToolBox.h */,
 				F589A31912879A9900D8079E /* DVDVideoCodecFFmpeg.cpp */,
 				F589A31A12879A9900D8079E /* DVDVideoCodecFFmpeg.h */,
 				F589A31B12879A9900D8079E /* DVDVideoCodecLibMpeg2.cpp */,
@@ -6731,6 +6744,7 @@
 				F589B0BF128A5FE200D8079E /* iOS_Utils.mm in Sources */,
 				F59E2BF1129A0C5B00F6AB7A /* fstrcmp.c in Sources */,
 				F5A29BDF12A044E7003A610C /* fastmemcpy-arm.S in Sources */,
+				F5A29DCF12A70EA3003A610C /* DVDVideoCodecVideoToolBox.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6755,6 +6769,10 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = NO;
 				EXECUTABLE_EXTENSION = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
+				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
@@ -6842,6 +6860,10 @@
 				DEAD_CODE_STRIPPING = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EXECUTABLE_EXTENSION = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
+				);
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_MODEL_TUNING = G5;

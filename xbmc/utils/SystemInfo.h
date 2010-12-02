@@ -97,6 +97,7 @@ public:
   bool HasInternet();
   bool IsAppleTV();
   bool HasVDADecoder();
+  bool HasVideoToolBoxDecoder();
   bool IsAeroDisabled();
   bool IsVistaOrHigher();
   static CStdString GetKernelVersion();
