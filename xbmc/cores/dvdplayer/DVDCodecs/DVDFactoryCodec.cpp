@@ -28,6 +28,10 @@
 #include "Overlay/DVDOverlayCodec.h"
 
 #include "Video/DVDVideoCodecVDA.h"
+#if defined(__APPLE__) && defined(__arm__)
+//#if defined(HAVE_VIDEOTOOLBOXDECODER)
+#include "Video/DVDVideoCodecVideoToolBox.h"
+#endif
 #include "Video/DVDVideoCodecFFmpeg.h"
 #include "Video/DVDVideoCodecOpenMax.h"
 #include "Video/DVDVideoCodecLibMpeg2.h"
@@ -139,6 +143,14 @@ CDVDVideoCodec* CDVDFactoryCodec::CreateVideoCodec( CDVDStreamInfo &hint )
 #elif defined(__APPLE__)
   hwSupport += "VDADecoder:no ";
 #endif
+/*
+#if defined(HAVE_VIDEOTOOLBOXDECODER) && defined(__APPLE__)
+  hwSupport += "VideoToolBoxDecoder:yes ";
+#elif defined(__APPLE__)
+  hwSupport += "VideoToolBoxDecoder:no ";
+#endif
+*/
+  hwSupport += "VideoToolBoxDecoder:yes ";
 #ifdef HAVE_LIBCRYSTALHD
   hwSupport += "CrystalHD:yes ";
 #else
@@ -179,6 +191,18 @@ CDVDVideoCodec* CDVDFactoryCodec::CreateVideoCodec( CDVDStreamInfo &hint )
     {
       CLog::Log(LOGINFO, "Trying Apple VDA Decoder...");
       if ( (pCodec = OpenCodec(new CDVDVideoCodecVDA(), hint, options)) ) return pCodec;
+    }
+  }
+#endif
+
+#if defined(__APPLE__) && defined(__arm__)
+//#if defined(HAVE_VIDEOTOOLBOXDECODER)
+  if (hint.width > 720 && g_sysinfo.HasVideoToolBoxDecoder())
+  {
+    if (!hint.software && hint.codec == CODEC_ID_H264)
+    {
+      CLog::Log(LOGINFO, "Trying Apple VideoToolBox Decoder...");
+      if ( (pCodec = OpenCodec(new CDVDVideoCodecVideoToolBox(), hint, options)) ) return pCodec;
     }
   }
 #endif
