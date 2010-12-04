@@ -145,13 +145,17 @@ static CFDictionaryRef MakeDictionaryWithDisplayTime(int64_t inFrameDisplayTime)
     kCFNumberSInt64Type,
     &inFrameDisplayTime);
 
-  return CFDictionaryCreate(
+  CFDictionaryRef dict = CFDictionaryCreate(
     kCFAllocatorDefault,
     (const void **)&key,
     (const void **)&value,
     1,
     &kCFTypeDictionaryKeyCallBacks,
     &kCFTypeDictionaryValueCallBacks);
+    
+    CFRelease(value);
+
+  return dict;
 }
 
 // example helper function to extract a time from our dictionary
