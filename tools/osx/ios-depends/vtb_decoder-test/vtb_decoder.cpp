@@ -5,6 +5,7 @@
 #include <queue>
 #include <vector>
 #include <semaphore.h>
+#include <mach/mach_time.h>
 
 #include <CoreVideo/CoreVideo.h>
 #include <CoreMedia/CoreMedia.h>
@@ -47,6 +48,8 @@ struct _VTDecompressionOutputCallback
   VTDecompressionOutputCallbackFunc func;
   void *data;
 };
+
+extern CFStringRef kVTVideoDecoderSpecification_EnableSandboxedVideoDecoder;
 
 extern OSStatus VTDecompressionSessionCreate(
   CFAllocatorRef allocator,
@@ -124,6 +127,40 @@ static void signal_handler(int iSignal)
   g_signal_abort = 1;
   printf("Terminating - Program received %s signal\n", \
     (iSignal == SIGINT? "SIGINT" : (iSignal == SIGTERM ? "SIGTERM" : "UNKNOWN")));
+}
+
+uint64_t CurrentHostCounter(void)
+{
+  uint64_t absolute_nano;
+
+  static mach_timebase_info_data_t timebase_info;
+  if (timebase_info.denom == 0)
+  {
+    // Zero-initialization of statics guarantees that denom will be 0 before
+    // calling mach_timebase_info.  mach_timebase_info will never set denom to
+    // 0 as that would be invalid, so the zero-check can be used to determine
+    // whether mach_timebase_info has already been called.  This is
+    // recommended by Apple's QA1398.
+    mach_timebase_info(&timebase_info);
+  }
+
+  // mach_absolute_time is it when it comes to ticks on the Mac.  Other calls
+  // with less precision (such as TickCount) just call through to
+  // mach_absolute_time.
+
+  // timebase_info converts absolute time tick units into nanoseconds.  
+  // to microseconds up front to stave off overflows.
+  absolute_nano = (mach_absolute_time() * timebase_info.numer) / timebase_info.denom;
+
+  // Don't bother with the rollover handling that the Windows version does.
+  // With numer and denom = 1 (the expected case), the 64-bit absolute time
+  // reported in nanoseconds is enough to last nearly 585 years.
+  return( (uint64_t)absolute_nano);
+}
+
+uint64_t CurrentHostFrequency(void)
+{
+  return( (uint64_t)1000000000L );
 }
 
 void
@@ -264,6 +301,11 @@ vtdec_create_session(AppContext *ctx)
   CFDictionarySetSInt32(destinationPixelBufferAttributes,
     kCVPixelBufferBytesPerRowAlignmentKey,
     2 * ctx->sourceWidth);
+
+  CFDictionarySetSInt32(destinationPixelBufferAttributes,
+    kVTVideoDecoderSpecification_EnableSandboxedVideoDecoder, 
+    TRUE);
+    
 
   outputCallback.func = vtdec_output_frame;
   outputCallback.data = ctx;
@@ -414,7 +456,8 @@ int main (int argc, char * const argv[])
   
   ctx.sourceWidth = ctx.codec_context->width;
   ctx.sourceHeight = ctx.codec_context->height;
-  printf("video width(%d), height(%d)\n", (int)ctx.sourceWidth, (int)ctx.sourceHeight);
+  printf("video width(%d), height(%d), extradata_size(%d)\n",
+    (int)ctx.sourceWidth, (int)ctx.sourceHeight, ctx.codec_context->extradata_size);
   
   // initialize video decoder.
   ctx.format_id = kVTFormatH264;
@@ -434,6 +477,7 @@ int main (int argc, char * const argv[])
   {
     OSStatus status;
     int frame_count, byte_count, total = 0;
+    uint64_t bgn, end;
     uint8_t* data;
     uint64_t dts, pts;
 
@@ -446,9 +490,12 @@ int main (int argc, char * const argv[])
 
     usleep(10000);
     frame_count = 0;
-    while (!g_signal_abort && byte_count && (frame_count < 100)) {
+    while (!g_signal_abort && byte_count && (frame_count < 300)) {
+      bgn = CurrentHostCounter() * 1000 / CurrentHostFrequency();
       status = vtdec_decode_buffer(&ctx, data, byte_count, dts, pts);
       free(data);
+      end = CurrentHostCounter() * 1000 / CurrentHostFrequency();
+      fprintf(stdout, "decode time(%llu)\n", end-bgn);
       frame_count++;
       usleep(10000);
       ctx.demuxer->Read(&data, &byte_count, &dts, &pts);
