@@ -490,7 +490,7 @@ int main (int argc, char * const argv[])
 
     usleep(10000);
     frame_count = 0;
-    while (!g_signal_abort && byte_count && (frame_count < 300)) {
+    while (!g_signal_abort && byte_count && (frame_count < 5000)) {
       bgn = CurrentHostCounter() * 1000 / CurrentHostFrequency();
       status = vtdec_decode_buffer(&ctx, data, byte_count, dts, pts);
       free(data);

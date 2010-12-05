@@ -1,9 +1,8 @@
 #
-#  Apple Media Services test project.
+#  Apple VideoToolBox.framework test project.
 #  Usage:
-#    ./ams_test --input media/SpeedRacer.mov
+#    ./vtb_decoder --input media/SpeedRacer.mov
 #
-# this makefile matches xcode project build (i.e. armv7 build)
 
 include ../config.mk
 
@@ -12,9 +11,9 @@ BIN = vtb_decoder
 INCLUDES+= -I./ffmpeg
 
 LDFLAGS+= -lbz2 -lz
-LDFLAGS+= -F/$(SDKROOT)/System/Library/Frameworks
+LDFLAGS+= -F$(SDKROOT)/System/Library/Frameworks
 LDFLAGS+= -framework CoreFoundation -framework CoreVideo -framework CoreMedia
-LDFLAGS+= -F/$(SDKROOT)/System/Library/PrivateFrameworks
+LDFLAGS+= -F$(SDKROOT)/System/Library/PrivateFrameworks
 LDFLAGS+= -framework VideoToolbox
 CPPFLAGS+= -g -O0 -Wall
 CPPFLAGS+= ${INCLUDES}
