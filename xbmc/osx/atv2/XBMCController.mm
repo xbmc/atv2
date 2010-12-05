@@ -25,6 +25,34 @@
 
 #import "XBMCController.h"
 #import "XBMCEAGLView.h"
+#import "xbmcclientwrapper.h"
+#import "XBMCDebugHelpers.h"
+
+typedef enum {
+  // for originator kBREventOriginatorRemote
+  kBREventRemoteActionMenu = 1,
+  kBREventRemoteActionMenuHold,
+  kBREventRemoteActionUp,
+  kBREventRemoteActionDown,
+  kBREventRemoteActionPlay,
+  kBREventRemoteActionLeft,
+  kBREventRemoteActionRight,
+
+  kBREventRemoteActionPlayHold = 20,
+
+  // Gestures, for originator kBREventOriginatorGesture
+  kBREventRemoteActionTap = 30,
+  kBREventRemoteActionSwipeLeft,
+  kBREventRemoteActionSwipeRight,
+  kBREventRemoteActionSwipeUp,
+  kBREventRemoteActionSwipeDown,
+
+  // Custom remote actions for old remote actions
+  kBREventRemoteActionHoldLeft = 0xfeed0001,
+  kBREventRemoteActionHoldRight,
+  kBREventRemoteActionHoldUp,
+  kBREventRemoteActionHoldDown,
+} BREventRemoteAction;
 
 //--------------------------------------------------------------
 //--------------------------------------------------------------
@@ -100,12 +128,17 @@ XBMCEAGLView  *m_glView;
   m_glView = [[XBMCEAGLView alloc] initWithFrame:m_window.bounds];
   [m_window addSubview:m_glView];
 
+  bool use_universal = NO;
+  NSString *client_address= @"localhost";
+  mp_xbmclient = [[XBMCClientWrapper alloc] initWithUniversalMode:use_universal serverAddress:client_address];
   return self;
 }
 
 - (void)dealloc
 {
   NSLog(@"%s", __PRETTY_FUNCTION__);
+
+	[mp_xbmclient release];
 
   [m_glView stopAnimation];
   [m_glView release];
@@ -150,11 +183,104 @@ XBMCEAGLView  *m_glView;
   return YES;
 }
 
-- (BOOL)brEventAction:(id)action
+- (eATVClientEvent) ATVClientEventFromBREvent:(BREvent*) f_event
+{
+  BOOL downEvent = [f_event value];
+  int remoteAction = [f_event remoteAction];
+  DLOG(@"got action %i %@", remoteAction, (downEvent)? @"pressed":@"released");
+  
+  switch (remoteAction)
+  {
+    case kBREventRemoteActionUp:
+    case 65676:  // tap up
+      if([f_event value] == 1)
+        return ATV_BUTTON_UP;
+      else
+        return ATV_BUTTON_UP_RELEASE;
+    case kBREventRemoteActionDown:
+    case 65677:  // tap down
+      if([f_event value] == 1)
+        return ATV_BUTTON_DOWN;
+      else
+        return ATV_BUTTON_DOWN_RELEASE;
+    case kBREventRemoteActionLeft:
+    case 65675:  // tap left
+      if([f_event value] == 1)
+        return ATV_BUTTON_LEFT;
+      else
+        return ATV_BUTTON_LEFT_RELEASE;
+    case 786612: // hold left
+      if([f_event value] == 1)
+        return ATV_LEARNED_REWIND;
+      else
+        return ATV_LEARNED_REWIND_RELEASE;
+    case kBREventRemoteActionRight:
+    case 65674:  // tap right
+      if ([f_event value] == 1)
+        return ATV_BUTTON_RIGHT;
+      else
+        return ATV_BUTTON_RIGHT_RELEASE;
+    case 786611: // hold right
+      if ([f_event value] == 1)
+        return ATV_LEARNED_FORWARD;
+      else
+        return ATV_LEARNED_FORWARD_RELEASE;
+    case kBREventRemoteActionPlay:
+    case 65673:  // tap play
+      return ATV_BUTTON_PLAY;
+    case kBREventRemoteActionPlayHold:
+    case 65668:  // hold play
+      return ATV_BUTTON_PLAY_H;
+    case kBREventRemoteActionMenu:
+    case 65670:  // menu
+      return ATV_BUTTON_MENU;
+    case kBREventRemoteActionMenuHold:
+    case 786496: // hold menu
+      return ATV_BUTTON_MENU_H;
+    case 786608: //learned play
+      return ATV_LEARNED_PLAY;
+    case 786609: //learned pause
+      return ATV_LEARNED_PAUSE;
+    case 786615: //learned stop
+      return ATV_LEARNED_STOP;
+    case 786613: //learned nexxt
+      return ATV_LEARNED_NEXT;
+    case 786614: //learned previous
+      return ATV_LEARNED_PREVIOUS;
+    case 786630: //learned enter, like go into something
+      return ATV_LEARNED_ENTER;
+    case 786631: //learned return, like go back
+      return ATV_LEARNED_RETURN;
+    case 786637:
+      return ATV_ALUMINIUM_PLAY;
+    default:
+      ELOG(@"XBMCPureController: Unknown button press remoteAction = %i", remoteAction);
+      return ATV_INVALID_BUTTON;
+  }
+}
+
+- (BOOL)brEventAction:(BREvent*)event
 {
   NSLog(@"%s", __PRETTY_FUNCTION__);
 
-  return [super brEventAction:action];
+	if ([m_glView isAnimating])
+  {
+    eATVClientEvent xbmcclient_event = [self ATVClientEventFromBREvent:event];
+    
+    if ( xbmcclient_event == ATV_INVALID_BUTTON )
+    {
+      return NO;
+    } 
+    else
+    {
+      [mp_xbmclient handleEvent:xbmcclient_event];
+      return TRUE;
+    }
+	}
+  else
+  {
+		return [super brEventAction:event];
+	}
 }
 
 #pragma mark -

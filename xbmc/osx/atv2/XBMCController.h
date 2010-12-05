@@ -20,12 +20,15 @@
 #import <BackRow/BackRow.h>
 #import "XBMCEAGLView.h"
 
+@class XBMCClientWrapper;
+
 @interface XBMCController : BRController
 {
   int padding[16];  // credit is due here to SapphireCompatibilityClasses!!
         
   int m_screensaverTimeout;
   BRController *m_controller;
+	XBMCClientWrapper* mp_xbmclient; // our own event-client implementation
 }
 // message from which our instance is obtained
 + (XBMCController*) sharedInstance;
