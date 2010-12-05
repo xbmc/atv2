@@ -6,6 +6,13 @@
 
 include ../config.mk
 
+# FFmpeg and libswscale are paired yet come from different locations
+# a normal FFmpeg checkout will grab the most recent libswscale so if
+# you want to checkout a specific FFmpeg version, need to know an use
+# the matching libswscale version. There is no automated way to do this.
+FFMPEG_VERS = 23596
+SWSCALE_VERS = 31391
+
 BIN = vtb_decoder
 
 INCLUDES+= -I./ffmpeg
@@ -39,7 +46,8 @@ ffmpeg-libs: ffmpeg/config.h
 	make -C ffmpeg
 
 ffmpeg/config.h:
-	svn export svn://svn.ffmpeg.org/ffmpeg/trunk ffmpeg
+	svn export --revision $(FFMPEG_VERS) --ignore-externals svn://svn.ffmpeg.org/ffmpeg/trunk ffmpeg
+	cd ffmpeg && svn export --revision $(SWSCALE_VERS) svn://svn.ffmpeg.org/mplayer/trunk/libswscale libswscale
 	cd ffmpeg && patch -p1 <../03_mpeg4_video_to_elementary_stream.patch
 	cd ffmpeg && patch -p1 <../04_vc1_bsfs.patch
 	cd ffmpeg && ./configure \

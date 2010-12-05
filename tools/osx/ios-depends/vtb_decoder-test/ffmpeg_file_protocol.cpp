@@ -38,7 +38,7 @@ int ReadContext(URLContext* h, unsigned char* buf, int size) {
   return read(GetHandle(h), buf, size);
 }
 
-int WriteContext(URLContext* h, unsigned char* buf, int size) {
+int WriteContext(URLContext* h, const unsigned char* buf, int size) {
   return write(GetHandle(h), buf, size);
 }
 
