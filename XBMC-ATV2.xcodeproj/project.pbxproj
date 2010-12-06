@@ -2867,6 +2867,8 @@
 		F589B0BD128A5FE200D8079E /* iOS_Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iOS_Utils.h; path = xbmc/osx/atv2/iOS_Utils.h; sourceTree = "<group>"; };
 		F589B0BE128A5FE200D8079E /* iOS_Utils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = iOS_Utils.mm; path = xbmc/osx/atv2/iOS_Utils.mm; sourceTree = "<group>"; };
 		F59E2BF0129A0C5B00F6AB7A /* fstrcmp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fstrcmp.c; sourceTree = "<group>"; };
+		F59FC11E12AD92290063D9F2 /* DVDVideoCodecOpenMax.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVDVideoCodecOpenMax.h; sourceTree = "<group>"; };
+		F59FC11F12AD92290063D9F2 /* DVDVideoCodecOpenMax.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DVDVideoCodecOpenMax.cpp; sourceTree = "<group>"; };
 		F5A29BDE12A044E7003A610C /* fastmemcpy-arm.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = "fastmemcpy-arm.S"; sourceTree = "<group>"; };
 		F5A29DCD12A70EA3003A610C /* DVDVideoCodecVideoToolBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DVDVideoCodecVideoToolBox.cpp; sourceTree = "<group>"; };
 		F5A29DCE12A70EA3003A610C /* DVDVideoCodecVideoToolBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVDVideoCodecVideoToolBox.h; sourceTree = "<group>"; };
@@ -4088,6 +4090,8 @@
 				F589A31A12879A9900D8079E /* DVDVideoCodecFFmpeg.h */,
 				F589A31B12879A9900D8079E /* DVDVideoCodecLibMpeg2.cpp */,
 				F589A31C12879A9900D8079E /* DVDVideoCodecLibMpeg2.h */,
+				F59FC11F12AD92290063D9F2 /* DVDVideoCodecOpenMax.cpp */,
+				F59FC11E12AD92290063D9F2 /* DVDVideoCodecOpenMax.h */,
 				F589A31D12879A9900D8079E /* DVDVideoPPFFmpeg.cpp */,
 				F589A31E12879A9900D8079E /* DVDVideoPPFFmpeg.h */,
 				F589A31F12879A9900D8079E /* libmpeg2 */,
@@ -5805,7 +5809,6 @@
 			isa = PBXProject;
 			buildConfigurationList = 1DEB911E08733D790010E9CD /* Build configuration list for PBXProject "XBMC-ATV2" */;
 			compatibilityVersion = "Xcode 3.1";
-			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
