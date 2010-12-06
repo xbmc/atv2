@@ -797,10 +797,12 @@ bool CDVDVideoCodecVideoToolBox::GetPicture(DVDVideoPicture* pDvdVideoPicture)
   uint8_t *base_ptr = (uint8_t*)CVPixelBufferGetBaseAddressOfPlane(picture_buffer_ref, 0);
   if (base_ptr)
   {
+  /*
     if (pixel_buffer_format == kCVPixelFormatType_422YpCbCr8)
       UYVY422_to_YUV420P(base_ptr, row_stride, pDvdVideoPicture);
     else if (pixel_buffer_format == kCVPixelFormatType_32BGRA)
       BGRA_to_YUV420P(base_ptr, row_stride, pDvdVideoPicture);
+  */
   }
   // unlock the CVPixelBuffer
   CVPixelBufferUnlockBaseAddress(picture_buffer_ref, 0);
