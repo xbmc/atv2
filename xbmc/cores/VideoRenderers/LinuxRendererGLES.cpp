@@ -694,23 +694,16 @@ void CLinuxRendererGLES::UpdateVideoFilter()
 
 void CLinuxRendererGLES::LoadShaders(int field)
 {
-  int requestedMethod = g_guiSettings.GetInt("videoplayer.rendermethod");
-  CLog::Log(LOGDEBUG, "GL: Requested render method: %d", requestedMethod);
-  bool err = false;
-
   if (CONF_FLAGS_FORMAT_MASK(m_iFlags) == CONF_FLAGS_FORMAT_OMXEGL)
   {
     CLog::Log(LOGNOTICE, "GL: Using OMXEGL render method");
     m_renderMethod = RENDER_OMXEGL;
   }
-
-  /*
-    Try GLSL shaders if they're supported and if the user has
-    requested for it. (settings -> video -> player -> rendermethod)
-   */
-  if (glCreateProgram // TODO: proper check
-      && (requestedMethod==RENDER_METHOD_AUTO || requestedMethod==RENDER_METHOD_GLSL))
+  else
   {
+    int requestedMethod = g_guiSettings.GetInt("videoplayer.rendermethod");
+    CLog::Log(LOGDEBUG, "GL: Requested render method: %d", requestedMethod);
+
     if (m_pYUVShader)
     {
       m_pYUVShader->Free();
@@ -718,40 +711,40 @@ void CLinuxRendererGLES::LoadShaders(int field)
       m_pYUVShader = NULL;
     }
 
-    // create regular progressive scan shader
-    m_pYUVShader = new YUV2RGBProgressiveShader(false, m_iFlags);
-    CLog::Log(LOGNOTICE, "GL: Selecting Single Pass YUV 2 RGB shader");
-
-    if (m_pYUVShader && m_pYUVShader->CompileAndLink())
+    switch(requestedMethod)
     {
-      //m_renderMethod = RENDER_GLSL;
-      UpdateVideoFilter();
-    }
-    else
-    {
-      m_pYUVShader->Free();
-      delete m_pYUVShader;
-      m_pYUVShader = NULL;
-      err = true;
-      CLog::Log(LOGERROR, "GL: Error enabling YUV2RGB GLSL shader");
-    }
-  }
+      case RENDER_METHOD_AUTO:
+      case RENDER_METHOD_GLSL:
+      // Try GLSL shaders if supported and user requested auto or GLSL.
+      if (glCreateProgram)
+      {
+        // create regular progressive scan shader
+        m_pYUVShader = new YUV2RGBProgressiveShader(false, m_iFlags);
+        CLog::Log(LOGNOTICE, "GL: Selecting Single Pass YUV 2 RGB shader");
 
-  /*
-    Fall back to software YUV 2 RGB conversion if
-      1) user requested it
-      2) or GLSL and/or ARB shaders failed
-   */
-  else
-  {
-    m_renderMethod = RENDER_SW ;
-    CLog::Log(LOGNOTICE, "GL: Shaders support not present, falling back to SW mode");
-  }
-
-  if (err==true)
-  {
-    CLog::Log(LOGERROR, "GL: Falling back to Software YUV2RGB");
-    m_renderMethod = RENDER_SW;
+        if (m_pYUVShader && m_pYUVShader->CompileAndLink())
+        {
+          m_renderMethod = RENDER_GLSL;
+          UpdateVideoFilter();
+          break;
+        }
+        else
+        {
+          m_pYUVShader->Free();
+          delete m_pYUVShader;
+          m_pYUVShader = NULL;
+          CLog::Log(LOGERROR, "GL: Error enabling YUV2RGB GLSL shader");
+          // drop through and try SW
+        }
+      }
+      case RENDER_METHOD_SOFTWARE:
+      default:
+      {
+        // Use software YUV 2 RGB conversion if user requested it or GLSL failed
+        m_renderMethod = RENDER_SW ;
+        CLog::Log(LOGNOTICE, "GL: Shaders support not present, falling back to SW mode");
+      }
+    }
   }
 
   // determine whether GPU supports NPOT textures
@@ -764,10 +757,20 @@ void CLinuxRendererGLES::LoadShaders(int field)
   else
     CLog::Log(LOGNOTICE, "GL: NPOT texture support detected");
 
-  // setup default YV12 texture handlers
-  m_textureUpload = &CLinuxRendererGLES::UploadYV12Texture;
-  m_textureCreate = &CLinuxRendererGLES::CreateYV12Texture;
-  m_textureDelete = &CLinuxRendererGLES::DeleteYV12Texture;
+  // Now that we now the render method, setup texture function handlers
+  if (CONF_FLAGS_FORMAT_MASK(m_iFlags) == CONF_FLAGS_FORMAT_OMXEGL)
+  {
+    m_textureUpload = &CLinuxRendererGLES::UploadOMXTexture;
+    m_textureCreate = &CLinuxRendererGLES::CreateOMXTexture;
+    m_textureDelete = &CLinuxRendererGLES::DeleteOMXTexture;
+  }
+  else
+  {
+    // default to YV12 texture handlers
+    m_textureUpload = &CLinuxRendererGLES::UploadYV12Texture;
+    m_textureCreate = &CLinuxRendererGLES::CreateYV12Texture;
+    m_textureDelete = &CLinuxRendererGLES::DeleteYV12Texture;
+  }
 }
 
 void CLinuxRendererGLES::UnInit()
@@ -822,8 +825,6 @@ void CLinuxRendererGLES::Render(DWORD flags, int renderBuffer)
 
   if (m_renderMethod & RENDER_GLSL)
   {
-    //(this->*m_textureUpload)(renderBuffer);
-    // call texture load function
     UpdateVideoFilter();
     switch(m_renderQuality)
     {
@@ -847,11 +848,10 @@ void CLinuxRendererGLES::Render(DWORD flags, int renderBuffer)
   else if ( m_renderMethod & RENDER_OMXEGL)
   {
     RenderOpenMax(renderBuffer, m_currentField);
+    VerifyGLState();
   }
   else
   {
-    //(this->*m_textureUpload)(renderBuffer);
-    // call texture load function
     RenderSoftware(renderBuffer, m_currentField);
     VerifyGLState();
   }
@@ -1219,7 +1219,7 @@ void CLinuxRendererGLES::RenderSoftware(int index, int field)
 
 void CLinuxRendererGLES::RenderOpenMax(int renderBuffer, int field)
 {
-#if 1
+#ifdef HAVE_LIBOPENMAX
   //printf("Texture: %d\n", m_buffers[renderBuffer].openMaxBuffer->texture_id);
 
   GLuint textureId = m_buffers[renderBuffer].openMaxBuffer->texture_id;
@@ -1334,7 +1334,7 @@ void CLinuxRendererGLES::UploadYV12Texture(int source)
   YUVFIELDS& fields =  buf.fields;
 
 
-  if (!(im->flags&IMAGE_FLAG_READY) || m_buffers[source].openMaxBuffer)
+  if (!(im->flags&IMAGE_FLAG_READY))
   {
     SetEvent(m_eventTexturesDone[source]);
     return;
@@ -1644,6 +1644,51 @@ bool CLinuxRendererGLES::CreateYV12Texture(int index)
   }
   glDisable(m_textureTarget);
   SetEvent(m_eventTexturesDone[index]);
+  return true;
+}
+
+//********************************************************************************************************
+// OMX Texture creation, deletion, copying + clearing
+//********************************************************************************************************
+void CLinuxRendererGLES::UploadOMXTexture(int source)
+{
+#ifdef HAVE_LIBOPENMAX
+  SetEvent(m_eventTexturesDone[source]);
+#endif
+}
+void CLinuxRendererGLES::DeleteOMXTexture(int index)
+{
+}
+bool CLinuxRendererGLES::CreateOMXTexture(int index)
+{
+#ifdef HAVE_LIBOPENMAX
+  /* since we also want the field textures, pitch must be texture aligned */
+  YV12Image &im     = m_buffers[index].image;
+  YUVFIELDS &fields = m_buffers[index].fields;
+  YUVPLANE  &plane  = fields[0][0];
+
+  DeleteOMXTexture(index);
+
+  memset(&im    , 0, sizeof(im));
+  memset(&fields, 0, sizeof(fields));
+
+  im.height = m_sourceHeight;
+  im.width  = m_sourceWidth;
+
+  plane.texwidth  = im.width;
+  plane.texheight = im.height;
+
+  plane.pixpertex_x = 1;
+  plane.pixpertex_y = 1;
+
+  if(m_renderMethod & RENDER_POT)
+  {
+    plane.texwidth  = NP2(plane.texwidth);
+    plane.texheight = NP2(plane.texheight);
+  }
+
+  SetEvent(m_eventTexturesDone[index]);
+#endif
   return true;
 }
 
