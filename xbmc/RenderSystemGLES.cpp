@@ -37,7 +37,9 @@ static const char* ShaderNames[SM_ESHADERCOUNT] =
      "guishader_frag_texture.glsl",
      "guishader_frag_multi.glsl",
      "guishader_frag_fonts.glsl",
-     "guishader_frag_texture_noblend.glsl"};
+     "guishader_frag_texture_noblend.glsl",
+     "guishader_frag_texture_rgba.glsl",
+     "guishader_frag_texture_noblend_rgba.glsl"};
 
 CRenderSystemGLES::CRenderSystemGLES()
  : CRenderSystemBase()
