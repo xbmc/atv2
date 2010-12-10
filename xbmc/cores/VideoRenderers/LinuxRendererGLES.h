@@ -173,6 +173,10 @@ protected:
   void DeleteYV12Texture(int index);
   bool CreateYV12Texture(int index);
 
+  void UploadOMXTexture(int index);
+  void DeleteOMXTexture(int index);
+  bool CreateOMXTexture(int index);
+
   void CalculateTextureSourceRects(int source, int num_planes);
 
   // renderers
