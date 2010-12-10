@@ -62,7 +62,12 @@ CLinuxRendererGLES::CLinuxRendererGLES()
   for (int i = 0; i < NUM_BUFFERS; i++)
   {
     m_eventTexturesDone[i] = CreateEvent(NULL,FALSE,TRUE,NULL);
+#ifdef HAVE_LIBOPENMAX
     m_buffers[i].openMaxBuffer = 0;
+#endif
+#ifdef HAVE_LIBCOREVIDEO
+    m_buffers[i].cvBufferRef = NULL;
+#endif
   }
 
   m_renderMethod = RENDER_GLSL;
@@ -274,10 +279,18 @@ int CLinuxRendererGLES::GetImage(YV12Image *image, int source, bool readonly)
   if( source == AUTOSOURCE )
     source = NextYV12Texture();
 
-  if ( m_renderMethod & RENDER_OMXEGL )
+#ifdef HAVE_LIBOPENMAX
+  if (m_renderMethod & RENDER_OMXEGL )
   {
     return source;
   }
+#endif
+#ifdef HAVE_LIBCOREVIDEO
+  if (m_renderMethod & RENDER_CVREF )
+  {
+    return source;
+  }
+#endif
 
   YV12Image &im = m_buffers[source].image;
 
@@ -700,6 +713,11 @@ void CLinuxRendererGLES::LoadShaders(int field)
     CLog::Log(LOGNOTICE, "GL: Using OMXEGL render method");
     m_renderMethod = RENDER_OMXEGL;
   }
+  else if (CONF_FLAGS_FORMAT_MASK(m_iFlags) == CONF_FLAGS_FORMAT_CVREF)
+  {
+    CLog::Log(LOGNOTICE, "GL: Using CoreVideoRef render method");
+    m_renderMethod = RENDER_CVREF;
+  }
   else
   {
     int requestedMethod = g_guiSettings.GetInt("videoplayer.rendermethod");
@@ -764,6 +782,12 @@ void CLinuxRendererGLES::LoadShaders(int field)
     m_textureUpload = &CLinuxRendererGLES::UploadOMXTexture;
     m_textureCreate = &CLinuxRendererGLES::CreateOMXTexture;
     m_textureDelete = &CLinuxRendererGLES::DeleteOMXTexture;
+  }
+  else if (CONF_FLAGS_FORMAT_MASK(m_iFlags) == CONF_FLAGS_FORMAT_CVREF)
+  {
+    m_textureUpload = &CLinuxRendererGLES::UploadCVRefTexture;
+    m_textureCreate = &CLinuxRendererGLES::DeleteCVRefTexture;
+    m_textureDelete = &CLinuxRendererGLES::CreateCVRefTexture;
   }
   else
   {
@@ -846,9 +870,14 @@ void CLinuxRendererGLES::Render(DWORD flags, int renderBuffer)
       break;
     }
   }
-  else if ( m_renderMethod & RENDER_OMXEGL)
+  else if (m_renderMethod & RENDER_OMXEGL)
   {
     RenderOpenMax(renderBuffer, m_currentField);
+    VerifyGLState();
+  }
+  else if (m_renderMethod & RENDER_CVREF)
+  {
+    RenderCoreVideoRef(renderBuffer, m_currentField);
     VerifyGLState();
   }
   else
@@ -1285,9 +1314,77 @@ void CLinuxRendererGLES::RenderOpenMax(int renderBuffer, int field)
 
   glDisable(m_textureTarget);
   VerifyGLState();
+#endif
+}
 
-  // ensure that image had been rendered
-  //glFinish();
+void CLinuxRendererGLES::RenderCoreVideoRef(int renderBuffer, int field)
+{
+#ifdef HAVE_LIBCOREVIDEO
+  //printf("Texture: %d\n", m_buffers[renderBuffer].openMaxBuffer->texture_id);
+
+  CVBufferRef cvBufferRef = m_buffers[renderBuffer].cvBufferRef;
+  GLenum target_id = CVOpenGLTextureGetTarget(cvBufferRef);
+
+  // set scissors if we are not in fullscreen video
+  if ( !(g_graphicsContext.IsFullScreenVideo() || g_graphicsContext.IsCalibrating() ))
+    g_graphicsContext.ClipToViewWindow();
+
+  glDisable(GL_DEPTH_TEST);
+
+  //glEnable(GL_TEXTURE_2D);
+  glEnable(target_id);
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(target_id, CVOpenGLTextureGetName(cvBufferRef));
+
+  g_Windowing.EnableGUIShader(SM_TEXTURE_RGBA);
+
+  GLubyte idx[4] = {0, 1, 3, 2};        //determines order of triangle strip
+  GLfloat ver[4][4];
+  GLfloat tex[4][2];
+  float col[4][3];
+
+  for (int index = 0;index < 4;++index)
+  {
+    col[index][0] = col[index][1] = col[index][2] = 1.0;
+  }
+
+  GLint   posLoc = g_Windowing.GUIShaderGetPos();
+  GLint   texLoc = g_Windowing.GUIShaderGetCoord0();
+  GLint   colLoc = g_Windowing.GUIShaderGetCol();
+
+  glVertexAttribPointer(posLoc, 4, GL_FLOAT, 0, 0, ver);
+  glVertexAttribPointer(texLoc, 2, GL_FLOAT, 0, 0, tex);
+  glVertexAttribPointer(colLoc, 3, GL_FLOAT, 0, 0, col);
+
+  glEnableVertexAttribArray(posLoc);
+  glEnableVertexAttribArray(texLoc);
+  glEnableVertexAttribArray(colLoc);
+
+  // Set vertex coordinates
+  ver[0][0] = ver[3][0] = m_destRect.x1;
+  ver[0][1] = ver[1][1] = m_destRect.y2;
+  ver[1][0] = ver[2][0] = m_destRect.x2;
+  ver[2][1] = ver[3][1] = m_destRect.y1;
+  ver[0][2] = ver[1][2] = ver[2][2] = ver[3][2] = 0.0f;
+  ver[0][3] = ver[1][3] = ver[2][3] = ver[3][3] = 1.0f;
+
+  // Set texture coordinates
+  tex[0][0] = tex[3][0] = 0;
+  tex[0][1] = tex[1][1] = 0;
+  tex[1][0] = tex[2][0] = 1;
+  tex[2][1] = tex[3][1] = 1;
+
+  glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_BYTE, idx);
+
+  glDisableVertexAttribArray(posLoc);
+  glDisableVertexAttribArray(texLoc);
+
+  g_Windowing.DisableGUIShader();
+
+  VerifyGLState();
+
+  glDisable(target_id);
+  VerifyGLState();
 #endif
 }
 
@@ -1692,6 +1789,50 @@ bool CLinuxRendererGLES::CreateOMXTexture(int index)
 #endif
   return true;
 }
+//********************************************************************************************************
+// CoreVideoRef Texture creation, deletion, copying + clearing
+//********************************************************************************************************
+void CLinuxRendererGLES::UploadCVRefTexture(int source)
+{
+#ifdef HAVE_LIBCOREVIDEO
+  SetEvent(m_eventTexturesDone[source]);
+#endif
+}
+void CLinuxRendererGLES::DeleteCVRefTexture(int index)
+{
+}
+bool CLinuxRendererGLES::CreateCVRefTexture(int index)
+{
+#ifdef HAVE_LIBCOREVIDEO
+  /* since we also want the field textures, pitch must be texture aligned */
+  YV12Image &im     = m_buffers[index].image;
+  YUVFIELDS &fields = m_buffers[index].fields;
+  YUVPLANE  &plane  = fields[0][0];
+
+  DeleteCVRefTexture(index);
+
+  memset(&im    , 0, sizeof(im));
+  memset(&fields, 0, sizeof(fields));
+
+  im.height = m_sourceHeight;
+  im.width  = m_sourceWidth;
+
+  plane.texwidth  = im.width;
+  plane.texheight = im.height;
+
+  plane.pixpertex_x = 1;
+  plane.pixpertex_y = 1;
+
+  if(m_renderMethod & RENDER_POT)
+  {
+    plane.texwidth  = NP2(plane.texwidth);
+    plane.texheight = NP2(plane.texheight);
+  }
+
+  SetEvent(m_eventTexturesDone[index]);
+#endif
+  return true;
+}
 
 void CLinuxRendererGLES::SetTextureFilter(GLenum method)
 {
@@ -1777,6 +1918,13 @@ void CLinuxRendererGLES::AddProcessor(COpenMaxVideo* openMax, DVDVideoPicture *p
 {
   YUVBUFFER &buf = m_buffers[NextYV12Texture()];
   buf.openMaxBuffer = picture->openMaxBuffer;
+}
+#endif
+#ifdef HAVE_LIBCOREVIDEO
+void CLinuxRendererGLES::AddProcessor(CDVDVideoCodecVideoToolBox* vtb, DVDVideoPicture *picture)
+{
+  YUVBUFFER &buf = m_buffers[NextYV12Texture()];
+  buf.cvBufferRef = picture->cvBufferRef;
 }
 #endif
 

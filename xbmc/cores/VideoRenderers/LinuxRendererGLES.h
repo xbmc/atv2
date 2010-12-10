@@ -87,7 +87,8 @@ enum RenderMethod
   RENDER_GLSL=0x01,
   RENDER_SW=0x04,
   RENDER_POT=0x10,
-  RENDER_OMXEGL=0x40
+  RENDER_OMXEGL=0x40,
+  RENDER_CVREF=0x80
 };
 
 enum RenderQuality
@@ -150,6 +151,9 @@ public:
 #ifdef HAVE_LIBOPENMAX
   virtual void         AddProcessor(COpenMaxVideo* openMax, DVDVideoPicture *picture);
 #endif
+#ifdef HAVE_LIBCOREVIDEO
+  virtual void         AddProcessor(CDVDVideoCodecVideoToolBox* vtb, DVDVideoPicture *picture);
+#endif
 protected:
   virtual void Render(DWORD flags, int renderBuffer);
 
@@ -177,6 +181,10 @@ protected:
   void DeleteOMXTexture(int index);
   bool CreateOMXTexture(int index);
 
+  void UploadCVRefTexture(int index);
+  void DeleteCVRefTexture(int index);
+  bool CreateCVRefTexture(int index);
+
   void CalculateTextureSourceRects(int source, int num_planes);
 
   // renderers
@@ -184,6 +192,7 @@ protected:
   void RenderSinglePass(int renderBuffer, int field); // single pass glsl renderer
   void RenderSoftware(int renderBuffer, int field);   // single pass s/w yuv2rgb renderer
   void RenderOpenMax(int renderBuffer, int field);  // OpenMAX rgb texture
+  void RenderCoreVideoRef(int renderBuffer, int field);  // CoreVideo reference
 
   CFrameBufferObject m_fbo;
 
@@ -239,6 +248,9 @@ protected:
 
 #ifdef HAVE_LIBOPENMAX
     OpenMaxVideoBuffer *openMaxBuffer;
+#endif
+#ifdef HAVE_LIBCOREVIDEO
+    CVBufferRef cvBufferRef;
 #endif
   };
 
