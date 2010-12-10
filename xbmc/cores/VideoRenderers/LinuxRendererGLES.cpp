@@ -471,9 +471,10 @@ void CLinuxRendererGLES::RenderUpdate(bool clear, DWORD flags, DWORD alpha)
 
   int index = m_iYV12RenderBuffer;
   YUVBUFFER& buf =  m_buffers[index];
-
-  if (!buf.fields[FIELD_FULL][0].id) return ;
-
+  if (CONF_FLAGS_FORMAT_MASK(m_iFlags) != CONF_FLAGS_FORMAT_OMXEGL)
+  {
+    if (!buf.fields[FIELD_FULL][0].id) return;
+  }
   if (buf.image.flags==0)
     return;
 
