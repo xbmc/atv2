@@ -752,7 +752,7 @@ int CDVDVideoCodecVideoToolBox::Decode(BYTE* pData, int iSize, double dts, doubl
 
   // TODO: queue depth is related to the number of reference frames in encoded h.264.
   // so we need to buffer until we get N ref frames + 1.
-  if (m_queue_depth < 16)
+  if (m_queue_depth < 8)
   {
     return VC_BUFFER;
   }
