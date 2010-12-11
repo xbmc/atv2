@@ -642,7 +642,7 @@ void CDVDVideoCodecVideoToolBox::Dispose()
   {
     // release any previous retained cvbuffer reference
     if (m_videobuffer.cvBufferRef)
-      CVPixelBufferRelease(m_videobuffer.cvBufferRef);
+      CVBufferRelease(m_videobuffer.cvBufferRef);
     m_videobuffer.cvBufferRef = NULL;
     m_videobuffer.iFlags = 0;
   }
@@ -748,12 +748,10 @@ void CDVDVideoCodecVideoToolBox::Reset(void)
 bool CDVDVideoCodecVideoToolBox::GetPicture(DVDVideoPicture* pDvdVideoPicture)
 {
   CCocoaAutoPool pool;
-  FourCharCode pixel_buffer_format;
-  CVPixelBufferRef picture_buffer_ref;
 
   // release any previous retained cvbuffer reference
   if (pDvdVideoPicture->cvBufferRef)
-    CVPixelBufferRelease(pDvdVideoPicture->cvBufferRef);
+    CVBufferRelease(pDvdVideoPicture->cvBufferRef);
 
   // clone the video picture buffer settings.
   *pDvdVideoPicture = m_videobuffer;
@@ -764,8 +762,6 @@ bool CDVDVideoCodecVideoToolBox::GetPicture(DVDVideoPicture* pDvdVideoPicture)
   // will never change and we can just grab a ref to the top frame. This way
   // we don't lockout the vdadecoder while doing color format convert.
   pthread_mutex_lock(&m_queue_mutex);
-  picture_buffer_ref = m_display_queue->pixel_buffer_ref;
-  pixel_buffer_format = m_display_queue->pixel_buffer_format;
   pDvdVideoPicture->dts = m_display_queue->dts;
   pDvdVideoPicture->pts = m_display_queue->pts;
   pDvdVideoPicture->cvBufferRef = m_display_queue->pixel_buffer_ref;
@@ -775,8 +771,11 @@ bool CDVDVideoCodecVideoToolBox::GetPicture(DVDVideoPicture* pDvdVideoPicture)
   // now we can pop the top frame.
   DisplayQueuePop();
 
-  //CLog::Log(LOGNOTICE, "%s - VDADecoderDecode dts(%f), pts(%f)", __FUNCTION__,
-  //  pDvdVideoPicture->dts, pDvdVideoPicture->pts);
+  if (m_queue_depth > 4)
+    CLog::Log(LOGNOTICE, "%s - m_queue_depth(%d)", __FUNCTION__, m_queue_depth);
+    
+  CLog::Log(LOGNOTICE, "%s - VTBDecoderDecode dts(%f), pts(%f), cvBufferRef(%p)", __FUNCTION__,
+    pDvdVideoPicture->dts, pDvdVideoPicture->pts, pDvdVideoPicture->cvBufferRef);
 
   return VC_PICTURE | VC_BUFFER;
 }
@@ -795,7 +794,7 @@ void CDVDVideoCodecVideoToolBox::DisplayQueuePop(void)
   pthread_mutex_unlock(&m_queue_mutex);
 
   // and release it
-  CVPixelBufferRelease(top_frame->pixel_buffer_ref);
+  CVBufferRelease(top_frame->pixel_buffer_ref);
   free(top_frame);
 }
 
@@ -902,7 +901,7 @@ CDVDVideoCodecVideoToolBox::VTDecoderCallback(
   frame_queue *newFrame = (frame_queue*)calloc(sizeof(frame_queue), 1);
   newFrame->nextframe = NULL;
   newFrame->pixel_buffer_format = format_type;
-  newFrame->pixel_buffer_ref = CVPixelBufferRetain(imageBuffer);
+  newFrame->pixel_buffer_ref = CVBufferRetain(imageBuffer);
   GetFrameDisplayTimeFromDictionary(frameInfo, newFrame);
 
   // if both dts or pts are good we use those, else use decoder insert time for frame sort
