@@ -22,6 +22,7 @@
  */
 
 #include "system.h"
+#define HAVE_LIBCOREVIDEO
 
 #include <vector>
 
@@ -35,9 +36,14 @@
 namespace DXVA { class CProcessor; }
 namespace VAAPI { class CHolder; }
 class CVDPAU;
-class COpenMaxVideo;
-struct OpenMaxVideoBuffer;
-
+#ifdef HAVE_LIBOPENMAX
+  class COpenMaxVideo;
+  struct OpenMaxVideoBuffer;
+#endif
+#ifdef HAVE_LIBCOREVIDEO
+  class CDVDVideoCodecVideoToolBox;
+  struct __CVBuffer;
+#endif
 // should be entirely filled by all codecs
 struct DVDVideoPicture
 {
@@ -61,10 +67,18 @@ struct DVDVideoPicture
       VAAPI::CHolder* vaapi;
     };
 
+#ifdef HAVE_LIBOPENMAX
     struct {
       COpenMaxVideo *openMax;
       OpenMaxVideoBuffer *openMaxBuffer;
     };
+#endif
+#ifdef HAVE_LIBCOREVIDEO
+    struct {
+      CDVDVideoCodecVideoToolBox *vtb;
+      struct __CVBuffer *cvBufferRef;
+    };
+#endif
   };
 
   unsigned int iFlags;
@@ -93,7 +107,8 @@ struct DVDVideoPicture
     FMT_YUY2,
     FMT_DXVA,
     FMT_VAAPI,
-    FMT_OMXEGL
+    FMT_OMXEGL,
+    FMT_CVBREF,
   } format;
 };
 

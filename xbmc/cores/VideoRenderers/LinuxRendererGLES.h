@@ -155,7 +155,7 @@ public:
   virtual void         AddProcessor(CDVDVideoCodecVideoToolBox* vtb, DVDVideoPicture *picture);
 #endif
 protected:
-  virtual void Render(DWORD flags, int renderBuffer);
+  virtual void Render(DWORD flags, int index);
 
   void ChooseUpscalingMethod();
   bool IsSoftwareUpscaling();
@@ -188,11 +188,11 @@ protected:
   void CalculateTextureSourceRects(int source, int num_planes);
 
   // renderers
-  void RenderMultiPass(int renderBuffer, int field);  // multi pass glsl renderer
-  void RenderSinglePass(int renderBuffer, int field); // single pass glsl renderer
-  void RenderSoftware(int renderBuffer, int field);   // single pass s/w yuv2rgb renderer
-  void RenderOpenMax(int renderBuffer, int field);  // OpenMAX rgb texture
-  void RenderCoreVideoRef(int renderBuffer, int field);  // CoreVideo reference
+  void RenderMultiPass(int index, int field);  // multi pass glsl renderer
+  void RenderSinglePass(int index, int field); // single pass glsl renderer
+  void RenderSoftware(int index, int field);   // single pass s/w yuv2rgb renderer
+  void RenderOpenMax(int index, int field);  // OpenMAX rgb texture
+  void RenderCoreVideoRef(int index, int field);  // CoreVideo reference
 
   CFrameBufferObject m_fbo;
 
@@ -250,7 +250,7 @@ protected:
     OpenMaxVideoBuffer *openMaxBuffer;
 #endif
 #ifdef HAVE_LIBCOREVIDEO
-    CVBufferRef cvBufferRef;
+  struct __CVBuffer *cvBufferRef;
 #endif
   };
 

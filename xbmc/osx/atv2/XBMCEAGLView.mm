@@ -87,7 +87,7 @@ enum {
     eaglLayer.opaque = TRUE;
     eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
       //[NSNumber numberWithBool:FALSE], kEAGLDrawablePropertyRetainedBacking,
-      //kEAGLColorFormatRGB565,
+      //kEAGLColorFormatRGB565, kEAGLDrawablePropertyColorFormat,
       kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat,
       nil];
 		
