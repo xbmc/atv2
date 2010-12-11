@@ -309,7 +309,7 @@ int CLinuxRendererGLES::GetImage(YV12Image *image, int source, bool readonly)
     im.flags |= IMAGE_FLAG_READING;
   else
   {
-    printf("Wait for Texture 1\n");
+    CLog::Log(LOGDEBUG, "CLinuxRenderer::GetImage - Wait for Texture 1");
     if( WaitForSingleObject(m_eventTexturesDone[source], 500) == WAIT_TIMEOUT )
       CLog::Log(LOGWARNING, "%s - Timeout waiting for texture %d", __FUNCTION__, source);
 
@@ -543,7 +543,9 @@ void CLinuxRendererGLES::RenderUpdate(bool clear, DWORD flags, DWORD alpha)
   glEnable(GL_BLEND);
 
   g_graphicsContext.EndPaint();
-  glFinish();
+  #if !defined(__APPLE__)
+    glFinish();
+  #endif
 }
 
 void CLinuxRendererGLES::FlipPage(int source)
@@ -715,6 +717,7 @@ void CLinuxRendererGLES::LoadShaders(int field)
 {
   int requestedMethod = g_guiSettings.GetInt("videoplayer.rendermethod");
   CLog::Log(LOGDEBUG, "GL: Requested render method: %d", requestedMethod);
+
   if (CONF_FLAGS_FORMAT_MASK(m_iFlags) == CONF_FLAGS_FORMAT_OMXEGL)
   {
     CLog::Log(LOGNOTICE, "GL: Using OMXEGL render method");
@@ -741,34 +744,34 @@ void CLinuxRendererGLES::LoadShaders(int field)
   {
     case RENDER_METHOD_AUTO:
     case RENDER_METHOD_GLSL:
-    // Try GLSL shaders if supported and user requested auto or GLSL.
-    if (glCreateProgram)
-    {
-      // create regular progressive scan shader
-      m_pYUVShader = new YUV2RGBProgressiveShader(false, m_iFlags);
-      CLog::Log(LOGNOTICE, "GL: Selecting Single Pass YUV 2 RGB shader");
+      // Try GLSL shaders if supported and user requested auto or GLSL.
+      if (glCreateProgram)
+      {
+        // create regular progressive scan shader
+        m_pYUVShader = new YUV2RGBProgressiveShader(false, m_iFlags);
+        CLog::Log(LOGNOTICE, "GL: Selecting Single Pass YUV 2 RGB shader");
 
-      if (m_pYUVShader && m_pYUVShader->CompileAndLink())
-      {
-        UpdateVideoFilter();
-        break;
+        if (m_pYUVShader && m_pYUVShader->CompileAndLink())
+        {
+          UpdateVideoFilter();
+          break;
+        }
+        else
+        {
+          m_pYUVShader->Free();
+          delete m_pYUVShader;
+          m_pYUVShader = NULL;
+          CLog::Log(LOGERROR, "GL: Error enabling YUV2RGB GLSL shader");
+          // drop through and try SW
+        }
       }
-      else
-      {
-        m_pYUVShader->Free();
-        delete m_pYUVShader;
-        m_pYUVShader = NULL;
-        CLog::Log(LOGERROR, "GL: Error enabling YUV2RGB GLSL shader");
-        // drop through and try SW
-      }
-    }
     case RENDER_METHOD_SOFTWARE:
     default:
-    {
-      // Use software YUV 2 RGB conversion if user requested it or GLSL failed
-      m_renderMethod = RENDER_SW ;
-      CLog::Log(LOGNOTICE, "GL: Shaders support not present, falling back to SW mode");
-    }
+      {
+        // Use software YUV 2 RGB conversion if user requested it or GLSL failed
+        m_renderMethod = RENDER_SW ;
+        CLog::Log(LOGNOTICE, "GL: Shaders support not present, falling back to SW mode");
+      }
   }
 
   // determine whether GPU supports NPOT textures
@@ -1433,7 +1436,7 @@ void CLinuxRendererGLES::UploadYV12Texture(int source)
   YUVFIELDS& fields =  buf.fields;
 
 
-  if (!(im->flags&IMAGE_FLAG_READY))
+  if (!(im->flags & IMAGE_FLAG_READY))
   {
     SetEvent(m_eventTexturesDone[source]);
     return;
@@ -1802,7 +1805,7 @@ void CLinuxRendererGLES::UploadCVRefTexture(int index)
   {
     YUVPLANE &plane = m_buffers[index].fields[0][0];
 
-    CVPixelBufferLockBaseAddress(cvBufferRef, /*kCVPixelBufferLock_ReadOnly*/0x00000001);
+    CVPixelBufferLockBaseAddress(cvBufferRef, kCVPixelBufferLock_ReadOnly);
     int bufferWidth = CVPixelBufferGetWidth(cvBufferRef);
     int bufferHeight = CVPixelBufferGetHeight(cvBufferRef);
     unsigned char *bufferBase = (unsigned char *)CVPixelBufferGetBaseAddress(cvBufferRef);
@@ -1819,8 +1822,8 @@ void CLinuxRendererGLES::UploadCVRefTexture(int index)
     glDisable(m_textureTarget);
     VerifyGLState();
 
-    CVPixelBufferUnlockBaseAddress(cvBufferRef, 0);
-    CVPixelBufferRelease(cvBufferRef);
+    CVPixelBufferUnlockBaseAddress(cvBufferRef, kCVPixelBufferLock_ReadOnly);
+    CVBufferRelease(cvBufferRef);
     m_buffers[index].cvBufferRef = NULL;
   }
 
@@ -1832,7 +1835,7 @@ void CLinuxRendererGLES::DeleteCVRefTexture(int index)
   YUVPLANE &plane = m_buffers[index].fields[0][0];
 
   if (m_buffers[index].cvBufferRef)
-    CVPixelBufferRelease(m_buffers[index].cvBufferRef);
+    CVBufferRelease(m_buffers[index].cvBufferRef);
   m_buffers[index].cvBufferRef = NULL;
 
   if(plane.id && glIsTexture(plane.id))
