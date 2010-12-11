@@ -913,6 +913,10 @@ void CDVDPlayerVideo::ProcessOverlays(DVDVideoPicture* pSource, YV12Image* pDest
   else if(pSource->format == DVDVideoPicture::FMT_OMXEGL)
     g_renderManager.AddProcessor(pSource->openMax, pSource);
 #endif
+#ifdef HAVE_LIBCOREVIDEO
+  else if(pSource->format == DVDVideoPicture::FMT_CVBREF)
+    g_renderManager.AddProcessor(pSource->vtb, pSource);
+#endif
 #ifdef HAVE_LIBVA
   else if(pSource->format == DVDVideoPicture::FMT_VAAPI)
     g_renderManager.AddProcessor(*pSource->vaapi);
@@ -997,6 +1001,9 @@ int CDVDPlayerVideo::OutputPicture(DVDVideoPicture* pPicture, double pts)
         break;
       case DVDVideoPicture::FMT_OMXEGL:
         flags |= CONF_FLAGS_FORMAT_OMXEGL;
+        break;
+      case DVDVideoPicture::FMT_CVBREF:
+        flags |= CONF_FLAGS_FORMAT_CVBREF;
         break;
     }
 

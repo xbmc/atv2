@@ -492,7 +492,6 @@ CDVDVideoCodecVideoToolBox::CDVDVideoCodecVideoToolBox() : CDVDVideoCodec()
 
   m_convert_bytestream = false;
   m_dllAvUtil = NULL;
-  m_dllSwScale = NULL;
   m_dllAvFormat = NULL;
   memset(&m_videobuffer, 0, sizeof(DVDVideoPicture));
 }
@@ -520,10 +519,6 @@ bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &o
     extrasize = hints.extrasize;
     extradata = (uint8_t*)hints.extradata;
  
-    m_dllSwScale = new DllSwScale;
-    if (!m_dllSwScale->Load())
-      return false;
-
     switch (hints.codec)
     {
       case CODEC_ID_MPEG4:
@@ -611,33 +606,17 @@ bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &o
     // allocate a YV12 DVDVideoPicture buffer.
     // first make sure all properties are reset.
     memset(&m_videobuffer, 0, sizeof(DVDVideoPicture));
-    unsigned int iPixels = width * height;
-    unsigned int iChromaPixels = iPixels/4;
 
+    m_videobuffer.dts = DVD_NOPTS_VALUE;
     m_videobuffer.pts = DVD_NOPTS_VALUE;
-    m_videobuffer.iFlags = DVP_FLAG_ALLOCATED;
-    m_videobuffer.format = DVDVideoPicture::FMT_YUV420P;
+    m_videobuffer.format = DVDVideoPicture::FMT_CVBREF;
     m_videobuffer.color_range  = 0;
     m_videobuffer.color_matrix = 4;
-    m_videobuffer.iWidth  = width;
-    m_videobuffer.iHeight = height;
-    m_videobuffer.iDisplayWidth  = width;
-    m_videobuffer.iDisplayHeight = height;
-
-    m_videobuffer.iLineSize[0] = width;   //Y
-    m_videobuffer.iLineSize[1] = width/2; //U
-    m_videobuffer.iLineSize[2] = width/2; //V
-    m_videobuffer.iLineSize[3] = 0;
-
-    m_videobuffer.data[0] = (BYTE*)malloc(iPixels);       //Y
-    m_videobuffer.data[1] = (BYTE*)malloc(iChromaPixels); //U
-    m_videobuffer.data[2] = (BYTE*)malloc(iChromaPixels); //V
-    m_videobuffer.data[3] = NULL;
-
-    // set all data to 0 for less artifacts.. hmm.. what is black in YUV??
-    memset(m_videobuffer.data[0], 0, iPixels);
-    memset(m_videobuffer.data[1], 0, iChromaPixels);
-    memset(m_videobuffer.data[2], 0, iChromaPixels);
+    m_videobuffer.iFlags  = DVP_FLAG_ALLOCATED;
+    m_videobuffer.iWidth  = hints.width;
+    m_videobuffer.iHeight = hints.height;
+    m_videobuffer.iDisplayWidth  = hints.width;
+    m_videobuffer.iDisplayHeight = hints.height;
 
     m_DropPictures = false;
     m_sort_time_offset = (CurrentHostCounter() * 1000.0) / CurrentHostFrequency();
@@ -661,20 +640,16 @@ void CDVDVideoCodecVideoToolBox::Dispose()
   
   if (m_videobuffer.iFlags & DVP_FLAG_ALLOCATED)
   {
-    free(m_videobuffer.data[0]);
-    free(m_videobuffer.data[1]);
-    free(m_videobuffer.data[2]);
+    // release any previous retained cvbuffer reference
+    if (m_videobuffer.cvBufferRef)
+      CVPixelBufferRelease(m_videobuffer.cvBufferRef);
+    m_videobuffer.cvBufferRef = NULL;
     m_videobuffer.iFlags = 0;
   }
   if (m_dllAvUtil)
   {
     delete m_dllAvUtil;
     m_dllAvUtil = NULL;
-  }
-  if (m_dllSwScale)
-  {
-    delete m_dllSwScale;
-    m_dllSwScale = NULL;
   }
   if (m_dllAvFormat)
   {
@@ -752,7 +727,7 @@ int CDVDVideoCodecVideoToolBox::Decode(BYTE* pData, int iSize, double dts, doubl
 
   // TODO: queue depth is related to the number of reference frames in encoded h.264.
   // so we need to buffer until we get N ref frames + 1.
-  if (m_queue_depth < 8)
+  if (m_queue_depth < 4)
   {
     return VC_BUFFER;
   }
@@ -776,6 +751,10 @@ bool CDVDVideoCodecVideoToolBox::GetPicture(DVDVideoPicture* pDvdVideoPicture)
   FourCharCode pixel_buffer_format;
   CVPixelBufferRef picture_buffer_ref;
 
+  // release any previous retained cvbuffer reference
+  if (pDvdVideoPicture->cvBufferRef)
+    CVPixelBufferRelease(pDvdVideoPicture->cvBufferRef);
+
   // clone the video picture buffer settings.
   *pDvdVideoPicture = m_videobuffer;
 
@@ -789,23 +768,9 @@ bool CDVDVideoCodecVideoToolBox::GetPicture(DVDVideoPicture* pDvdVideoPicture)
   pixel_buffer_format = m_display_queue->pixel_buffer_format;
   pDvdVideoPicture->dts = m_display_queue->dts;
   pDvdVideoPicture->pts = m_display_queue->pts;
+  pDvdVideoPicture->cvBufferRef = m_display_queue->pixel_buffer_ref;
+  CVPixelBufferRetain(pDvdVideoPicture->cvBufferRef);
   pthread_mutex_unlock(&m_queue_mutex);
-
-  // lock the CVPixelBuffer down
-  CVPixelBufferLockBaseAddress(picture_buffer_ref, 0);
-  int row_stride = CVPixelBufferGetBytesPerRowOfPlane(picture_buffer_ref, 0);
-  uint8_t *base_ptr = (uint8_t*)CVPixelBufferGetBaseAddressOfPlane(picture_buffer_ref, 0);
-  if (base_ptr)
-  {
-  /*
-    if (pixel_buffer_format == kCVPixelFormatType_422YpCbCr8)
-      UYVY422_to_YUV420P(base_ptr, row_stride, pDvdVideoPicture);
-    else if (pixel_buffer_format == kCVPixelFormatType_32BGRA)
-      BGRA_to_YUV420P(base_ptr, row_stride, pDvdVideoPicture);
-  */
-  }
-  // unlock the CVPixelBuffer
-  CVPixelBufferUnlockBaseAddress(picture_buffer_ref, 0);
 
   // now we can pop the top frame.
   DisplayQueuePop();
@@ -814,46 +779,6 @@ bool CDVDVideoCodecVideoToolBox::GetPicture(DVDVideoPicture* pDvdVideoPicture)
   //  pDvdVideoPicture->dts, pDvdVideoPicture->pts);
 
   return VC_PICTURE | VC_BUFFER;
-}
-
-void CDVDVideoCodecVideoToolBox::BGRA_to_YUV420P(uint8_t *bgra_ptr, int bgra_stride, DVDVideoPicture *picture)
-{
-  // convert PIX_FMT_BGRA to PIX_FMT_YUV420P.
-  struct SwsContext *swcontext = m_dllSwScale->sws_getContext(
-    m_videobuffer.iWidth, m_videobuffer.iHeight, PIX_FMT_BGRA, 
-    m_videobuffer.iWidth, m_videobuffer.iHeight, PIX_FMT_YUV420P, 
-    SWS_FAST_BILINEAR, NULL, NULL, NULL);
-  if (swcontext)
-  {
-    uint8_t  *src[] = { bgra_ptr, 0, 0, 0 };
-    int srcStride[] = { bgra_stride, 0, 0, 0 };
-
-    uint8_t  *dst[] = { picture->data[0], picture->data[1], picture->data[2], 0 };
-    int dstStride[] = { picture->iLineSize[0], picture->iLineSize[1], picture->iLineSize[2], 0 };
-
-    m_dllSwScale->sws_scale(swcontext, src, srcStride, 0, picture->iHeight, dst, dstStride);
-    m_dllSwScale->sws_freeContext(swcontext);
-  }
-}
-
-void CDVDVideoCodecVideoToolBox::UYVY422_to_YUV420P(uint8_t *yuv422_ptr, int yuv422_stride, DVDVideoPicture *picture)
-{
-  // convert PIX_FMT_UYVY422 to PIX_FMT_YUV420P.
-  struct SwsContext *swcontext = m_dllSwScale->sws_getContext(
-    m_videobuffer.iWidth, m_videobuffer.iHeight, PIX_FMT_UYVY422, 
-    m_videobuffer.iWidth, m_videobuffer.iHeight, PIX_FMT_YUV420P, 
-    SWS_FAST_BILINEAR, NULL, NULL, NULL);
-  if (swcontext)
-  {
-    uint8_t  *src[] = { yuv422_ptr, 0, 0, 0 };
-    int srcStride[] = { yuv422_stride, 0, 0, 0 };
-
-    uint8_t  *dst[] = { picture->data[0], picture->data[1], picture->data[2], 0 };
-    int dstStride[] = { picture->iLineSize[0], picture->iLineSize[1], picture->iLineSize[2], 0 };
-
-    m_dllSwScale->sws_scale(swcontext, src, srcStride, 0, picture->iHeight, dst, dstStride);
-    m_dllSwScale->sws_freeContext(swcontext);
-  }
 }
 
 void CDVDVideoCodecVideoToolBox::DisplayQueuePop(void)
@@ -900,6 +825,8 @@ CDVDVideoCodecVideoToolBox::CreateVTSession(int width, int height, CMFormatDescr
     kCVPixelBufferHeightKey, height);
   CFDictionarySetSInt32(destinationPixelBufferAttributes,
     kCVPixelBufferBytesPerRowAlignmentKey, 2 * width);
+  //CFDictionarySetValue(destinationPixelBufferAttributes,
+  //  kCVPixelBufferOpenGLCompatibilityKey, kCFBooleanTrue);
 
   // This codec accepts YCbCr input in the form of '2vuy' format pixel buffers.
   // We recommend explicitly defining the gamma level and YCbCr matrix that should be used.

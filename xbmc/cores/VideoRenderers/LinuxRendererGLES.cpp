@@ -41,8 +41,13 @@
 #include "Texture.h"
 #include "../dvdplayer/Codecs/DllSwScale.h"
 #include "../dvdplayer/Codecs/DllAvCodec.h"
-#include "../dvdplayer/DVDCodecs/Video/OpenMaxVideo.h"
-
+#ifdef HAVE_LIBOPENMAX
+  #include "../dvdplayer/DVDCodecs/Video/OpenMaxVideo.h"
+#endif
+#ifdef HAVE_LIBCOREVIDEO
+  #include "../dvdplayer/DVDCodecs/Video/DVDVideoCodecVideoToolBox.h"
+  #include <CoreVideo/CoreVideo.h>
+#endif
 using namespace Shaders;
 
 CLinuxRendererGLES::YUVBUFFER::YUVBUFFER()
@@ -428,7 +433,7 @@ void CLinuxRendererGLES::LoadPlane( YUVPLANE& plane, int type, unsigned flipinde
       src += stride;
       dst += width;
     }
-    const GLvoid *pixelData = reinterpret_cast<const GLvoid *>(&pixelVector[0]);
+    //const GLvoid *pixelData = reinterpret_cast<const GLvoid *>(&pixelVector[0]);
     stride = width;
   }
 
@@ -708,61 +713,61 @@ void CLinuxRendererGLES::UpdateVideoFilter()
 
 void CLinuxRendererGLES::LoadShaders(int field)
 {
+  int requestedMethod = g_guiSettings.GetInt("videoplayer.rendermethod");
+  CLog::Log(LOGDEBUG, "GL: Requested render method: %d", requestedMethod);
   if (CONF_FLAGS_FORMAT_MASK(m_iFlags) == CONF_FLAGS_FORMAT_OMXEGL)
   {
     CLog::Log(LOGNOTICE, "GL: Using OMXEGL render method");
     m_renderMethod = RENDER_OMXEGL;
   }
-  else if (CONF_FLAGS_FORMAT_MASK(m_iFlags) == CONF_FLAGS_FORMAT_CVREF)
+  else if (CONF_FLAGS_FORMAT_MASK(m_iFlags) == CONF_FLAGS_FORMAT_CVBREF)
   {
     CLog::Log(LOGNOTICE, "GL: Using CoreVideoRef render method");
     m_renderMethod = RENDER_CVREF;
   }
   else
   {
-    int requestedMethod = g_guiSettings.GetInt("videoplayer.rendermethod");
-    CLog::Log(LOGDEBUG, "GL: Requested render method: %d", requestedMethod);
+    m_renderMethod = RENDER_GLSL;
+  }
 
-    if (m_pYUVShader)
+  if (m_pYUVShader)
+  {
+    m_pYUVShader->Free();
+    delete m_pYUVShader;
+    m_pYUVShader = NULL;
+  }
+
+  switch(requestedMethod)
+  {
+    case RENDER_METHOD_AUTO:
+    case RENDER_METHOD_GLSL:
+    // Try GLSL shaders if supported and user requested auto or GLSL.
+    if (glCreateProgram)
     {
-      m_pYUVShader->Free();
-      delete m_pYUVShader;
-      m_pYUVShader = NULL;
+      // create regular progressive scan shader
+      m_pYUVShader = new YUV2RGBProgressiveShader(false, m_iFlags);
+      CLog::Log(LOGNOTICE, "GL: Selecting Single Pass YUV 2 RGB shader");
+
+      if (m_pYUVShader && m_pYUVShader->CompileAndLink())
+      {
+        UpdateVideoFilter();
+        break;
+      }
+      else
+      {
+        m_pYUVShader->Free();
+        delete m_pYUVShader;
+        m_pYUVShader = NULL;
+        CLog::Log(LOGERROR, "GL: Error enabling YUV2RGB GLSL shader");
+        // drop through and try SW
+      }
     }
-
-    switch(requestedMethod)
+    case RENDER_METHOD_SOFTWARE:
+    default:
     {
-      case RENDER_METHOD_AUTO:
-      case RENDER_METHOD_GLSL:
-      // Try GLSL shaders if supported and user requested auto or GLSL.
-      if (glCreateProgram)
-      {
-        // create regular progressive scan shader
-        m_pYUVShader = new YUV2RGBProgressiveShader(false, m_iFlags);
-        CLog::Log(LOGNOTICE, "GL: Selecting Single Pass YUV 2 RGB shader");
-
-        if (m_pYUVShader && m_pYUVShader->CompileAndLink())
-        {
-          m_renderMethod = RENDER_GLSL;
-          UpdateVideoFilter();
-          break;
-        }
-        else
-        {
-          m_pYUVShader->Free();
-          delete m_pYUVShader;
-          m_pYUVShader = NULL;
-          CLog::Log(LOGERROR, "GL: Error enabling YUV2RGB GLSL shader");
-          // drop through and try SW
-        }
-      }
-      case RENDER_METHOD_SOFTWARE:
-      default:
-      {
-        // Use software YUV 2 RGB conversion if user requested it or GLSL failed
-        m_renderMethod = RENDER_SW ;
-        CLog::Log(LOGNOTICE, "GL: Shaders support not present, falling back to SW mode");
-      }
+      // Use software YUV 2 RGB conversion if user requested it or GLSL failed
+      m_renderMethod = RENDER_SW ;
+      CLog::Log(LOGNOTICE, "GL: Shaders support not present, falling back to SW mode");
     }
   }
 
@@ -783,11 +788,11 @@ void CLinuxRendererGLES::LoadShaders(int field)
     m_textureCreate = &CLinuxRendererGLES::CreateOMXTexture;
     m_textureDelete = &CLinuxRendererGLES::DeleteOMXTexture;
   }
-  else if (CONF_FLAGS_FORMAT_MASK(m_iFlags) == CONF_FLAGS_FORMAT_CVREF)
+  else if (CONF_FLAGS_FORMAT_MASK(m_iFlags) == CONF_FLAGS_FORMAT_CVBREF)
   {
     m_textureUpload = &CLinuxRendererGLES::UploadCVRefTexture;
-    m_textureCreate = &CLinuxRendererGLES::DeleteCVRefTexture;
-    m_textureDelete = &CLinuxRendererGLES::CreateCVRefTexture;
+    m_textureCreate = &CLinuxRendererGLES::CreateCVRefTexture;
+    m_textureDelete = &CLinuxRendererGLES::DeleteCVRefTexture;
   }
   else
   {
@@ -821,7 +826,7 @@ void CLinuxRendererGLES::UnInit()
   m_bConfigured = false;
 }
 
-void CLinuxRendererGLES::Render(DWORD flags, int renderBuffer)
+void CLinuxRendererGLES::Render(DWORD flags, int index)
 {
   // obtain current field, if interlaced
   if( flags & RENDER_FLAG_ODD)
@@ -846,7 +851,7 @@ void CLinuxRendererGLES::Render(DWORD flags, int renderBuffer)
   else
     m_currentField = FIELD_FULL;
 
-  (this->*m_textureUpload)(renderBuffer);
+  (this->*m_textureUpload)(index);
 
   if (m_renderMethod & RENDER_GLSL)
   {
@@ -855,34 +860,34 @@ void CLinuxRendererGLES::Render(DWORD flags, int renderBuffer)
     {
     case RQ_LOW:
     case RQ_SINGLEPASS:
-      RenderSinglePass(renderBuffer, m_currentField);
+      RenderSinglePass(index, m_currentField);
       VerifyGLState();
       break;
 
     case RQ_MULTIPASS:
-      RenderMultiPass(renderBuffer, m_currentField);
+      RenderMultiPass(index, m_currentField);
       VerifyGLState();
       break;
 
     case RQ_SOFTWARE:
-      RenderSoftware(renderBuffer, m_currentField);
+      RenderSoftware(index, m_currentField);
       VerifyGLState();
       break;
     }
   }
   else if (m_renderMethod & RENDER_OMXEGL)
   {
-    RenderOpenMax(renderBuffer, m_currentField);
+    RenderOpenMax(index, m_currentField);
     VerifyGLState();
   }
   else if (m_renderMethod & RENDER_CVREF)
   {
-    RenderCoreVideoRef(renderBuffer, m_currentField);
+    RenderCoreVideoRef(index, m_currentField);
     VerifyGLState();
   }
   else
   {
-    RenderSoftware(renderBuffer, m_currentField);
+    RenderSoftware(index, m_currentField);
     VerifyGLState();
   }
 }
@@ -1247,12 +1252,12 @@ void CLinuxRendererGLES::RenderSoftware(int index, int field)
   VerifyGLState();
 }
 
-void CLinuxRendererGLES::RenderOpenMax(int renderBuffer, int field)
+void CLinuxRendererGLES::RenderOpenMax(int index, int field)
 {
 #ifdef HAVE_LIBOPENMAX
   //printf("Texture: %d\n", m_buffers[renderBuffer].openMaxBuffer->texture_id);
 
-  GLuint textureId = m_buffers[renderBuffer].openMaxBuffer->texture_id;
+  GLuint textureId = m_buffers[index].openMaxBuffer->texture_id;
 
   // set scissors if we are not in fullscreen video
   if ( !(g_graphicsContext.IsFullScreenVideo() || g_graphicsContext.IsCalibrating() ))
@@ -1317,13 +1322,10 @@ void CLinuxRendererGLES::RenderOpenMax(int renderBuffer, int field)
 #endif
 }
 
-void CLinuxRendererGLES::RenderCoreVideoRef(int renderBuffer, int field)
+void CLinuxRendererGLES::RenderCoreVideoRef(int index, int field)
 {
 #ifdef HAVE_LIBCOREVIDEO
-  //printf("Texture: %d\n", m_buffers[renderBuffer].openMaxBuffer->texture_id);
-
-  CVBufferRef cvBufferRef = m_buffers[renderBuffer].cvBufferRef;
-  GLenum target_id = CVOpenGLTextureGetTarget(cvBufferRef);
+  YUVPLANE &plane = m_buffers[index].fields[field][0];
 
   // set scissors if we are not in fullscreen video
   if ( !(g_graphicsContext.IsFullScreenVideo() || g_graphicsContext.IsCalibrating() ))
@@ -1331,10 +1333,9 @@ void CLinuxRendererGLES::RenderCoreVideoRef(int renderBuffer, int field)
 
   glDisable(GL_DEPTH_TEST);
 
-  //glEnable(GL_TEXTURE_2D);
-  glEnable(target_id);
+  glEnable(GL_TEXTURE_2D);
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(target_id, CVOpenGLTextureGetName(cvBufferRef));
+  glBindTexture(m_textureTarget, plane.id);
 
   g_Windowing.EnableGUIShader(SM_TEXTURE_RGBA);
 
@@ -1368,22 +1369,22 @@ void CLinuxRendererGLES::RenderCoreVideoRef(int renderBuffer, int field)
   ver[0][2] = ver[1][2] = ver[2][2] = ver[3][2] = 0.0f;
   ver[0][3] = ver[1][3] = ver[2][3] = ver[3][3] = 1.0f;
 
-  // Set texture coordinates
+  // Set texture coordinates (corevideo is flipped in y)
   tex[0][0] = tex[3][0] = 0;
-  tex[0][1] = tex[1][1] = 0;
+  tex[0][1] = tex[1][1] = 1;
   tex[1][0] = tex[2][0] = 1;
-  tex[2][1] = tex[3][1] = 1;
+  tex[2][1] = tex[3][1] = 0;
 
   glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_BYTE, idx);
 
   glDisableVertexAttribArray(posLoc);
   glDisableVertexAttribArray(texLoc);
+  glDisableVertexAttribArray(colLoc);
 
   g_Windowing.DisableGUIShader();
-
   VerifyGLState();
 
-  glDisable(target_id);
+  glDisable(m_textureTarget);
   VerifyGLState();
 #endif
 }
@@ -1792,14 +1793,51 @@ bool CLinuxRendererGLES::CreateOMXTexture(int index)
 //********************************************************************************************************
 // CoreVideoRef Texture creation, deletion, copying + clearing
 //********************************************************************************************************
-void CLinuxRendererGLES::UploadCVRefTexture(int source)
+void CLinuxRendererGLES::UploadCVRefTexture(int index)
 {
 #ifdef HAVE_LIBCOREVIDEO
-  SetEvent(m_eventTexturesDone[source]);
+  CVBufferRef cvBufferRef = m_buffers[index].cvBufferRef;
+
+  if (cvBufferRef)
+  {
+    YUVPLANE &plane = m_buffers[index].fields[0][0];
+
+    CVPixelBufferLockBaseAddress(cvBufferRef, /*kCVPixelBufferLock_ReadOnly*/0x00000001);
+    int bufferWidth = CVPixelBufferGetWidth(cvBufferRef);
+    int bufferHeight = CVPixelBufferGetHeight(cvBufferRef);
+    unsigned char *bufferBase = (unsigned char *)CVPixelBufferGetBaseAddress(cvBufferRef);
+
+    glEnable(m_textureTarget);
+    VerifyGLState();
+
+    glBindTexture(m_textureTarget, plane.id);
+    // Using BGRA extension to pull in video frame data directly
+    //glTexImage2D(m_textureTarget, 0, GL_RGBA, bufferWidth, bufferHeight, 0, GL_BGRA, GL_UNSIGNED_BYTE, bufferBase);
+    glTexSubImage2D(m_textureTarget, 0, 0, 0, bufferWidth, bufferHeight, GL_BGRA, GL_UNSIGNED_BYTE, bufferBase);
+    glBindTexture(m_textureTarget, 0);
+
+    glDisable(m_textureTarget);
+    VerifyGLState();
+
+    CVPixelBufferUnlockBaseAddress(cvBufferRef, 0);
+    CVPixelBufferRelease(cvBufferRef);
+    m_buffers[index].cvBufferRef = NULL;
+  }
+
+  SetEvent(m_eventTexturesDone[index]);
 #endif
 }
 void CLinuxRendererGLES::DeleteCVRefTexture(int index)
 {
+  YUVPLANE &plane = m_buffers[index].fields[0][0];
+
+  if (m_buffers[index].cvBufferRef)
+    CVPixelBufferRelease(m_buffers[index].cvBufferRef);
+  m_buffers[index].cvBufferRef = NULL;
+
+  if(plane.id && glIsTexture(plane.id))
+    glDeleteTextures(1, &plane.id);
+  plane.id = 0;
 }
 bool CLinuxRendererGLES::CreateCVRefTexture(int index)
 {
@@ -1820,14 +1858,25 @@ bool CLinuxRendererGLES::CreateCVRefTexture(int index)
   plane.texwidth  = im.width;
   plane.texheight = im.height;
 
-  plane.pixpertex_x = 1;
-  plane.pixpertex_y = 1;
-
   if(m_renderMethod & RENDER_POT)
   {
     plane.texwidth  = NP2(plane.texwidth);
     plane.texheight = NP2(plane.texheight);
   }
+  glEnable(m_textureTarget);
+  glGenTextures(1, &plane.id);
+  VerifyGLState();
+
+  glBindTexture(m_textureTarget, plane.id);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// This is necessary for non-power-of-two textures
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+  glTexImage2D(m_textureTarget, 0, GL_RGBA, plane.texwidth, plane.texheight, 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL);
+  glBindTexture(m_textureTarget, 0);
+  glDisable(m_textureTarget);
 
   SetEvent(m_eventTexturesDone[index]);
 #endif
@@ -1925,6 +1974,8 @@ void CLinuxRendererGLES::AddProcessor(CDVDVideoCodecVideoToolBox* vtb, DVDVideoP
 {
   YUVBUFFER &buf = m_buffers[NextYV12Texture()];
   buf.cvBufferRef = picture->cvBufferRef;
+  // unhook corevideo buffer reference so it does not get released
+  picture->cvBufferRef = NULL;
 }
 #endif
 
