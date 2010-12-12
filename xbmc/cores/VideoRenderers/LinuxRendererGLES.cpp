@@ -897,7 +897,6 @@ void CLinuxRendererGLES::Render(DWORD flags, int index)
 
 void CLinuxRendererGLES::RenderSinglePass(int index, int field)
 {
-  return;
   YV12Image &im     = m_buffers[index].image;
   YUVFIELDS &fields = m_buffers[index].fields;
   YUVPLANES &planes = fields[field];
