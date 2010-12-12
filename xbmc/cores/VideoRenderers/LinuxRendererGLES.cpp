@@ -1844,7 +1844,6 @@ void CLinuxRendererGLES::DeleteCVRefTexture(int index)
 bool CLinuxRendererGLES::CreateCVRefTexture(int index)
 {
 #ifdef HAVE_LIBCOREVIDEO
-  /* since we also want the field textures, pitch must be texture aligned */
   YV12Image &im     = m_buffers[index].image;
   YUVFIELDS &fields = m_buffers[index].fields;
   YUVPLANE  &plane  = fields[0][0];
