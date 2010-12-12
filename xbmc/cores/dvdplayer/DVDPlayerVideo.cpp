@@ -534,7 +534,7 @@ void CDVDPlayerVideo::Process()
         {
 
           // try to retrieve the picture (should never fail!), unless there is a demuxer bug ofcours
-          memset(&picture, 0, sizeof(DVDVideoPicture));
+          m_pVideoCodec->ClearPicture(&picture);
           if (m_pVideoCodec->GetPicture(&picture))
           {
             sPostProcessType.clear();

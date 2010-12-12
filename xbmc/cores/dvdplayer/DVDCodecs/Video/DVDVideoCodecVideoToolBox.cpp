@@ -727,7 +727,7 @@ int CDVDVideoCodecVideoToolBox::Decode(BYTE* pData, int iSize, double dts, doubl
 
   // TODO: queue depth is related to the number of reference frames in encoded h.264.
   // so we need to buffer until we get N ref frames + 1.
-  if (m_queue_depth < 4)
+  if (m_queue_depth < 8)
   {
     return VC_BUFFER;
   }
@@ -749,10 +749,6 @@ bool CDVDVideoCodecVideoToolBox::GetPicture(DVDVideoPicture* pDvdVideoPicture)
 {
   CCocoaAutoPool pool;
 
-  // release any previous retained cvbuffer reference
-  if (pDvdVideoPicture->cvBufferRef)
-    CVBufferRelease(pDvdVideoPicture->cvBufferRef);
-
   // clone the video picture buffer settings.
   *pDvdVideoPicture = m_videobuffer;
 
@@ -762,22 +758,33 @@ bool CDVDVideoCodecVideoToolBox::GetPicture(DVDVideoPicture* pDvdVideoPicture)
   // will never change and we can just grab a ref to the top frame. This way
   // we don't lockout the vdadecoder while doing color format convert.
   pthread_mutex_lock(&m_queue_mutex);
-  pDvdVideoPicture->dts = m_display_queue->dts;
-  pDvdVideoPicture->pts = m_display_queue->pts;
-  pDvdVideoPicture->cvBufferRef = m_display_queue->pixel_buffer_ref;
+  pDvdVideoPicture->dts             = m_display_queue->dts;
+  pDvdVideoPicture->pts             = m_display_queue->pts;
+  pDvdVideoPicture->iWidth          = m_display_queue->width;
+  pDvdVideoPicture->iHeight         = m_display_queue->height;
+  pDvdVideoPicture->iDisplayWidth   = m_display_queue->width;
+  pDvdVideoPicture->iDisplayHeight  = m_display_queue->height;
+  pDvdVideoPicture->cvBufferRef     = m_display_queue->pixel_buffer_ref;
   CVPixelBufferRetain(pDvdVideoPicture->cvBufferRef);
   pthread_mutex_unlock(&m_queue_mutex);
 
   // now we can pop the top frame.
   DisplayQueuePop();
 
-  if (m_queue_depth > 4)
-    CLog::Log(LOGNOTICE, "%s - m_queue_depth(%d)", __FUNCTION__, m_queue_depth);
-    
-  CLog::Log(LOGNOTICE, "%s - VTBDecoderDecode dts(%f), pts(%f), cvBufferRef(%p)", __FUNCTION__,
-    pDvdVideoPicture->dts, pDvdVideoPicture->pts, pDvdVideoPicture->cvBufferRef);
+  //CLog::Log(LOGNOTICE, "%s - VTBDecoderDecode dts(%f), pts(%f), cvBufferRef(%p)", __FUNCTION__,
+  //  pDvdVideoPicture->dts, pDvdVideoPicture->pts, pDvdVideoPicture->cvBufferRef);
 
   return VC_PICTURE | VC_BUFFER;
+}
+
+bool CDVDVideoCodecVideoToolBox::ClearPicture(DVDVideoPicture* pDvdVideoPicture)
+{
+  // release any previous retained cvbuffer reference that
+  // has not been passed up to renderer (ie. dropped frames).
+  if (pDvdVideoPicture->cvBufferRef)
+    CVBufferRelease(pDvdVideoPicture->cvBufferRef);
+
+  return CDVDVideoCodec::ClearPicture(pDvdVideoPicture);
 }
 
 void CDVDVideoCodecVideoToolBox::DisplayQueuePop(void)
@@ -807,6 +814,15 @@ CDVDVideoCodecVideoToolBox::CreateVTSession(int width, int height, CMFormatDescr
   VTDecompressionOutputCallback outputCallback;
   OSStatus status;
 
+  #if defined(__arm__)
+    // scale output pictures down to 720p size for display
+    if (width > 1280)
+    {
+      double w_scaler = 1280.0 / width;
+      width = 1280;
+      height = height * w_scaler;
+    }
+  #endif
   destinationPixelBufferAttributes = CFDictionaryCreateMutable(
     NULL, // CFAllocatorRef allocator
     0,    // CFIndex capacity
@@ -882,9 +898,9 @@ CDVDVideoCodecVideoToolBox::VTDecoderCallback(
     return;
   }
   OSType format_type = CVPixelBufferGetPixelFormatType(imageBuffer);
-  if ((format_type != kCVPixelFormatType_422YpCbCr8) && (format_type != kCVPixelFormatType_32BGRA) )
+  if (format_type != kCVPixelFormatType_32BGRA)
   {
-    CLog::Log(LOGERROR, "%s - imageBuffer format is not '2vuy' or 'BGRA',is reporting 0x%x",
+    CLog::Log(LOGERROR, "%s - imageBuffer format is not 'BGRA',is reporting 0x%x",
       "VTDecoderCallback", (int)format_type);
     return;
   }
@@ -900,6 +916,14 @@ CDVDVideoCodecVideoToolBox::VTDecoderCallback(
   // parsed out of the bitstream and stored in the frameInfo dictionary by the client
   frame_queue *newFrame = (frame_queue*)calloc(sizeof(frame_queue), 1);
   newFrame->nextframe = NULL;
+  if (CVPixelBufferIsPlanar(imageBuffer) )
+  {
+    newFrame->width  = CVPixelBufferGetWidthOfPlane(imageBuffer, 0);
+    newFrame->height = CVPixelBufferGetHeightOfPlane(imageBuffer, 0);
+  } else {
+    newFrame->width  = CVPixelBufferGetWidth(imageBuffer);
+    newFrame->height = CVPixelBufferGetHeight(imageBuffer);
+  }
   newFrame->pixel_buffer_format = format_type;
   newFrame->pixel_buffer_ref = CVBufferRetain(imageBuffer);
   GetFrameDisplayTimeFromDictionary(frameInfo, newFrame);
