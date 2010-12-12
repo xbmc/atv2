@@ -721,9 +721,9 @@ if test "$host_vendor" != "apple"; then
   XB_FIND_SONAME([CURL],        [curl])
   XB_FIND_SONAME([FLAC],        [FLAC])
   XB_FIND_SONAME([MODPLUG],     [modplug])
-  XB_FIND_SONAME([FAAD],        [faad])
-  XB_FIND_SONAME([MAD],         [mad])
 fi
+XB_FIND_SONAME([FAAD],        [faad])
+XB_FIND_SONAME([MAD],         [mad])
 XB_FIND_SONAME([OGG],         [ogg])
 XB_FIND_SONAME([VORBIS],      [vorbis])
 XB_FIND_SONAME([VORBISENC],   [vorbisenc])
