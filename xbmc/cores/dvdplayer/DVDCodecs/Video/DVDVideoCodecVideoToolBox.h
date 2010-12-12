@@ -58,12 +58,9 @@ public:
   virtual const char* GetName(void) { return (const char*)m_pFormatName; }
   
 protected:
+  void DisplayQueuePop(void);
   void CreateVTSession(int width, int height, CMFormatDescriptionRef fmt_desc);
   void DestroyVTSession(void);
-  void DisplayQueuePop(void);
-  void BGRA_to_YUV420P(uint8_t *bgra_ptr, int bgra_stride, DVDVideoPicture *picture);
-  void UYVY422_to_YUV420P(uint8_t *yuv422_ptr, int yuv422_stride, DVDVideoPicture *picture);
-
   static void VTDecoderCallback(
     void *refcon, CFDictionaryRef frameInfo,
     OSStatus status, UInt32 infoFlags, CVBufferRef imageBuffer);
