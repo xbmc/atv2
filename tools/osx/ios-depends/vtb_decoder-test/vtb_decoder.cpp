@@ -279,6 +279,19 @@ vtdec_create_session(AppContext *ctx)
   CFMutableDictionaryRef destinationPixelBufferAttributes;
   VTDecompressionOutputCallback outputCallback;
   OSStatus status;
+  int width, height;
+  
+  width = ctx->sourceWidth;
+  height= ctx->sourceHeight;
+  #if 0
+    // scale output pictures down to 720p size for display
+    if (width > 1280)
+    {
+      double w_scaler = 1280.0 / width;
+      width = 1280;
+      height = height * w_scaler;
+    }
+  #endif
 
   destinationPixelBufferAttributes = CFDictionaryCreateMutable(
     NULL, // CFAllocatorRef allocator
@@ -289,23 +302,13 @@ vtdec_create_session(AppContext *ctx)
   // The recommended pixel format choices are 
   //  kCVPixelFormatType_32BGRA or kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange
   CFDictionarySetSInt32(destinationPixelBufferAttributes,
-    kCVPixelBufferPixelFormatTypeKey, 
-    kCVPixelFormatType_32BGRA);
-    //kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange);
+    kCVPixelBufferPixelFormatTypeKey, kCVPixelFormatType_32BGRA);
   CFDictionarySetSInt32(destinationPixelBufferAttributes,
-    kCVPixelBufferWidthKey,
-    ctx->sourceWidth);
+    kCVPixelBufferWidthKey, width);
   CFDictionarySetSInt32(destinationPixelBufferAttributes,
-    kCVPixelBufferHeightKey,
-    ctx->sourceHeight);
+    kCVPixelBufferHeightKey, height);
   CFDictionarySetSInt32(destinationPixelBufferAttributes,
-    kCVPixelBufferBytesPerRowAlignmentKey,
-    2 * ctx->sourceWidth);
-
-  CFDictionarySetSInt32(destinationPixelBufferAttributes,
-    kVTVideoDecoderSpecification_EnableSandboxedVideoDecoder, 
-    TRUE);
-    
+    kCVPixelBufferBytesPerRowAlignmentKey, 16);
 
   outputCallback.func = vtdec_output_frame;
   outputCallback.data = ctx;
