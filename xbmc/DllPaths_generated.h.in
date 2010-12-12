@@ -67,13 +67,12 @@
 #define DLL_PATH_SHN_CODEC     "special://xbmcbin/system/players/paplayer/libshnplay-@ARCH@.so"
 #if defined(_LINUX) && !defined(__APPLE__)
 #define DLL_PATH_FLAC_CODEC    "@FLAC_SONAME@"
-#define DLL_PATH_OGG_CODEC     "@VORBISFILE_SONAME@"
 #define DLL_PATH_MODPLUG_CODEC "@MODPLUG_SONAME@"
 #else
 #define DLL_PATH_FLAC_CODEC    "special://xbmcbin/system/players/paplayer/libFLAC-@ARCH@.so"
-#define DLL_PATH_OGG_CODEC     "special://xbmcbin/system/players/paplayer/vorbisfile-@ARCH@.so"
 #define DLL_PATH_MODPLUG_CODEC "special://xbmcbin/system/players/paplayer/libmodplug-@ARCH@.so"
 #endif
+#define DLL_PATH_OGG_CODEC     "@VORBISFILE_SONAME@"
 
 /* dvdplayer */
 #define DLL_PATH_LIBASS        "special://xbmcbin/system/players/dvdplayer/libass-@ARCH@.so"
@@ -99,15 +98,12 @@
 /* cdrip */
 #if defined(_LINUX) && !defined(__APPLE__)
 #define DLL_PATH_LAME_ENC      "libmp3lame.so.0"
+#else
+#define DLL_PATH_LAME_ENC      "special://xbmcbin/system/cdrip/lame_enc-@ARCH@.so"
+#endif
 #define DLL_PATH_OGG           "@OGG_SONAME@"
 #define DLL_PATH_VORBIS_ENC    "@VORBISENC_SONAME@"
 #define DLL_PATH_VORBIS        "@VORBIS_SONAME@"
-#else
-#define DLL_PATH_LAME_ENC      "special://xbmcbin/system/cdrip/lame_enc-@ARCH@.so"
-#define DLL_PATH_OGG           "special://xbmcbin/system/cdrip/ogg-@ARCH@.so"
-#define DLL_PATH_VORBIS_ENC    "special://xbmcbin/system/cdrip/vorbisenc-@ARCH@.so"
-#define DLL_PATH_VORBIS        "special://xbmcbin/system/cdrip/vorbis-@ARCH@.so"
-#endif
 
 /* broadcom crystalhd */
 #if defined(_LINUX) && !defined(__APPLE__)
