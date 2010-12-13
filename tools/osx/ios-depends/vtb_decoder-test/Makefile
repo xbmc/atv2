@@ -17,7 +17,7 @@ BIN = vtb_decoder
 
 INCLUDES+= -I./ffmpeg
 
-LDFLAGS+= -lbz2 -lz
+LDFLAGS+= -lbz2 -lz -lc
 LDFLAGS+= -F$(SDKROOT)/System/Library/Frameworks
 LDFLAGS+= -framework CoreFoundation -framework CoreVideo -framework CoreMedia
 LDFLAGS+= -F$(SDKROOT)/System/Library/PrivateFrameworks
@@ -46,6 +46,7 @@ ffmpeg-libs: ffmpeg/config.h
 	make -C ffmpeg
 
 ffmpeg/config.h:
+	rm -rf ffmpeg
 	svn export --revision $(FFMPEG_VERS) --ignore-externals svn://svn.ffmpeg.org/ffmpeg/trunk ffmpeg
 	cd ffmpeg && svn export --revision $(SWSCALE_VERS) svn://svn.ffmpeg.org/mplayer/trunk/libswscale libswscale
 	cd ffmpeg && patch -p1 <../03_mpeg4_video_to_elementary_stream.patch
@@ -77,7 +78,6 @@ ffmpeg/config.h:
       --enable-gpl \
       --enable-protocol=http \
       --enable-pthreads \
-      --enable-memalign-hack \
       --cc=$(CC) \
       --as="gas-preprocessor.pl $(CC)"
 
