@@ -75,7 +75,8 @@
 #include "HALManager.h"
 #endif
 #endif
-#if defined(__APPLE__) && !defined(__arm__)
+#if defined(__APPLE__) 
+//&& !defined(__arm__)
   #include "CoreAudio.h"
   #include "XBMCHelper.h"
 #endif
@@ -671,7 +672,8 @@ void CGUIWindowSettingsCategory::UpdateSettings()
       if (pControl)
         pControl->SetEnabled(g_guiSettings.GetInt("videoscreen.screen") != DM_WINDOWED);
     }
-#if (defined(__APPLE__) && !defined(__arm__)) || defined(_WIN32)
+//#if (defined(__APPLE__) && !defined(__arm__)) || defined(_WIN32)
+#if defined(__APPLE__) || defined(_WIN32)
     else if (strSetting.Equals("videoscreen.blankdisplays"))
     {
       CGUIControl *pControl = (CGUIControl *)GetControl(pSettingControl->GetID());
@@ -2794,7 +2796,7 @@ void CGUIWindowSettingsCategory::FillInNetworkInterfaces(CSetting *pSetting)
 void CGUIWindowSettingsCategory::FillInAudioDevices(CSetting* pSetting, bool Passthrough)
 {
 #if defined(__APPLE__)
-#if !defined(__arm__)
+//#if !defined(__arm__)
   if (Passthrough)
     return;
   CGUISpinControlEx *pControl = (CGUISpinControlEx *)GetControl(GetSetting(pSetting->GetSetting())->GetID());
@@ -2819,7 +2821,7 @@ void CGUIWindowSettingsCategory::FillInAudioDevices(CSetting* pSetting, bool Pas
     deviceList.pop_front();
   }
   pControl->SetValue(activeDevice);
-#endif
+//#endif
 #else
   CGUISpinControlEx *pControl = (CGUISpinControlEx *)GetControl(GetSetting(pSetting->GetSetting())->GetID());
   pControl->Clear();

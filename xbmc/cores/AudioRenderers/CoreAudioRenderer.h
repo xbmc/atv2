@@ -21,8 +21,9 @@
 
 #ifndef __COREAUDIO_RENDERER_H__
 #define __COREAUDIO_RENDERER_H__
-#if !defined(__arm__)
-#include <osx/CoreAudio.h>
+//#include <osx/CoreAudio.h>
+#include "CoreAudio.h"
+#include "PlatformDefs.h"
 #include "IAudioRenderer.h"
 #include <utils/Event.h>
 #include <utils/LockFree.h>
@@ -168,5 +169,4 @@ class CCoreAudioRenderer : public IAudioRenderer
     long m_DoRunout;
   };
 
-#endif
 #endif

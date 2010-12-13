@@ -22,7 +22,116 @@
 #ifndef __COREAUDIO_H__
 #define __COREAUDIO_H__
 
-#if !defined(__arm__)
+#include <AudioUnit/AudioUnit.h>
+#include <AudioToolbox/AudioToolbox.h>
+#include <AudioToolbox/AudioServices.h>
+#include "AudioHardware.h">
+#include <StdString.h>
+#include <list>
+#include <vector>
+
+#if defined(__arm__)
+/*
+enum
+{
+    kAudioHardwarePropertyProcessIsMaster                   = 'mast',
+    kAudioHardwarePropertyIsInitingOrExiting                = 'inot',
+    kAudioHardwarePropertyDevices                           = 'dev#',
+    kAudioHardwarePropertyDefaultInputDevice                = 'dIn ',
+    kAudioHardwarePropertyDefaultOutputDevice               = 'dOut',
+    kAudioHardwarePropertyDefaultSystemOutputDevice         = 'sOut',
+    kAudioHardwarePropertyDeviceForUID                      = 'duid',
+    kAudioHardwarePropertySleepingIsAllowed                 = 'slep',
+    kAudioHardwarePropertyUnloadingIsAllowed                = 'unld',
+    kAudioHardwarePropertyHogModeIsAllowed                  = 'hogr',
+    kAudioHardwarePropertyRunLoop                           = 'rnlp',
+    kAudioHardwarePropertyPlugInForBundleID                 = 'pibi'
+};
+enum
+{
+    kAudioObjectPropertyClass               = 'clas',
+    kAudioObjectPropertyOwner               = 'stdv',
+    kAudioObjectPropertyCreator             = 'oplg',
+    kAudioObjectPropertyName                = 'lnam',
+    kAudioObjectPropertyManufacturer        = 'lmak',
+    kAudioObjectPropertyElementName         = 'lchn',
+    kAudioObjectPropertyElementCategoryName = 'lccn',
+    kAudioObjectPropertyElementNumberName   = 'lcnn',
+    kAudioObjectPropertyOwnedObjects        = 'ownd',
+    kAudioObjectPropertyListenerAdded       = 'lisa',
+    kAudioObjectPropertyListenerRemoved     = 'lisr'
+};
+
+
+enum
+{
+    kAudioDevicePropertyDeviceName                          = 'name',
+    kAudioDevicePropertyDeviceNameCFString                  = kAudioObjectPropertyName,
+    kAudioDevicePropertyDeviceManufacturer                  = 'makr',
+    kAudioDevicePropertyDeviceManufacturerCFString          = kAudioObjectPropertyManufacturer,
+    kAudioDevicePropertyRegisterBufferList                  = 'rbuf',
+    kAudioDevicePropertyBufferSize                          = 'bsiz',
+    kAudioDevicePropertyBufferSizeRange                     = 'bsz#',
+    kAudioDevicePropertyChannelName                         = 'chnm',
+    kAudioDevicePropertyChannelNameCFString                 = kAudioObjectPropertyElementName,
+    kAudioDevicePropertyChannelCategoryName                 = 'ccnm',
+    kAudioDevicePropertyChannelCategoryNameCFString         = kAudioObjectPropertyElementCategoryName,
+    kAudioDevicePropertyChannelNumberName                   = 'cnnm',
+    kAudioDevicePropertyChannelNumberNameCFString           = kAudioObjectPropertyElementNumberName,
+    kAudioDevicePropertySupportsMixing                      = 'mix?',
+    kAudioDevicePropertyStreamFormat                        = 'sfmt',
+    kAudioDevicePropertyStreamFormats                       = 'sfm#',
+    kAudioDevicePropertyStreamFormatSupported               = 'sfm?',
+    kAudioDevicePropertyStreamFormatMatch                   = 'sfmm',
+    kAudioDevicePropertyDataSourceNameForID                 = 'sscn',
+    kAudioDevicePropertyClockSourceNameForID                = 'cscn',
+    kAudioDevicePropertyPlayThruDestinationNameForID        = 'mddn',
+    kAudioDevicePropertyChannelNominalLineLevelNameForID    = 'cnlv'
+};
+
+
+
+
+
+enum
+{
+    kAudioDevicePropertyPlugIn                          = 'plug',
+    kAudioDevicePropertyConfigurationApplication        = 'capp',
+    kAudioDevicePropertyDeviceUID                       = 'uid ',
+    kAudioDevicePropertyModelUID                        = 'muid',
+    kAudioDevicePropertyTransportType                   = 'tran',
+    kAudioDevicePropertyRelatedDevices                  = 'akin',
+    kAudioDevicePropertyClockDomain                     = 'clkd',
+    kAudioDevicePropertyDeviceIsAlive                   = 'livn',
+    kAudioDevicePropertyDeviceHasChanged                = 'diff',
+    kAudioDevicePropertyDeviceIsRunning                 = 'goin',
+    kAudioDevicePropertyDeviceIsRunningSomewhere        = 'gone',
+    kAudioDevicePropertyDeviceCanBeDefaultDevice        = 'dflt',
+    kAudioDevicePropertyDeviceCanBeDefaultSystemDevice  = 'sflt',
+    kAudioDeviceProcessorOverload                       = 'over',
+    kAudioDevicePropertyHogMode                         = 'oink',
+    kAudioDevicePropertyLatency                         = 'ltnc',
+    kAudioDevicePropertyBufferFrameSize                 = 'fsiz',
+    kAudioDevicePropertyBufferFrameSizeRange            = 'fsz#',
+    kAudioDevicePropertyUsesVariableBufferFrameSizes    = 'vfsz',
+    kAudioDevicePropertyStreams                         = 'stm#',
+    kAudioDevicePropertySafetyOffset                    = 'saft',
+    kAudioDevicePropertyIOCycleUsage                    = 'ncyc',
+    kAudioDevicePropertyStreamConfiguration             = 'slay',
+    kAudioDevicePropertyIOProcStreamUsage               = 'suse',
+    kAudioDevicePropertyPreferredChannelsForStereo      = 'dch2',
+    kAudioDevicePropertyPreferredChannelLayout          = 'srnd',
+    kAudioDevicePropertyNominalSampleRate               = 'nsrt',
+    kAudioDevicePropertyAvailableNominalSampleRates     = 'nsr#',
+    kAudioDevicePropertyActualSampleRate                = 'asrt'
+};
+
+typedef short SInt16;
+typedef float Float32;
+*/
+#endif
+
+//#if !defined(__arm__)
 #include <AudioUnit/AudioUnit.h>
 #include <AudioToolbox/AudioToolbox.h>
 #include <AudioToolbox/AudioServices.h>
@@ -30,16 +139,28 @@
 #include <list>
 #include <vector>
 
-#if 0
+enum {
+  kAudioUnitSubType_HALOutput           = 'ahal',
+  kAudioUnitSubType_DefaultOutput       = 'def ',
+  kAudioUnitSubType_SystemOutput        = 'sys ',
+};
+enum {
+  kAudioUnitSubType_StereoMixer            = 'smxr',
+  kAudioUnitSubType_3DMixer                = '3dmx',
+  kAudioUnitSubType_MatrixMixer            = 'mxmx',
+};
+
 typedef UInt32      AudioObjectID;
 typedef AudioObjectID   AudioDeviceID;
 typedef AudioObjectID   AudioStreamID;
+/*
 struct  AudioStreamRangedDescription
 {
     AudioStreamBasicDescription     mFormat;
     AudioValueRange                 mSampleRateRange;
 };
 typedef struct AudioStreamRangedDescription AudioStreamRangedDescription;
+*/
 typedef OSStatus
 (*AudioDeviceIOProc)(   AudioDeviceID           inDevice,
                         const AudioTimeStamp*   inNow,
@@ -56,7 +177,7 @@ struct ComponentDescription {
   unsigned long       componentFlagsMask;     /* Mask for specifying which flags to consider in search, zero during registration */
 };
 typedef struct ComponentDescription     ComponentDescription;
-#endif
+
 // Forward declarations
 class CCoreAudioHardware;
 class CCoreAudioDevice;
@@ -167,10 +288,10 @@ public:
   CCoreAudioUnit();
   virtual ~CCoreAudioUnit();
   
-  bool Open(ComponentDescription desc);
+  bool Open(AudioComponentDescription desc);
   bool Open(OSType type, OSType subType, OSType manufacturer);
-  void Attach(AudioUnit audioUnit) {m_Component = audioUnit;}
-  AudioUnit GetComponent(){return m_Component;}
+  void Attach(AudioUnit audioUnit) {m_AudioUnit = audioUnit;}
+  AudioComponentInstance GetComponent(){return m_AudioUnit;}
   void Close();
   bool Initialize();
   bool IsInitialized() {return m_Initialized;}
@@ -181,7 +302,7 @@ public:
   bool SetOutputFormat(AudioStreamBasicDescription* pDesc);
   bool SetMaxFramesPerSlice(UInt32 maxFrames);
 protected:
-  AudioUnit m_Component;
+  AudioComponentInstance m_AudioUnit;
   bool m_Initialized;
 };
 
@@ -217,7 +338,5 @@ char* UInt32ToFourCC(UInt32* val);
 const char* StreamDescriptionToString(AudioStreamBasicDescription desc, CStdString& str);
 
 #define CONVERT_OSSTATUS(x) UInt32ToFourCC((UInt32*)&ret)
-
-#endif
 
 #endif // __COREAUDIO_H__
