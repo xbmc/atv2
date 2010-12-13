@@ -74,7 +74,8 @@ long cas(volatile long* pAddr, long expectedVal, long swapVal)
 long cas(volatile long* pAddr, long expectedVal, long swapVal)
 {
   // TODO: ARM Assembler
-  return 0;
+  // __sync_val_compare_and_swap -> GCC >= 401
+  return __sync_val_compare_and_swap(pAddr, expectedVal, swapVal); 
 }
 
 #else // Linux / OSX86 (GCC)

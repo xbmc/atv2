@@ -239,9 +239,11 @@
 #include "XRandR.h"
 #endif
 #if  defined(__APPLE__)
-  #include "CocoaInterface.h"
   #if !defined(__arm__)
+    #include "CocoaInterface.h"
     #include "XBMCHelper.h"
+  #else
+    #include "iOS_Utils.h"
   #endif
 #endif
 
@@ -848,7 +850,17 @@ bool CApplication::InitDirectoriesOSX()
 
   CStdString xbmcPath;
   CUtil::GetHomePath(xbmcPath);
-  xbmcPath = "/private/var/stash/Applications/Lowtide.app/Appliances/XBMC.frappliance/XBMCData/XBMCHome";
+
+
+  #if defined(__arm__)
+  	uint32_t path_size = 2*MAXPATHLEN;
+  	char     given_path[2*MAXPATHLEN];
+
+    GetFrappBundlePath(given_path, &path_size);
+    strcat(given_path, "XBMCData/XBMCHome/");
+    //xbmcPath = "/private/var/mobile/Applications/94DE54CA-43CC-44D5-8311-1D64D290316A/XBMC.app/XBMCData/XBMCHome";
+    xbmcPath = given_path;
+  #endif
 
   setenv("XBMC_HOME", xbmcPath.c_str(), 0);
 
@@ -2718,6 +2730,14 @@ void CApplication::FrameMove()
 #ifdef HAS_SDL
   CWinEvents::MessagePump();
 #endif
+#if defined(__APPLE__) && defined(__arm__)
+  CWinEvents::MessagePump();
+#endif
+/*
+#if defined(__APPLE__) && defined(__arm__)
+  CWinEvents::MessagePump();
+#endif
+*/
   ProcessHTTPApiButtons();
   ProcessRemote(frameTime);
   ProcessGamepad(frameTime);

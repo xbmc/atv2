@@ -34,11 +34,7 @@
 #include "Win32DirectSound.h"
 #endif
 #if defined(__APPLE__)
-  #if !defined(__arm__)
-    #include "CoreAudioRenderer.h"
-  #else
-    //#include "iOSAudioRenderer.h"
-  #endif
+  #include "CoreAudioRenderer.h"
 #elif defined(_LINUX)
 #include "ALSADirectSound.h"
 #endif
@@ -99,10 +95,8 @@ IAudioRenderer* CAudioRendererFactory::Create(IAudioCallback* pCallback, int iCh
     if (deviceString.Equals("custom"))
       deviceString = g_guiSettings.GetString("audiooutput.custompassthrough");
 #else
-    #if !defined(__arm__)
     // osx/win platforms do not have an "audiooutput.passthroughdevice" setting but can do passthrough
     deviceString = g_guiSettings.GetString("audiooutput.audiodevice");
-    #endif
 #endif
   }
   else
@@ -148,9 +142,7 @@ IAudioRenderer* CAudioRendererFactory::Create(IAudioCallback* pCallback, int iCh
   CreateAndReturnOnValidInitialize(CWin32DirectSound);
 #endif
 #if defined(__APPLE__)
-  #if !defined(__arm__)
-    CreateAndReturnOnValidInitialize(CCoreAudioRenderer);
-  #endif
+  CreateAndReturnOnValidInitialize(CCoreAudioRenderer);
 #elif defined(_LINUX)
   CreateAndReturnOnValidInitialize(CALSADirectSound);
 #endif
@@ -175,9 +167,7 @@ void CAudioRendererFactory::EnumerateAudioSinks(AudioSinkList& vAudioSinks, bool
 #endif
 
 #if defined(__APPLE__)
-  #if !defined(__arm__)
-    CCoreAudioRenderer::EnumerateAudioSinks(vAudioSinks, passthrough);
-  #endif
+  CCoreAudioRenderer::EnumerateAudioSinks(vAudioSinks, passthrough);
 #elif defined(_LINUX)
   CALSADirectSound::EnumerateAudioSinks(vAudioSinks, passthrough);
 #endif
@@ -198,10 +188,8 @@ IAudioRenderer *CAudioRendererFactory::CreateFromUri(const CStdString &soundsyst
 #endif
 
 #if defined(__APPLE__)
-  #if !defined(__arm__)
-    if (soundsystem.Equals("coreaudio"))
-      ReturnNewRenderer(CCoreAudioRenderer);
-  #endif
+  if (soundsystem.Equals("coreaudio"))
+    ReturnNewRenderer(CCoreAudioRenderer);
 #elif defined(_LINUX)
   if (soundsystem.Equals("alsa"))
     ReturnNewRenderer(CALSADirectSound);

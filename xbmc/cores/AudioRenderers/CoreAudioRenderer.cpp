@@ -20,7 +20,6 @@
  *
  */
 
-#if !defined(__arm__)
 #include "CoreAudioRenderer.h"
 #include "AudioContext.h"
 #include "GUISettings.h"
@@ -28,18 +27,8 @@
 #include "utils/Atomics.h"
 #include "utils/log.h"
 #include "utils/TimeUtils.h"
-#if 0
-enum {
-   kAudioUnitSubType_HALOutput           = 'ahal',
-   kAudioUnitSubType_DefaultOutput       = 'def ',
-   kAudioUnitSubType_SystemOutput        = 'sys ',
-};
-enum {
-   kAudioUnitSubType_StereoMixer            = 'smxr',
-   kAudioUnitSubType_3DMixer                = '3dmx',
-   kAudioUnitSubType_MatrixMixer            = 'mxmx',
-};
-#endif
+
+#undef _DEBUG
 
 // based on Win32WASAPI, with default 5 channel layout changed from 4.1 to 5.0
 const enum PCMChannels default_channel_layout[][8] = 
@@ -354,6 +343,16 @@ CCoreAudioRenderer::CCoreAudioRenderer() :
       CLog::Log(LOGERROR, "CoreAudioRenderer::constructor: kAudioHardwarePropertyRunLoop error.");
     }
   }
+#else
+  /*
+  CFRunLoopRef theRunLoop = NULL;
+  AudioObjectPropertyAddress theAddress = { kAudioHardwarePropertyRunLoop, kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMaster };
+  OSStatus theError = AudioObjectSetPropertyData(kAudioObjectSystemObject, &theAddress, 0, NULL, sizeof(CFRunLoopRef), &theRunLoop);
+  if (theError != noErr)
+  {
+    CLog::Log(LOGERROR, "CoreAudioRenderer::constructor: kAudioHardwarePropertyRunLoop error.");
+  }
+  */
 #endif
 }
 
@@ -444,7 +443,7 @@ bool CCoreAudioRenderer::Initialize(IAudioCallback* pCallback, const CStdString&
     UInt32 bufferFrames = m_AUOutput.GetBufferFrameSize(); // Size of the output buffer, in Frames
     if (!m_AUOutput.SetMaxFramesPerSlice(bufferFrames))
       return false;
-
+    
     m_ChunkLen = bufferFrames * m_BytesPerFrame;  // This is the minimum amount of data that we will accept from a client
 
     // Setup the callback function that the AudioUnit will use to request data	
@@ -718,13 +717,11 @@ OSStatus CCoreAudioRenderer::OnRender(AudioUnitRenderActionFlags *ioActionFlags,
     m_RunoutEvent.Set(); // Tell anyone who cares that the cache is empty
     if (m_DoRunout) // We were waiting for a runout. This is not an error.
     {
-      //CLog::Log(LOGDEBUG, "CCoreAudioRenderer::OnRender: Runout complete");
+      CLog::Log(LOGDEBUG, "CCoreAudioRenderer::OnRender: Runout complete");
       m_DoRunout = 0;
     }
-/*
     else
       CLog::Log(LOGDEBUG, "CCoreAudioRenderer::OnRender: Buffer underrun.");
-*/
   }
   // Hard mute for formats that do not allow standard volume control. Throw away any actual data to keep the stream moving.
   if (!m_EnableVolumeControl && m_CurrentVolume <= VOLUME_MINIMUM)
@@ -776,8 +773,10 @@ bool CCoreAudioRenderer::InitializePCM(UInt32 channels, UInt32 samplesPerSecond,
   for(PCMChannels *channel = outLayout; *channel != PCM_INVALID; channel++)
     ++layoutChannels;
   
+  /*
   CoreAudioChannelList outputMap;
   m_AudioDevice.GetPreferredChannelLayout(&outputMap);
+  */
   
   // Create the MatrixMixer AudioUnit Component
   if (!m_MixerUnit.Open(kAudioUnitType_Mixer, kAudioUnitSubType_MatrixMixer, kAudioUnitManufacturer_Apple))
@@ -795,7 +794,7 @@ bool CCoreAudioRenderer::InitializePCM(UInt32 channels, UInt32 samplesPerSecond,
   inputFormat.mBytesPerFrame = (bitsPerSample>>3) * channels; // Size of a frame == 1 sample per channel		
   inputFormat.mFramesPerPacket = 1;                         // The smallest amount of indivisible data. Always 1 for uncompressed audio 	
   inputFormat.mBytesPerPacket = inputFormat.mBytesPerFrame * inputFormat.mFramesPerPacket;
-  inputFormat.mReserved = 0;
+  inputFormat.mReserved = 0;  
   if (!m_AUOutput.SetInputFormat(&inputFormat))
     return false;
 	
@@ -921,7 +920,6 @@ bool CCoreAudioRenderer::InitializeEncoded(AudioDeviceID outputDevice, UInt32 sa
   return true;
 }
 
-#endif
 #endif
 
 
