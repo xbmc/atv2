@@ -7,7 +7,7 @@ platform_gcc_version=4.2.1
 platform_host=arm-apple-darwin10
 platform_path=/Developer/Platforms/iPhoneOS.platform/Developer
 platform_os_min=iphoneos-version-min=${platform_os_version}
-platform_os_cflags=-march=armv7 -mcpu=cortex-a8 -mfpu=neon -ftree-vectorize -mfloat-abi=softfp -mdynamic-no-pic -pipe -Wno-trigraphs -fpascal-strings -O0 -Wreturn-type -Wunused-variable -fmessage-length=0 -gdwarf-2
+platform_os_cflags=-march=armv7 -mcpu=cortex-a8 -mfpu=neon -ftree-vectorize -mfloat-abi=softfp -pipe -Wno-trigraphs -fpascal-strings -O0 -Wreturn-type -Wunused-variable -fmessage-length=0 -gdwarf-2
 platform_os_ldflags=-march=armv7 -mcpu=cortex-a8
 prefix_path=$(shell cd $(TOP); pwd)/build
 #prefix_path:=$(shell cd ../../../build/xbmc-ios-${platform_os_version}; pwd)
