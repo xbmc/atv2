@@ -52,7 +52,7 @@ ffmpeg/config.h:
 	cd ffmpeg && patch -p1 <../03_mpeg4_video_to_elementary_stream.patch
 	cd ffmpeg && patch -p1 <../04_vc1_bsfs.patch
 	cd ffmpeg && ./configure \
-      --extra-cflags="$(CFLAGS) -w -D_DARWIN_C_SOURCE -Dclosesocket=close -Dattribute_deprecated=" \
+      --extra-cflags="$(CFLAGS) -march=armv7-a -w -D_DARWIN_C_SOURCE -Dclosesocket=close -Dattribute_deprecated=" \
       --extra-ldflags="-Wl,-undefined,dynamic_lookup" \
       --enable-cross-compile \
       --arch=arm \

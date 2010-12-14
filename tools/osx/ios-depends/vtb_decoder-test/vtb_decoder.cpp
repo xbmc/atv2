@@ -8,6 +8,8 @@
 #include <mach/mach_time.h>
 
 #include <CoreVideo/CoreVideo.h>
+#include <CoreVideo/CVHostTime.h>
+
 #include <CoreMedia/CoreMedia.h>
 
 #include "ffmpeg_common.h"
@@ -459,8 +461,9 @@ int main (int argc, char * const argv[])
   
   ctx.sourceWidth = ctx.codec_context->width;
   ctx.sourceHeight = ctx.codec_context->height;
-  printf("video width(%d), height(%d), extradata_size(%d)\n",
-    (int)ctx.sourceWidth, (int)ctx.sourceHeight, ctx.codec_context->extradata_size);
+  printf("video width(%d), height(%d), extradata_size(%d), extradata(%x)\n",
+    (int)ctx.sourceWidth, (int)ctx.sourceHeight,
+    ctx.codec_context->extradata_size, ctx.codec_context->extradata[0]);
   
   // initialize video decoder.
   ctx.format_id = kVTFormatH264;
@@ -494,10 +497,10 @@ int main (int argc, char * const argv[])
     usleep(10000);
     frame_count = 0;
     while (!g_signal_abort && byte_count && (frame_count < 5000)) {
-      bgn = CurrentHostCounter() * 1000 / CurrentHostFrequency();
+      bgn = CVGetCurrentHostTime() * 1000 / CVGetHostClockFrequency();
       status = vtdec_decode_buffer(&ctx, data, byte_count, dts, pts);
       free(data);
-      end = CurrentHostCounter() * 1000 / CurrentHostFrequency();
+      end = CVGetCurrentHostTime() * 1000 / CVGetHostClockFrequency();
       fprintf(stdout, "decode time(%llu)\n", end-bgn);
       frame_count++;
       usleep(10000);
