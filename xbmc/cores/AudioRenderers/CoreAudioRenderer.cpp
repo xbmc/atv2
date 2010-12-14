@@ -28,18 +28,6 @@
 #include "utils/Atomics.h"
 #include "utils/log.h"
 #include "utils/TimeUtils.h"
-#if 0
-enum {
-   kAudioUnitSubType_HALOutput           = 'ahal',
-   kAudioUnitSubType_DefaultOutput       = 'def ',
-   kAudioUnitSubType_SystemOutput        = 'sys ',
-};
-enum {
-   kAudioUnitSubType_StereoMixer            = 'smxr',
-   kAudioUnitSubType_3DMixer                = '3dmx',
-   kAudioUnitSubType_MatrixMixer            = 'mxmx',
-};
-#endif
 
 // based on Win32WASAPI, with default 5 channel layout changed from 4.1 to 5.0
 const enum PCMChannels default_channel_layout[][8] = 
