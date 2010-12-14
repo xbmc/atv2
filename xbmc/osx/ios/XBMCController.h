@@ -62,6 +62,7 @@
 - (void) stopAnimation;
 - (void) setFramebuffer;
 - (void) presentFramebuffer;
+- (CGSize) getScreenSize;
 - (UIInterfaceOrientation) getOrientation;
 @end
 

@@ -465,6 +465,22 @@ extern NSString* kBRScreenSaverDismissed;
 	NSLog(@"%s:displayFPS(%f)", __PRETTY_FUNCTION__, displayFPS);
 	return displayFPS;
 }
+- (CGSize) getScreenSize
+{
+  CGSize screensize;
+
+  if (orientation == UIInterfaceOrientationPortrait)
+  {
+    screensize.width  = [[UIScreen mainScreen] bounds].size.width;
+    screensize.height = [[UIScreen mainScreen] bounds].size.height;
+  }
+  else
+  {
+    screensize.height = [[UIScreen mainScreen] bounds].size.width;
+    screensize.width  = [[UIScreen mainScreen] bounds].size.height;
+  }
+  return screensize;
+}
 
 - (BOOL) recreateOnReselect
 { 

@@ -126,6 +126,14 @@ XBMCEAGLView  *m_glView;
 {
   return [m_glView presentFramebuffer];
 }
+- (CGSize) getScreenSize
+{
+  CGSize screensize;
+
+  screensize.width  = [BRWindow interfaceFrame].size.width;
+  screensize.height = [BRWindow interfaceFrame].size.height;
+  return screensize;
+}
 
 
 - (id) init

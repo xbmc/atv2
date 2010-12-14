@@ -37,12 +37,9 @@
 #undef BOOL
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
-#import "../BackRow/BackRow.h"
 #import <OpenGLES/ES2/gl.h>
 #import <OpenGLES/ES2/glext.h>
 #import "XBMCController.h"
-#import "XBMCEAGLView.h"
 #import <dlfcn.h>
 
 CWinSystemIOS::CWinSystemIOS() : CWinSystemBase()
@@ -124,29 +121,14 @@ bool CWinSystemIOS::SetFullScreen(bool fullScreen, RESOLUTION_INFO& res, bool bl
 void CWinSystemIOS::UpdateResolutions()
 {
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-  int w = 0;
-  int h = 0;
-#if 1
-  w = [BRWindow interfaceFrame].size.width;
-  h = [BRWindow interfaceFrame].size.height;
-  double fps = [g_xbmcController getDisplayLinkFPS];
-#else
-  if ([g_xbmcController getOrientation] == UIInterfaceOrientationPortrait)
-  {
-    w = [[UIScreen mainScreen] bounds].size.width;
-    h = [[UIScreen mainScreen] bounds].size.height;
-  }
-  else
-  {
-    h = [[UIScreen mainScreen] bounds].size.width;
-    w = [[UIScreen mainScreen] bounds].size.height;
-  }
+  
+  CGSize screensize = [g_xbmcController getScreenSize];
   double fps = [g_xbmcController getDisplayLinkFPS];
 
   NSLog(@"%s UpdateResolutions width=%d, height=%d, fps=%f", 
-		__PRETTY_FUNCTION__, w, h, fps);
-#endif
-  UpdateDesktopResolution(g_settings.m_ResInfo[RES_DESKTOP], 0, w, h, fps);
+		__PRETTY_FUNCTION__, screensize.width, screensize.height, fps);
+
+  UpdateDesktopResolution(g_settings.m_ResInfo[RES_DESKTOP], 0, screensize.width, screensize.height, fps);
   [pool release];
 }
 
