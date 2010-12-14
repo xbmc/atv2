@@ -23,9 +23,6 @@
 #ifndef WINDOW_EVENTS_IOS_H
 #define WINDOW_EVENTS_IOS_H
 
-//#ifdef HAS_SDL
-//#include <SDL/SDL_events.h>
-
 #include "WinEvents.h"
 
 class CWinEventsIOS : public CWinEventsBase
