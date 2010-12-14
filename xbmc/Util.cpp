@@ -720,8 +720,8 @@ void CUtil::GetHomePath(CStdString& strPath, const CStdString& strTarget)
 
     #if defined(__arm__)
       result = GetFrappBundlePath(given_path, &path_size);
-      strcat(given_path, "../XBMCData/XBMCHome/");
-      strcpy(given_path, "/private/var/stash/Applications/Lowtide.app/Appliances/XBMC.frappliance/XBMCData/XBMCHome");
+      strcat(given_path, "XBMCData/XBMCHome/");
+      //strcpy(given_path, "/private/var/mobile/Applications/94DE54CA-43CC-44D5-8311-1D64D290316A/XBMC.app/XBMCData/XBMCHome");
       /*
       // Convert to real path.
       char real_path[2*MAXPATHLEN];
@@ -3444,7 +3444,7 @@ CStdString CUtil::ResolveExecutablePath()
   uint32_t path_size = 2*MAXPATHLEN;
   #if defined(__arm__)
     result = GetFrappBundlePath(given_path, &path_size);
-    strcpy(given_path, "/private/var/stash/Applications/Lowtide.app/Appliances/XBMC.frappliance/XBMC");
+    //strcpy(given_path, "/private/var/mobile/Applications/94DE54CA-43CC-44D5-8311-1D64D290316A/XBMC.app/XBMC");
   #else
     result = _NSGetExecutablePath(given_path, &path_size);
   #endif
