@@ -36,13 +36,17 @@ public:
 };
 
 #ifdef _WIN32
-#include "WinEventsWin32.h"
-#define CWinEvents CWinEventsWin32
+  #include "WinEventsWin32.h"
+  #define CWinEvents CWinEventsWin32
 #endif
 
 #ifdef _LINUX
-#include "WinEventsSDL.h"
-#define CWinEvents CWinEventsSDL
+  #if defined(__APPLE__) && defined(__arm__)
+    #include "osx/WinEventsIOS.h"
+    #define CWinEvents CWinEventsIOS
+  #else
+    #include "WinEventsSDL.h"
+    #define CWinEvents CWinEventsSDL
 #endif
 
 
