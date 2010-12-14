@@ -6845,6 +6845,7 @@
 					HAVE_CONFIG_H,
 					HAS_SPC_CODEC,
 				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
 					$SRCROOT,
 					guilib,
@@ -6938,6 +6939,7 @@
 					HAVE_CONFIG_H,
 					HAS_SPC_CODEC,
 				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
 					$SRCROOT,
 					guilib,
