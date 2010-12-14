@@ -1831,6 +1831,7 @@ void CLinuxRendererGLES::UploadCVRefTexture(int index)
 }
 void CLinuxRendererGLES::DeleteCVRefTexture(int index)
 {
+#ifdef HAVE_LIBCOREVIDEO
   YUVPLANE &plane = m_buffers[index].fields[0][0];
 
   if (m_buffers[index].cvBufferRef)
@@ -1840,6 +1841,7 @@ void CLinuxRendererGLES::DeleteCVRefTexture(int index)
   if(plane.id && glIsTexture(plane.id))
     glDeleteTextures(1, &plane.id);
   plane.id = 0;
+#endif
 }
 bool CLinuxRendererGLES::CreateCVRefTexture(int index)
 {
