@@ -2733,11 +2733,6 @@ void CApplication::FrameMove()
 #if defined(__APPLE__) && defined(__arm__)
   CWinEvents::MessagePump();
 #endif
-/*
-#if defined(__APPLE__) && defined(__arm__)
-  CWinEvents::MessagePump();
-#endif
-*/
   ProcessHTTPApiButtons();
   ProcessRemote(frameTime);
   ProcessGamepad(frameTime);
