@@ -12,7 +12,9 @@
 		321B63B012B2091400429E0F /* WinEventsIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 321B63AF12B2091400429E0F /* WinEventsIOS.mm */; };
 		3255316612B2D02400837CD2 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3255316512B2D02400837CD2 /* CoreAudio.framework */; };
 		32D8145F12B0039C002F3874 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 32D8145E12B0039C002F3874 /* MainWindow.xib */; };
-		32D9EC8C12B3D17600EF13B3 /* libfaad.2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 32D9EC8B12B3D17600EF13B3 /* libfaad.2.0.0.dylib */; };
+		F54D9E8112B713F8006870F9 /* libc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9E8012B713F8006870F9 /* libc.dylib */; };
+		F54D9E8312B7141F006870F9 /* libfaad.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9E8212B7141F006870F9 /* libfaad.dylib */; };
+		F54D9E8512B71434006870F9 /* libvorbisfile.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9E8412B71434006870F9 /* libvorbisfile.dylib */; };
 		F5899DCE1287212700D8079E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5899DCA1287212700D8079E /* QuartzCore.framework */; };
 		F5899DCF1287212700D8079E /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5899DCB1287212700D8079E /* OpenGLES.framework */; };
 		F5899DD01287212700D8079E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5899DCC1287212700D8079E /* UIKit.framework */; };
@@ -936,8 +938,10 @@
 		321B63AF12B2091400429E0F /* WinEventsIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = WinEventsIOS.mm; sourceTree = "<group>"; };
 		3255316512B2D02400837CD2 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		32D8145E12B0039C002F3874 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MainWindow.xib; path = xbmc/osx/ios/MainWindow.xib; sourceTree = "<group>"; };
-		32D9EC8B12B3D17600EF13B3 /* libfaad.2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfaad.2.0.0.dylib; path = "tools/osx/ios-depends/build/lib/libfaad.2.0.0.dylib"; sourceTree = "<group>"; };
 		8D576316048677EA00EA77CD /* XBMC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XBMC.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F54D9E8012B713F8006870F9 /* libc.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libc.dylib; path = usr/lib/libc.dylib; sourceTree = SDKROOT; };
+		F54D9E8212B7141F006870F9 /* libfaad.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfaad.dylib; path = "../../../../../../Users/davilla/xbmc-atv2/tools/osx/ios-depends/build/lib/libfaad.dylib"; sourceTree = SDKROOT; };
+		F54D9E8412B71434006870F9 /* libvorbisfile.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libvorbisfile.dylib; path = "../../../../../../Users/davilla/xbmc-atv2/tools/osx/ios-depends/build/lib/libvorbisfile.dylib"; sourceTree = SDKROOT; };
 		F5653BB4128B9441009C7ABB /* libcurl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.dylib; path = "tools/osx/ios-depends/build/lib/libcurl.dylib"; sourceTree = "<group>"; };
 		F5899DCA1287212700D8079E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		F5899DCB1287212700D8079E /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -2939,7 +2943,9 @@
 				F5A29EC312A7221B003A610C /* CoreMedia.framework in Frameworks */,
 				F5A29F2712A72246003A610C /* VideoToolbox.framework in Frameworks */,
 				3255316612B2D02400837CD2 /* CoreAudio.framework in Frameworks */,
-				32D9EC8C12B3D17600EF13B3 /* libfaad.2.0.0.dylib in Frameworks */,
+				F54D9E8112B713F8006870F9 /* libc.dylib in Frameworks */,
+				F54D9E8312B7141F006870F9 /* libfaad.dylib in Frameworks */,
+				F54D9E8512B71434006870F9 /* libvorbisfile.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2957,7 +2963,6 @@
 				F589AE0A1288DC1300D8079E /* External Libs */,
 				F5899DC91287212700D8079E /* System Libs and Frameworks */,
 				19C28FB6FE9D52B211CA2CBB /* Products */,
-				32D9EC8B12B3D17600EF13B3 /* libfaad.2.0.0.dylib */,
 			);
 			name = "XBMC-frapp";
 			sourceTree = "<group>";
@@ -2973,6 +2978,7 @@
 		F5899DC91287212700D8079E /* System Libs and Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F54D9E8012B713F8006870F9 /* libc.dylib */,
 				F589AE461288E07400D8079E /* libz.dylib */,
 				F589AE4C1288E0A300D8079E /* libm.dylib */,
 				F589AE441288E06100D8079E /* libbz2.dylib */,
@@ -5748,10 +5754,12 @@
 				F589AE321288DEE900D8079E /* libpcrecpp.dylib */,
 				F589AE2E1288DEC900D8079E /* libcrypto.dylib */,
 				F589AE2A1288DEA400D8079E /* libmad.dylib */,
+				F54D9E8212B7141F006870F9 /* libfaad.dylib */,
 				F589AE281288DE9600D8079E /* libmpeg2.dylib */,
 				F589AE261288DE8A00D8079E /* libwavpack.dylib */,
 				F589AE2C1288DEB000D8079E /* libogg.dylib */,
 				F589AE221288DE7200D8079E /* libvorbis.dylib */,
+				F54D9E8412B71434006870F9 /* libvorbisfile.dylib */,
 				F589AE3A1288DF2A00D8079E /* libvorbisenc.dylib */,
 				F589AE201288DE6400D8079E /* libfribidi.dylib */,
 				F589AE1C1288DE1B00D8079E /* libcdio.dylib */,
@@ -5823,8 +5831,9 @@
 /* Begin PBXProject section */
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = 1DEB911E08733D790010E9CD /* Build configuration list for PBXProject "XBMC-IOS_OLD" */;
+			buildConfigurationList = 1DEB911E08733D790010E9CD /* Build configuration list for PBXProject "XBMC-IOS" */;
 			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -7045,7 +7054,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1DEB911E08733D790010E9CD /* Build configuration list for PBXProject "XBMC-IOS_OLD" */ = {
+		1DEB911E08733D790010E9CD /* Build configuration list for PBXProject "XBMC-IOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1DEB911F08733D790010E9CD /* Debug */,
