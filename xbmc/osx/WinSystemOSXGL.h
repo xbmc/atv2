@@ -40,4 +40,5 @@ protected:
   virtual void SetVSyncImpl(bool enable);  
 };
 
+#endif
 #endif // WINDOW_SYSTEM_H
