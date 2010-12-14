@@ -11,6 +11,11 @@
 		F54D9DD812B56A7D006870F9 /* libfaad.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9DD712B56A7D006870F9 /* libfaad.dylib */; };
 		F54D9DDA12B56A9C006870F9 /* libvorbisfile.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9DD912B56A9C006870F9 /* libvorbisfile.dylib */; };
 		F54D9E0712B65FFF006870F9 /* libc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9E0612B65FFF006870F9 /* libc.dylib */; };
+		F54D9E1B12B70DEE006870F9 /* IOSCoreAudio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F54D9E1912B70DEE006870F9 /* IOSCoreAudio.cpp */; };
+		F54D9E1E12B70E14006870F9 /* posix-realtime-stub.c in Sources */ = {isa = PBXBuildFile; fileRef = F54D9E1C12B70E14006870F9 /* posix-realtime-stub.c */; };
+		F54D9E2112B70E46006870F9 /* IOSAudioRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F54D9E1F12B70E46006870F9 /* IOSAudioRenderer.cpp */; };
+		F54D9E3312B70F57006870F9 /* WinEventsIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = F54D9E3212B70F57006870F9 /* WinEventsIOS.mm */; };
+		F54D9E8E12B71457006870F9 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9E8D12B71457006870F9 /* CoreAudio.framework */; };
 		F5899DCE1287212700D8079E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5899DCA1287212700D8079E /* QuartzCore.framework */; };
 		F5899DCF1287212700D8079E /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5899DCB1287212700D8079E /* OpenGLES.framework */; };
 		F5899DD01287212700D8079E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5899DCC1287212700D8079E /* UIKit.framework */; };
@@ -272,7 +277,6 @@
 		F589A9D112879A9E00D8079E /* WAVPackcodec.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A3DE12879A9A00D8079E /* WAVPackcodec.cpp */; };
 		F589A9D212879A9E00D8079E /* YMCodec.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A3E012879A9A00D8079E /* YMCodec.cpp */; };
 		F589A9D312879A9E00D8079E /* ssrc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A3E212879A9A00D8079E /* ssrc.cpp */; };
-		F589A9D412879A9E00D8079E /* CoreAudioRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A3E512879A9A00D8079E /* CoreAudioRenderer.cpp */; };
 		F589A9D512879A9E00D8079E /* AudioRendererFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A3E912879A9A00D8079E /* AudioRendererFactory.cpp */; };
 		F589A9D612879A9E00D8079E /* NullDirectSound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A3EA12879A9A00D8079E /* NullDirectSound.cpp */; };
 		F589A9D712879A9E00D8079E /* BaseRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A3ED12879A9A00D8079E /* BaseRenderer.cpp */; };
@@ -708,7 +712,6 @@
 		F589AB9C12879A9E00D8079E /* ulinks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A7BA12879A9C00D8079E /* ulinks.cpp */; settings = {COMPILER_FLAGS = "-DSILENT"; }; };
 		F589AB9D12879A9E00D8079E /* unicode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A7BC12879A9C00D8079E /* unicode.cpp */; settings = {COMPILER_FLAGS = "-DSILENT"; }; };
 		F589ABA012879A9E00D8079E /* volume.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A7C412879A9C00D8079E /* volume.cpp */; settings = {COMPILER_FLAGS = "-DSILENT"; }; };
-		F589ABA212879A9E00D8079E /* CoreAudio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A7CC12879A9C00D8079E /* CoreAudio.cpp */; };
 		F589ABA312879A9E00D8079E /* CocoaInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = F589A7CE12879A9C00D8079E /* CocoaInterface.mm */; };
 		F589ABA412879A9E00D8079E /* CocoaPowerSyscall.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A7D012879A9C00D8079E /* CocoaPowerSyscall.cpp */; };
 		F589ABA512879A9E00D8079E /* XBMCHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589A7D212879A9C00D8079E /* XBMCHelper.cpp */; };
@@ -933,6 +936,15 @@
 		F54D9DD712B56A7D006870F9 /* libfaad.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfaad.dylib; path = "tools/osx/ios-depends/build/lib/libfaad.dylib"; sourceTree = "<group>"; };
 		F54D9DD912B56A9C006870F9 /* libvorbisfile.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libvorbisfile.dylib; path = "tools/osx/ios-depends/build/lib/libvorbisfile.dylib"; sourceTree = "<group>"; };
 		F54D9E0612B65FFF006870F9 /* libc.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libc.dylib; path = usr/lib/libc.dylib; sourceTree = SDKROOT; };
+		F54D9E1912B70DEE006870F9 /* IOSCoreAudio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IOSCoreAudio.cpp; sourceTree = "<group>"; };
+		F54D9E1A12B70DEE006870F9 /* IOSCoreAudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOSCoreAudio.h; sourceTree = "<group>"; };
+		F54D9E1C12B70E14006870F9 /* posix-realtime-stub.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "posix-realtime-stub.c"; sourceTree = "<group>"; };
+		F54D9E1D12B70E14006870F9 /* posix-realtime-stub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "posix-realtime-stub.h"; sourceTree = "<group>"; };
+		F54D9E1F12B70E46006870F9 /* IOSAudioRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IOSAudioRenderer.cpp; path = AudioRenderers/IOSAudioRenderer.cpp; sourceTree = "<group>"; };
+		F54D9E2012B70E46006870F9 /* IOSAudioRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IOSAudioRenderer.h; path = AudioRenderers/IOSAudioRenderer.h; sourceTree = "<group>"; };
+		F54D9E3112B70F57006870F9 /* WinEventsIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WinEventsIOS.h; sourceTree = "<group>"; };
+		F54D9E3212B70F57006870F9 /* WinEventsIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = WinEventsIOS.mm; sourceTree = "<group>"; };
+		F54D9E8D12B71457006870F9 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		F5653BB4128B9441009C7ABB /* libcurl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.dylib; path = "tools/osx/ios-depends/build/lib/libcurl.dylib"; sourceTree = "<group>"; };
 		F5899DCA1287212700D8079E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		F5899DCB1287212700D8079E /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -1536,8 +1548,6 @@
 		F589A3E112879A9A00D8079E /* YMCodec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YMCodec.h; sourceTree = "<group>"; };
 		F589A3E212879A9A00D8079E /* ssrc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ssrc.cpp; sourceTree = "<group>"; };
 		F589A3E312879A9A00D8079E /* ssrc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ssrc.h; sourceTree = "<group>"; };
-		F589A3E512879A9A00D8079E /* CoreAudioRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CoreAudioRenderer.cpp; path = AudioRenderers/CoreAudioRenderer.cpp; sourceTree = "<group>"; };
-		F589A3E612879A9A00D8079E /* CoreAudioRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CoreAudioRenderer.h; path = AudioRenderers/CoreAudioRenderer.h; sourceTree = "<group>"; };
 		F589A3E712879A9A00D8079E /* IAudioRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IAudioRenderer.h; path = AudioRenderers/IAudioRenderer.h; sourceTree = "<group>"; };
 		F589A3E812879A9A00D8079E /* AudioRendererFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioRendererFactory.h; path = AudioRenderers/AudioRendererFactory.h; sourceTree = "<group>"; };
 		F589A3E912879A9A00D8079E /* AudioRendererFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AudioRendererFactory.cpp; path = AudioRenderers/AudioRendererFactory.cpp; sourceTree = "<group>"; };
@@ -2477,8 +2487,6 @@
 		F589A7C512879A9C00D8079E /* volume.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = volume.hpp; sourceTree = "<group>"; };
 		F589A7C712879A9C00D8079E /* zconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zconf.h; sourceTree = "<group>"; };
 		F589A7C812879A9C00D8079E /* zlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zlib.h; sourceTree = "<group>"; };
-		F589A7CC12879A9C00D8079E /* CoreAudio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CoreAudio.cpp; sourceTree = "<group>"; };
-		F589A7CD12879A9C00D8079E /* CoreAudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreAudio.h; sourceTree = "<group>"; };
 		F589A7CE12879A9C00D8079E /* CocoaInterface.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaInterface.mm; sourceTree = "<group>"; };
 		F589A7CF12879A9C00D8079E /* CocoaInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaInterface.h; sourceTree = "<group>"; };
 		F589A7D012879A9C00D8079E /* CocoaPowerSyscall.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CocoaPowerSyscall.cpp; sourceTree = "<group>"; };
@@ -2938,6 +2946,7 @@
 				F54D9DD812B56A7D006870F9 /* libfaad.dylib in Frameworks */,
 				F54D9DDA12B56A9C006870F9 /* libvorbisfile.dylib in Frameworks */,
 				F54D9E0712B65FFF006870F9 /* libc.dylib in Frameworks */,
+				F54D9E8E12B71457006870F9 /* CoreAudio.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2982,6 +2991,7 @@
 				F5899DCB1287212700D8079E /* OpenGLES.framework */,
 				F5A29EC212A7221B003A610C /* CoreMedia.framework */,
 				F5A29F2612A72246003A610C /* VideoToolbox.framework */,
+				F54D9E8D12B71457006870F9 /* CoreAudio.framework */,
 			);
 			name = "System Libs and Frameworks";
 			sourceTree = "<group>";
@@ -4338,8 +4348,8 @@
 		F589A3E412879A9A00D8079E /* AudioRenderers */ = {
 			isa = PBXGroup;
 			children = (
-				F589A3E512879A9A00D8079E /* CoreAudioRenderer.cpp */,
-				F589A3E612879A9A00D8079E /* CoreAudioRenderer.h */,
+				F54D9E1F12B70E46006870F9 /* IOSAudioRenderer.cpp */,
+				F54D9E2012B70E46006870F9 /* IOSAudioRenderer.h */,
 				F589A3E712879A9A00D8079E /* IAudioRenderer.h */,
 				F589A3E812879A9A00D8079E /* AudioRendererFactory.h */,
 				F589A3E912879A9A00D8079E /* AudioRendererFactory.cpp */,
@@ -5467,8 +5477,8 @@
 			isa = PBXGroup;
 			children = (
 				F589ACC21287A78300D8079E /* atv2 */,
-				F589A7CC12879A9C00D8079E /* CoreAudio.cpp */,
-				F589A7CD12879A9C00D8079E /* CoreAudio.h */,
+				F54D9E1912B70DEE006870F9 /* IOSCoreAudio.cpp */,
+				F54D9E1A12B70DEE006870F9 /* IOSCoreAudio.h */,
 				F589A7CE12879A9C00D8079E /* CocoaInterface.mm */,
 				F589A7CF12879A9C00D8079E /* CocoaInterface.h */,
 				F589A7D012879A9C00D8079E /* CocoaPowerSyscall.cpp */,
@@ -5477,8 +5487,12 @@
 				F589A7D312879A9C00D8079E /* XBMCHelper.h */,
 				F589A7D412879A9C00D8079E /* OSXGNUReplacements.c */,
 				F589A7D512879A9C00D8079E /* OSXGNUReplacements.h */,
+				F54D9E1C12B70E14006870F9 /* posix-realtime-stub.c */,
+				F54D9E1D12B70E14006870F9 /* posix-realtime-stub.h */,
 				F589A7D812879A9C00D8079E /* SemaphoreDarwin.cpp */,
 				F589A7D912879A9C00D8079E /* SemaphoreDarwin.h */,
+				F54D9E3212B70F57006870F9 /* WinEventsIOS.mm */,
+				F54D9E3112B70F57006870F9 /* WinEventsIOS.h */,
 				F589AFD9128A2E6000D8079E /* WinSystemIOS.mm */,
 				F589AFDA128A2E6000D8079E /* WinSystemIOS.h */,
 				F589A7DA12879A9C00D8079E /* DarwinStorageProvider.cpp */,
@@ -5718,8 +5732,8 @@
 			children = (
 				F589B0BD128A5FE200D8079E /* iOS_Utils.h */,
 				F589B0BE128A5FE200D8079E /* iOS_Utils.mm */,
-				F589ACBC1287A76A00D8079E /* XBMCAppliance.h */,
 				F589ACBD1287A76A00D8079E /* XBMCAppliance.m */,
+				F589ACBC1287A76A00D8079E /* XBMCAppliance.h */,
 				F589ACBF1287A77400D8079E /* XBMCController.h */,
 				F589ACC01287A77400D8079E /* XBMCController.mm */,
 				F589ADB81288CC6100D8079E /* XBMCEAGLView.h */,
@@ -6159,7 +6173,6 @@
 				F589A9D112879A9E00D8079E /* WAVPackcodec.cpp in Sources */,
 				F589A9D212879A9E00D8079E /* YMCodec.cpp in Sources */,
 				F589A9D312879A9E00D8079E /* ssrc.cpp in Sources */,
-				F589A9D412879A9E00D8079E /* CoreAudioRenderer.cpp in Sources */,
 				F589A9D512879A9E00D8079E /* AudioRendererFactory.cpp in Sources */,
 				F589A9D612879A9E00D8079E /* NullDirectSound.cpp in Sources */,
 				F589A9D712879A9E00D8079E /* BaseRenderer.cpp in Sources */,
@@ -6595,7 +6608,6 @@
 				F589AB9C12879A9E00D8079E /* ulinks.cpp in Sources */,
 				F589AB9D12879A9E00D8079E /* unicode.cpp in Sources */,
 				F589ABA012879A9E00D8079E /* volume.cpp in Sources */,
-				F589ABA212879A9E00D8079E /* CoreAudio.cpp in Sources */,
 				F589ABA312879A9E00D8079E /* CocoaInterface.mm in Sources */,
 				F589ABA412879A9E00D8079E /* CocoaPowerSyscall.cpp in Sources */,
 				F589ABA512879A9E00D8079E /* XBMCHelper.cpp in Sources */,
@@ -6771,6 +6783,10 @@
 				F5A29BDF12A044E7003A610C /* fastmemcpy-arm.S in Sources */,
 				F5A29DCF12A70EA3003A610C /* DVDVideoCodecVideoToolBox.cpp in Sources */,
 				F5A2AD0212AAE4DF003A610C /* xbmcclientwrapper.mm in Sources */,
+				F54D9E1B12B70DEE006870F9 /* IOSCoreAudio.cpp in Sources */,
+				F54D9E1E12B70E14006870F9 /* posix-realtime-stub.c in Sources */,
+				F54D9E2112B70E46006870F9 /* IOSAudioRenderer.cpp in Sources */,
+				F54D9E3312B70F57006870F9 /* WinEventsIOS.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
