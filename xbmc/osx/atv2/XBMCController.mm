@@ -54,6 +54,8 @@ typedef enum {
   kBREventRemoteActionHoldDown,
 } BREventRemoteAction;
 
+XBMCController *g_xbmcController;
+
 //--------------------------------------------------------------
 //--------------------------------------------------------------
 @implementation UIWindow (limneos)
@@ -89,6 +91,7 @@ XBMCEAGLView  *m_glView;
 //
 //
 @implementation XBMCController
+/*
 + (XBMCController*) sharedInstance
 {
   // the instance of this class is stored here
@@ -101,11 +104,29 @@ XBMCEAGLView  *m_glView;
   // return the instance of this class
   return myInstance;
 }
+*/
 
-- (XBMCEAGLView*) getEGLView
+- (void) initDisplayLink
 {
-  return m_glView;
+  [m_glView initDisplayLink];
 }
+- (void) deinitDisplayLink
+{
+  [m_glView deinitDisplayLink];
+}
+- (double) getDisplayLinkFPS
+{
+  return [m_glView getDisplayLinkFPS];
+}
+- (void) setFramebuffer
+{
+  [m_glView setFramebuffer];
+}
+- (bool) presentFramebuffer
+{
+  return [m_glView presentFramebuffer];
+}
+
 
 - (id) init
 {  
@@ -127,6 +148,8 @@ XBMCEAGLView  *m_glView;
   m_window = [[UIWindow alloc] initWithFrame:[BRWindow interfaceFrame]];
   m_glView = [[XBMCEAGLView alloc] initWithFrame:m_window.bounds];
   [m_window addSubview:m_glView];
+
+  g_xbmcController = self;
 
   bool use_universal = NO;
   NSString *client_address= @"localhost";
