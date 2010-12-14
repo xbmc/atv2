@@ -159,31 +159,52 @@ extern NSString* kBRScreenSaverDismissed;
   XBMC_Event newEvent;
   memset(&newEvent, 0, sizeof(newEvent));
 
-  newEvent.type = XBMC_MOUSEBUTTONUP;
+  //XBMC_KEYDOWN
+  
   if([touch tapCount] == 2) {
+    newEvent.type = XBMC_MOUSEBUTTONUP;
     newEvent.button.button = XBMC_BUTTON_RIGHT;
-    newEvent.button.type = XBMC_MOUSEBUTTONUP;
+    newEvent.button.type = XBMC_MOUSEBUTTONDOWN;
     newEvent.button.state = XBMC_PRESSED;
     newEvent.button.x = lastTouch.x;
     newEvent.button.y = lastTouch.y;
-    //g_application.OnEvent(newEvent);
     CWinEventsIOS::MessagePush(&newEvent);
-  } else {
+    Sleep(500);
+    newEvent.button.type = XBMC_MOUSEBUTTONUP;
+    newEvent.button.state = XBMC_RELEASED;
+    newEvent.button.x = lastTouch.x;
+    newEvent.button.y = lastTouch.y;
+    CWinEventsIOS::MessagePush(&newEvent);
+  } else if([touch tapCount] == 1) {
+    newEvent.type = XBMC_MOUSEBUTTONUP;
     newEvent.button.button = XBMC_BUTTON_LEFT;  
+    newEvent.button.type = XBMC_MOUSEBUTTONUP;
+    newEvent.button.state = XBMC_RELEASED;
+    newEvent.button.x = lastTouch.x;
+    newEvent.button.y = lastTouch.y;
+    CWinEventsIOS::MessagePush(&newEvent);
   }
-  newEvent.button.type = XBMC_MOUSEBUTTONUP;
-  newEvent.button.state = XBMC_RELEASED;
-  newEvent.button.x = lastTouch.x;
-  newEvent.button.y = lastTouch.y;
-  CWinEventsIOS::MessagePush(&newEvent);
-  //g_application.OnEvent(newEvent);
-  //g_Mouse.SetActive(true);
 }
 
 - (void)awakeFromNib
-{  
+{ 
   NSLog(@"%s", __PRETTY_FUNCTION__);
 
+  /*
+  uint64_t start_time = CTimeUtils::GetTimeMS();
+  start_time = CTimeUtils::GetTimeMS();
+
+  NSLog(@"%s starttime ", __PRETTY_FUNCTION__, start_time);
+
+  while(1) {
+    if(( CTimeUtils::GetTimeMS() - start_time ) > 30*1000) {
+      break;
+    }
+  }
+  start_time = CTimeUtils::GetTimeMS();
+  NSLog(@"%s endtime ", __PRETTY_FUNCTION__, start_time);
+  */
+  
   NSNotificationCenter *center;
   // first the default notification center, which is all
   // notifications that only happen inside of our program
