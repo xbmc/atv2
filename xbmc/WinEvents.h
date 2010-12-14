@@ -47,6 +47,7 @@ public:
   #else
     #include "WinEventsSDL.h"
     #define CWinEvents CWinEventsSDL
+  #endif
 #endif
 
 
