@@ -22,6 +22,7 @@
 #ifndef __COREAUDIO_H__
 #define __COREAUDIO_H__
 
+#if defined(__APPLE__)
 #include <AudioUnit/AudioUnit.h>
 #include <AudioToolbox/AudioToolbox.h>
 #include <AudioToolbox/AudioServices.h>
@@ -339,4 +340,5 @@ const char* IOSStreamDescriptionToString(AudioStreamBasicDescription desc, CStdS
 
 #define CONVERT_OSSTATUS(x) IOSUInt32ToFourCC((UInt32*)&ret)
 
+#endif
 #endif // __COREAUDIO_H__
