@@ -127,8 +127,8 @@
 {
   NSLog(@"%s", __PRETTY_FUNCTION__);
   
-  //XBMCController *controller = [[[XBMCController alloc] init] autorelease];
-  XBMCController *controller = [XBMCController sharedInstance];
+  XBMCController *controller = [[[XBMCController alloc] init] autorelease];
+  //XBMCController *controller = [XBMCController sharedInstance];
   return controller;
 }
 

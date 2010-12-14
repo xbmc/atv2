@@ -38,6 +38,8 @@
 - (double) getDisplayLinkFPS;
 - (void) setFramebuffer;
 - (bool) presentFramebuffer;
+- (CGSize) getScreenSize;
+
 @end
 
 extern XBMCController *g_xbmcController;
