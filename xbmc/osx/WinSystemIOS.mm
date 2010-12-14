@@ -73,11 +73,9 @@ bool CWinSystemIOS::CreateNewWindow(const CStdString& name, bool fullScreen, RES
 	
   if(!SetFullScreen(fullScreen, res, false))
     return false;
-#if 1
-  [[[XBMCController sharedInstance] getEGLView] setFramebuffer];
-#else
+
   [g_xbmcController setFramebuffer];
-#endif
+
   m_bWindowCreated = true;
 
   m_eglext  = " ";
@@ -131,7 +129,7 @@ void CWinSystemIOS::UpdateResolutions()
 #if 1
   w = [BRWindow interfaceFrame].size.width;
   h = [BRWindow interfaceFrame].size.height;
-  double fps = [[[XBMCController sharedInstance] getEGLView] getDisplayLinkFPS];
+  double fps = [g_xbmcController getDisplayLinkFPS];
 #else
   if ([g_xbmcController getOrientation] == UIInterfaceOrientationPortrait)
   {
@@ -170,11 +168,9 @@ bool CWinSystemIOS::BeginRender()
 {
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   bool rtn;
-#if 1
-  [[[XBMCController sharedInstance] getEGLView] setFramebuffer];
-#else
+
   [g_xbmcController setFramebuffer];
-#endif
+
   rtn = CRenderSystemGLES::BeginRender();
 
   [pool release];
@@ -194,31 +190,17 @@ bool CWinSystemIOS::EndRender()
 
 void CWinSystemIOS::InitDisplayLink(void)
 {
-/*
-  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-  
-  [[[XBMCController sharedInstance] getEGLView] initDisplayLink];
-  [pool release];
-*/
 }
 void CWinSystemIOS::DeinitDisplayLink(void)
 {
-/*
-  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-  
-  [[[XBMCController sharedInstance] getEGLView] deinitDisplayLink];
-  [pool release];
-*/
 }
 double CWinSystemIOS::GetDisplayLinkFPS(void)
 {
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   double fps;
-#if 1
-  fps = [[[XBMCController sharedInstance] getEGLView] getDisplayLinkFPS];
-#else
-  fps = [g_xbmcController getDisplayLinkFPS]
-#endif
+
+  fps = [g_xbmcController getDisplayLinkFPS];
+
   [pool release];
   return fps;
 }
@@ -229,11 +211,8 @@ bool CWinSystemIOS::PresentRenderImpl()
   
   //glFlush;
   //glFinish();
-#if 1
-  [[[XBMCController sharedInstance] getEGLView] presentFramebuffer];
-#else
   [g_xbmcController presentFramebuffer];
-#endif
+
   [pool release];
   return true;
 }

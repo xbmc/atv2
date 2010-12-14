@@ -31,7 +31,13 @@
 	XBMCClientWrapper* mp_xbmclient; // our own event-client implementation
 }
 // message from which our instance is obtained
-+ (XBMCController*) sharedInstance;
-- (XBMCEAGLView*) getEGLView;
+//+ (XBMCController*) sharedInstance;
+
+- (void) initDisplayLink;
+- (void) deinitDisplayLink;
+- (double) getDisplayLinkFPS;
+- (void) setFramebuffer;
+- (bool) presentFramebuffer;
 @end
 
+extern XBMCController *g_xbmcController;
