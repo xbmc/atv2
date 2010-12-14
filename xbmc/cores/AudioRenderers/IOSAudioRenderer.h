@@ -21,89 +21,22 @@
 
 #ifndef __COREAUDIO_RENDERER_H__
 #define __COREAUDIO_RENDERER_H__
-#if !defined(__arm__)
-#include <osx/CoreAudio.h>
+//#include <osx/CoreAudio.h>
+#include "IOSCoreAudio.h"
+#include "PlatformDefs.h"
 #include "IAudioRenderer.h"
 #include <utils/Event.h>
 #include <utils/LockFree.h>
+extern "C" {
+#include "libavutil/fifo.h"
+#include "libavutil/mem.h"
+}
 
-struct audio_slice
-{
-  struct _tag_header{
-    uint64_t timestamp; // Currently not used
-    size_t data_len;
-  } header;
-  unsigned int data[1];
-  unsigned char* get_data() {return (unsigned char*)&data;}
-};
-
-class CAtomicAllocator
-{
-public:
-  CAtomicAllocator(size_t blockSize);
-  ~CAtomicAllocator();
-  void* Alloc();
-  void Free(void* p);
-  size_t GetBlockSize();
-private:
-  lf_heap m_Heap ;
-  size_t m_BlockSize;
-};
-
-class CSliceQueue
-{
-public:
-  CSliceQueue(size_t sliceSize);
-  virtual ~CSliceQueue();
-  size_t AddData(void* pBuf, size_t bufLen);
-  size_t GetData(void* pBuf, size_t bufLen);
-  size_t GetTotalBytes();
-  void Clear();
-protected:
-  void Push(audio_slice* pSlice);
-  audio_slice* Pop(); // Does not respect remainder, so it must be private
-  CAtomicAllocator* m_pAllocator;
-  lf_queue m_Queue;
-  size_t m_TotalBytes;
-  audio_slice* m_pPartialSlice;
-  size_t m_RemainderSize;
-};
-
-class CCoreAudioPerformance
-{
-public:
-  CCoreAudioPerformance();
-  ~CCoreAudioPerformance();
-  void Init(UInt32 expectedBytesPerSec, UInt32 watchdogInterval = 1000, UInt32 flags = 0);
-  void ReportData(UInt32 bytesIn, UInt32 bytesOut);
-  void EnableWatchdog(bool enable);
-  void SetPreroll(UInt32 bytes); // Fixed bytes
-  void SetPreroll(float seconds); // Calculated for time (seconds)
-  void Reset();
-  enum
-  {
-    FlagDefault = 0
-  };
-protected:
-  UInt64 m_TotalBytesIn;
-  UInt64 m_TotalBytesOut;
-  UInt32 m_ExpectedBytesPerSec;
-  UInt32 m_ActualBytesPerSec;
-  UInt32 m_Flags;
-  bool m_WatchdogEnable;
-  UInt32 m_WatchdogInterval;
-  UInt32 m_LastWatchdogCheck;
-  UInt32 m_LastWatchdogBytesIn;
-  UInt32 m_LastWatchdogBytesOut;
-  float m_WatchdogBitrateSensitivity;
-  UInt32 m_WatchdogPreroll;
-};
-
-class CCoreAudioRenderer : public IAudioRenderer
+class CIOSAudioRenderer : public IAudioRenderer
   {
   public:
-    CCoreAudioRenderer();
-    virtual ~CCoreAudioRenderer();
+    CIOSAudioRenderer();
+    virtual ~CIOSAudioRenderer();
     virtual unsigned int GetChunkLen();
     virtual float GetDelay();
     virtual bool Initialize(IAudioCallback* pCallback, const CStdString& device, int iChannels, enum PCMChannels *channelMap, unsigned int uiSamplesPerSec, unsigned int uiBitsPerSample, bool bResample, bool bIsMusic=false, bool bPassthrough = false);
@@ -131,42 +64,26 @@ class CCoreAudioRenderer : public IAudioRenderer
   private:
     OSStatus OnRender(AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData);
     static OSStatus RenderCallback(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData);
-    static OSStatus DirectRenderCallback(AudioDeviceID inDevice, const AudioTimeStamp* inNow, const AudioBufferList* inInputData, const AudioTimeStamp* inInputTime, AudioBufferList* outOutputData, const AudioTimeStamp* inOutputTime, void* inClientData);
-    bool InitializeEncoded(AudioDeviceID outputDevice, UInt32 sampleRate);
     bool InitializePCM(UInt32 channels, UInt32 samplesPerSecond, UInt32 bitsPerSample, enum PCMChannels *channelMap);
-    bool InitializePCMEncoded(UInt32 sampleRate);
 
     bool m_Pause;
     bool m_Initialized; // Prevent multiple init/deinit
 
     long m_CurrentVolume; // Courtesy of the jerk that made GetCurrentVolume a const...
-    unsigned int m_ChunkLen; // Minimum amount of data accepted by AddPackets
-    char* m_RemapBuffer; // Temporary buffer for channel remapping
-    CSliceQueue* m_pCache;
-    size_t m_MaxCacheLen; // Maximum number of bytes to be cached by the renderer.
 
-    CAUOutputDevice m_AUOutput;
-    CCoreAudioUnit m_MixerUnit;
-    CCoreAudioDevice m_AudioDevice;
-    CCoreAudioStream m_OutputStream;
+    CIOSAUOutputDevice m_AUOutput;
+    CIOSCoreAudioDevice m_AudioDevice;
     UInt32 m_OutputBufferIndex;
 
-    bool m_Passthrough;
     bool m_EnableVolumeControl;
 
     // Stream format
     size_t m_AvgBytesPerSec;
-    size_t m_BytesPerFrame; // Input frame size
-    UInt32 m_NumLatencyFrames;
-
-#ifdef _DEBUG
-    // Performace Monitoring
-    CCoreAudioPerformance m_PerfMon;
-#endif
-    // Thread synchronization
-    CEvent m_RunoutEvent;
-    long m_DoRunout;
+    AVFifoBuffer *m_Buffer;
+    unsigned int m_BufferLen; ///< must always be num_chunks * chunk_size
+    unsigned int m_NumChunks;
+    unsigned int m_ChunkSize;
+    int m_packetSize;
   };
 
-#endif
 #endif
