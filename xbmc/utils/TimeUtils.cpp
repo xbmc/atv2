@@ -26,8 +26,6 @@
   #if defined(__ppc__)
     #include <mach/mach_time.h>
     #include <CoreVideo/CVHostTime.h>
-  #elif defined(__arm__)
-    #include <mach/mach_time.h>
   #else
     #include <time.h>
     #include "posix-realtime-stub.h"
@@ -42,33 +40,6 @@ int64_t CurrentHostCounter(void)
 {
 #if defined(__APPLE__) && defined(__ppc__)
   return( (int64_t)CVGetCurrentHostTime() );
-#elif defined(__APPLE__) && defined(__arm__)
-  uint64_t absolute_nano;
-
-  static mach_timebase_info_data_t timebase_info;
-  if (timebase_info.denom == 0)
-  {
-    // Zero-initialization of statics guarantees that denom will be 0 before
-    // calling mach_timebase_info.  mach_timebase_info will never set denom to
-    // 0 as that would be invalid, so the zero-check can be used to determine
-    // whether mach_timebase_info has already been called.  This is
-    // recommended by Apple's QA1398.
-    mach_timebase_info(&timebase_info);
-  }
-
-  // mach_absolute_time is it when it comes to ticks on the Mac.  Other calls
-  // with less precision (such as TickCount) just call through to
-  // mach_absolute_time.
-
-  // timebase_info converts absolute time tick units into nanoseconds.  
-  // to microseconds up front to stave off overflows.
-  absolute_nano = (mach_absolute_time() * timebase_info.numer) / timebase_info.denom;
-
-  // Don't bother with the rollover handling that the Windows version does.
-  // With numer and denom = 1 (the expected case), the 64-bit absolute time
-  // reported in nanoseconds is enough to last nearly 585 years.
-  return( (int64_t)absolute_nano);
-
 #elif defined(_LINUX)
   struct timespec now;
   clock_gettime(CLOCK_MONOTONIC, &now);
@@ -85,8 +56,6 @@ int64_t CurrentHostFrequency(void)
 #if defined(__APPLE__) && defined(__ppc__)
   // needed for 10.5.8 on ppc
   return( (int64_t)CVGetHostClockFrequency() );
-#elif defined(__APPLE__) && defined(__arm__)
-  return( (int64_t)1000000000L );
 #elif defined(_LINUX)
   return( (int64_t)1000000000L );
 #else
@@ -111,21 +80,21 @@ unsigned int CTimeUtils::GetFrameTime()
 unsigned int CTimeUtils::GetTimeMS()
 {
 #ifdef _LINUX
-          uint64_t now_time;
+  double now_time;
+  //uint64_t now_time;
   static  uint64_t start_time = 0;
-#if defined(__APPLE__) && defined(__ppc__)
-  now_time = CVGetCurrentHostTime() * 1000 / CVGetHostClockFrequency();
-#elif defined(__APPLE__) && defined(__arm__)
-  now_time = CurrentHostCounter() * 1000 / CurrentHostFrequency();
-#else
-  struct timespec ts = {};
-  clock_gettime(CLOCK_MONOTONIC, &ts);
-  now_time = (ts.tv_sec * 1000) + (ts.tv_nsec / 1000000);
-#endif
-  if (start_time == 0)
-    start_time = now_time;
-  return (now_time - start_time);
-#else
+  #if defined(__APPLE__) && defined(__ppc__)
+    now_time = CVGetCurrentHostTime() *  1000.0f / CVGetHostClockFrequency();
+  #else
+    struct timespec ts = {};
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    now_time = (ts.tv_sec * 1000.0f) + (ts.tv_nsec / 1000000.0f);
+    //fprintf(stderr, " %lld\n", (uint64_t)now_time);
+  #endif
+    if (start_time == 0)
+      start_time = now_time;
+    return (now_time - start_time);
+  #else
   return timeGetTime();
 #endif
 }
