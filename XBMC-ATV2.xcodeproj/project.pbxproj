@@ -10,6 +10,7 @@
 		18A0B34F129FC3A5007BB966 /* XBMC.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A0B34E129FC3A5007BB966 /* XBMC.png */; };
 		F54D9DD812B56A7D006870F9 /* libfaad.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9DD712B56A7D006870F9 /* libfaad.dylib */; };
 		F54D9DDA12B56A9C006870F9 /* libvorbisfile.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9DD912B56A9C006870F9 /* libvorbisfile.dylib */; };
+		F54D9E0712B65FFF006870F9 /* libc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9E0612B65FFF006870F9 /* libc.dylib */; };
 		F5899DCE1287212700D8079E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5899DCA1287212700D8079E /* QuartzCore.framework */; };
 		F5899DCF1287212700D8079E /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5899DCB1287212700D8079E /* OpenGLES.framework */; };
 		F5899DD01287212700D8079E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5899DCC1287212700D8079E /* UIKit.framework */; };
@@ -931,6 +932,7 @@
 		8D576316048677EA00EA77CD /* XBMC.frappliance */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XBMC.frappliance; sourceTree = BUILT_PRODUCTS_DIR; };
 		F54D9DD712B56A7D006870F9 /* libfaad.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfaad.dylib; path = "tools/osx/ios-depends/build/lib/libfaad.dylib"; sourceTree = "<group>"; };
 		F54D9DD912B56A9C006870F9 /* libvorbisfile.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libvorbisfile.dylib; path = "tools/osx/ios-depends/build/lib/libvorbisfile.dylib"; sourceTree = "<group>"; };
+		F54D9E0612B65FFF006870F9 /* libc.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libc.dylib; path = usr/lib/libc.dylib; sourceTree = SDKROOT; };
 		F5653BB4128B9441009C7ABB /* libcurl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.dylib; path = "tools/osx/ios-depends/build/lib/libcurl.dylib"; sourceTree = "<group>"; };
 		F5899DCA1287212700D8079E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		F5899DCB1287212700D8079E /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -2935,6 +2937,7 @@
 				F5A29F2712A72246003A610C /* VideoToolbox.framework in Frameworks */,
 				F54D9DD812B56A7D006870F9 /* libfaad.dylib in Frameworks */,
 				F54D9DDA12B56A9C006870F9 /* libvorbisfile.dylib in Frameworks */,
+				F54D9E0712B65FFF006870F9 /* libc.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2965,6 +2968,7 @@
 		F5899DC91287212700D8079E /* System Libs and Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F54D9E0612B65FFF006870F9 /* libc.dylib */,
 				F589AE461288E07400D8079E /* libz.dylib */,
 				F589AE4C1288E0A300D8079E /* libm.dylib */,
 				F589AE441288E06100D8079E /* libbz2.dylib */,
