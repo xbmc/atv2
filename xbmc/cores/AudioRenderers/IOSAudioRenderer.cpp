@@ -175,7 +175,8 @@ bool CIOSAudioRenderer::Deinitialize()
   m_BufferLen = 0;
   m_NumChunks = 0;
   m_ChunkSize = 0;
-  m_dllAvUtil->av_fifo_free(m_Buffer);
+  if (m_Buffer)
+    m_dllAvUtil->av_fifo_free(m_Buffer);
   m_Buffer = NULL;
 
   g_audioContext.SetActiveDevice(CAudioContext::DEFAULT_DEVICE);
@@ -213,7 +214,9 @@ bool CIOSAudioRenderer::Stop()
   m_AUOutput.Stop();
 
   m_Pause = true;
-  m_dllAvUtil->av_fifo_reset(m_Buffer);
+  // Deinitialize (and thus Stop) could be called twice so check that m_Buffer still exists
+  if (m_Buffer)
+    m_dllAvUtil->av_fifo_reset(m_Buffer);
 
   return true;
 }
