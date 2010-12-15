@@ -27,10 +27,9 @@
 #include "IAudioRenderer.h"
 #include <utils/Event.h>
 #include <utils/LockFree.h>
-extern "C" {
-#include "libavutil/fifo.h"
-#include "libavutil/mem.h"
-}
+
+class DllAvUtil;
+struct AVFifoBuffer;
 
 class CIOSAudioRenderer : public IAudioRenderer
   {
@@ -84,6 +83,8 @@ class CIOSAudioRenderer : public IAudioRenderer
     unsigned int m_NumChunks;
     unsigned int m_ChunkSize;
     int m_packetSize;
+    
+    DllAvUtil *m_dllAvUtil;
   };
 
 #endif
