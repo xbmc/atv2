@@ -132,6 +132,10 @@ XBMCEAGLView  *m_glView;
 
   screensize.width  = [BRWindow interfaceFrame].size.width;
   screensize.height = [BRWindow interfaceFrame].size.height;
+
+  NSLog(@"%s UpdateResolutions width=%f, height=%f", 
+		__PRETTY_FUNCTION__, screensize.width, screensize.height);
+
   return screensize;
 }
 

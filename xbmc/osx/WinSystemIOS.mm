@@ -125,7 +125,7 @@ void CWinSystemIOS::UpdateResolutions()
   CGSize screensize = [g_xbmcController getScreenSize];
   double fps = [g_xbmcController getDisplayLinkFPS];
 
-  NSLog(@"%s UpdateResolutions width=%d, height=%d, fps=%f", 
+  NSLog(@"%s UpdateResolutions width=%f, height=%f, fps=%f", 
 		__PRETTY_FUNCTION__, screensize.width, screensize.height, fps);
 
   UpdateDesktopResolution(g_settings.m_ResInfo[RES_DESKTOP], 0, screensize.width, screensize.height, fps);
