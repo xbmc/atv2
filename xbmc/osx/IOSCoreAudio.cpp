@@ -26,6 +26,8 @@
 #include <Log.h>
 #include <math.h>
 
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 char* IOSUInt32ToFourCC(UInt32* pVal) // NOT NULL TERMINATED! Modifies input value.
 {
   UInt32 inVal = *pVal;
