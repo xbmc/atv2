@@ -45,12 +45,14 @@ extern "C" {
   #if (defined HAVE_LIBAVCODEC_AVCODEC_H)
     #include <libavcodec/avcodec.h>
     #include <libavutil/crc.h>
+    #include <libavutil/fifo.h>
     #if (defined AVPACKET_IN_AVFORMAT)
       #include <libavformat/avformat.h>
     #endif
   #elif (defined HAVE_FFMPEG_AVCODEC_H)
     #include <ffmpeg/avcodec.h>
     #include <ffmpeg/crc.h>
+    #include <ffmpeg/fifo.h>
     #if (defined AVPACKET_IN_AVFORMAT)
       #include <ffmpeg/avformat.h>
     #endif
@@ -58,10 +60,12 @@ extern "C" {
   /* We'll just inlude this header in our project for now */
   #include "xbmc/cores/dvdplayer/Codecs/ffmpeg/libavcodec/audioconvert.h"
   #include "xbmc/cores/dvdplayer/Codecs/ffmpeg/libavutil/crc.h"
+  #include "xbmc/cores/dvdplayer/Codecs/ffmpeg/libavutil/fifo.h"
 #else
   #include "libavcodec/avcodec.h"
   #include "libavcodec/audioconvert.h"
   #include "libavutil/crc.h"
+  #include "libavutil/fifo.h"
 #endif
 }
 
@@ -341,6 +345,13 @@ public:
   virtual int64_t av_rescale_q(int64_t a, AVRational bq, AVRational cq)=0;
   virtual const AVCRC* av_crc_get_table(AVCRCId crc_id)=0;
   virtual uint32_t av_crc(const AVCRC *ctx, uint32_t crc, const uint8_t *buffer, size_t length)=0;
+  //
+  virtual AVFifoBuffer *av_fifo_alloc(unsigned int size) = 0;
+  virtual void av_fifo_free(AVFifoBuffer *f) = 0;
+  virtual void av_fifo_reset(AVFifoBuffer *f) = 0;
+  virtual int av_fifo_size(AVFifoBuffer *f) = 0;
+  virtual int av_fifo_generic_read(AVFifoBuffer *f, void *dest, int buf_size, void (*func)(void*, void*, int)) = 0;
+  virtual int av_fifo_generic_write(AVFifoBuffer *f, void *src, int size, int (*func)(void*, void*, int)) = 0;
 };
 
 #if (defined USE_EXTERNAL_FFMPEG)
@@ -351,24 +362,37 @@ class DllAvUtilBase : public DllDynamic, DllAvUtilInterface
 public:
 
   virtual ~DllAvUtilBase() {}
-   virtual void av_log_set_callback(void (*foo)(void*, int, const char*, va_list)) { ::av_log_set_callback(foo); }
-   virtual void *av_malloc(unsigned int size) { return ::av_malloc(size); }
-   virtual void *av_mallocz(unsigned int size) { return ::av_mallocz(size); }
-   virtual void *av_realloc(void *ptr, unsigned int size) { return ::av_realloc(ptr, size); }
-   virtual void av_free(void *ptr) { ::av_free(ptr); }
-   virtual void av_freep(void *ptr) { ::av_freep(ptr); }
-   virtual int64_t av_rescale_rnd(int64_t a, int64_t b, int64_t c, enum AVRounding d) { return ::av_rescale_rnd(a, b, c, d); }
-   virtual int64_t av_rescale_q(int64_t a, AVRational bq, AVRational cq) { return ::av_rescale_q(a, bq, cq); }
-   virtual const AVCRC* av_crc_get_table(AVCRCId crc_id) { return ::av_crc_get_table(crc_id); }
-   virtual uint32_t av_crc(const AVCRC *ctx, uint32_t crc, const uint8_t *buffer, size_t length) { return ::av_crc(ctx, crc, buffer, length); }
+  virtual void av_log_set_callback(void (*foo)(void*, int, const char*, va_list)) { ::av_log_set_callback(foo); }
+  virtual void *av_malloc(unsigned int size) { return ::av_malloc(size); }
+  virtual void *av_mallocz(unsigned int size) { return ::av_mallocz(size); }
+  virtual void *av_realloc(void *ptr, unsigned int size) { return ::av_realloc(ptr, size); }
+  virtual void av_free(void *ptr) { ::av_free(ptr); }
+  virtual void av_freep(void *ptr) { ::av_freep(ptr); }
+  virtual int64_t av_rescale_rnd(int64_t a, int64_t b, int64_t c, enum AVRounding d) { return ::av_rescale_rnd(a, b, c, d); }
+  virtual int64_t av_rescale_q(int64_t a, AVRational bq, AVRational cq) { return ::av_rescale_q(a, bq, cq); }
+  virtual const AVCRC* av_crc_get_table(AVCRCId crc_id) { return ::av_crc_get_table(crc_id); }
+  virtual uint32_t av_crc(const AVCRC *ctx, uint32_t crc, const uint8_t *buffer, size_t length) { return ::av_crc(ctx, crc, buffer, length); }
+  //
+  virtual AVFifoBuffer *av_fifo_alloc(unsigned int size) {return ::av_fifo_alloc(size); }
+  virtual void av_fifo_free(AVFifoBuffer *f) (av_fifo_free(f); )
+  virtual void av_fifo_reset(AVFifoBuffer *f) { av_fifo_reset(f); }
+  virtual int av_fifo_size(AVFifoBuffer *f) { return av_fifo_size(f); }
+  virtual int av_fifo_generic_read(AVFifoBuffer *f, void *dest, int buf_size, void (*func)(void*, void*, int))
+  {
+    return av_fifo_generic_read(f, dest, buf_size, func);
+  }
+  virtual int av_fifo_generic_write(AVFifoBuffer *f, void *src, int size, int (*func)(void*, void*, int))
+  {
+    return av_fifo_generic_read(f, src, size, func);
+  }
 
-   // DLL faking.
-   virtual bool ResolveExports() { return true; }
-   virtual bool Load() {
-     CLog::Log(LOGDEBUG, "DllAvUtilBase: Using libavutil system library");
-     return true;
-   }
-   virtual void Unload() {}
+  // DLL faking.
+  virtual bool ResolveExports() { return true; }
+  virtual bool Load() {
+    CLog::Log(LOGDEBUG, "DllAvUtilBase: Using libavutil system library");
+    return true;
+  }
+  virtual void Unload() {}
 };
 
 #else
@@ -389,6 +413,13 @@ class DllAvUtilBase : public DllDynamic, DllAvUtilInterface
   DEFINE_METHOD3(int64_t, av_rescale_q, (int64_t p1, AVRational p2, AVRational p3));
   DEFINE_METHOD1(const AVCRC*, av_crc_get_table, (AVCRCId p1))
   DEFINE_METHOD4(uint32_t, av_crc, (const AVCRC *p1, uint32_t p2, const uint8_t *p3, size_t p4));
+  //
+  DEFINE_METHOD1(AVFifoBuffer*, av_fifo_alloc, (unsigned int p1))
+  DEFINE_METHOD1(void, av_fifo_free, (AVFifoBuffer *p1))
+  DEFINE_METHOD1(void, av_fifo_reset, (AVFifoBuffer *p1))
+  DEFINE_METHOD1(int, av_fifo_size, (AVFifoBuffer *p1))
+  DEFINE_METHOD4(int, av_fifo_generic_read, (AVFifoBuffer *p1, void *p2, int p3, void (*p4)(void*, void*, int)))
+  DEFINE_METHOD4(int, av_fifo_generic_write, (AVFifoBuffer *p1, void *p2, int p3, int (*p4)(void*, void*, int)))
 
   public:
   BEGIN_METHOD_RESOLVE()
@@ -402,6 +433,14 @@ class DllAvUtilBase : public DllDynamic, DllAvUtilInterface
     RESOLVE_METHOD(av_rescale_q)
     RESOLVE_METHOD(av_crc_get_table)
     RESOLVE_METHOD(av_crc)
+    //
+    RESOLVE_METHOD(av_fifo_alloc)
+    RESOLVE_METHOD(av_fifo_free)
+    RESOLVE_METHOD(av_fifo_reset)
+    RESOLVE_METHOD(av_fifo_size)
+    RESOLVE_METHOD(av_fifo_generic_read)
+    RESOLVE_METHOD(av_fifo_generic_write)
+    
   END_METHOD_RESOLVE()
 };
 

@@ -27,6 +27,7 @@
 #include "utils/Atomics.h"
 #include "utils/log.h"
 #include "utils/TimeUtils.h"
+#include "dvdplayer/Codecs/DllAvCodec.h"
 
 //***********************************************************************************************
 // Contruction/Destruction
@@ -43,6 +44,7 @@ CIOSAudioRenderer::CIOSAudioRenderer() :
   m_ChunkSize(0),
   m_packetSize(0)
 {
+  m_dllAvUtil = new DllAvUtil;
   /*
   CFRunLoopRef theRunLoop = NULL;
   AudioObjectPropertyAddress theAddress = { kAudioHardwarePropertyRunLoop, kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMaster };
@@ -57,6 +59,7 @@ CIOSAudioRenderer::CIOSAudioRenderer() :
 CIOSAudioRenderer::~CIOSAudioRenderer()
 {
   Deinitialize();
+  delete m_dllAvUtil;
 }
 
 //***********************************************************************************************
@@ -67,6 +70,9 @@ bool CIOSAudioRenderer::Initialize(IAudioCallback* pCallback, const CStdString& 
 {
   if (m_Initialized) // Have to clean house before we start again. TODO: Should we return failure instead?
     Deinitialize();
+
+  if (!m_dllAvUtil->Load())
+    CLog::Log(LOGERROR,"CLinuxRendererGL::PreInit - failed to load rescale libraries!");
 
   g_audioContext.SetActiveDevice(CAudioContext::DIRECTSOUND_DEVICE);
 
@@ -118,7 +124,7 @@ bool CIOSAudioRenderer::Initialize(IAudioCallback* pCallback, const CStdString& 
   m_ChunkSize = bufferFrames;
   m_NumChunks = (m_AvgBytesPerSec + m_ChunkSize - 1) / m_ChunkSize;
   m_BufferLen = m_NumChunks * m_ChunkSize;
-  m_Buffer = av_fifo_alloc(m_BufferLen);
+  m_Buffer = m_dllAvUtil->av_fifo_alloc(m_BufferLen);
   m_packetSize = inputFormat.mFramesPerPacket*inputFormat.mChannelsPerFrame*(inputFormat.mBitsPerChannel/8); 
     
   // Setup the callback function that the AudioUnit will use to request data	
@@ -169,7 +175,7 @@ bool CIOSAudioRenderer::Deinitialize()
   m_BufferLen = 0;
   m_NumChunks = 0;
   m_ChunkSize = 0;
-  av_fifo_free(m_Buffer);
+  m_dllAvUtil->av_fifo_free(m_Buffer);
   m_Buffer = NULL;
 
   g_audioContext.SetActiveDevice(CAudioContext::DEFAULT_DEVICE);
@@ -207,7 +213,7 @@ bool CIOSAudioRenderer::Stop()
   m_AUOutput.Stop();
 
   m_Pause = true;
-  av_fifo_reset(m_Buffer);
+  m_dllAvUtil->av_fifo_reset(m_Buffer);
 
   return true;
 }
@@ -248,13 +254,13 @@ bool CIOSAudioRenderer::SetCurrentVolume(LONG nVolume)
 //***********************************************************************************************
 unsigned int CIOSAudioRenderer::GetSpace()
 {
-  return m_BufferLen - av_fifo_size(m_Buffer);
+  return m_BufferLen - m_dllAvUtil->av_fifo_size(m_Buffer);
 }
 
 unsigned int CIOSAudioRenderer::AddPackets(const void* data, DWORD len)
 {
 
-  int free = m_BufferLen - av_fifo_size(m_Buffer);
+  int free = m_BufferLen - m_dllAvUtil->av_fifo_size(m_Buffer);
 
   // Require at least one 'chunk'. This allows us at least some measure of control over efficiency
   // TODO 
@@ -266,7 +272,7 @@ unsigned int CIOSAudioRenderer::AddPackets(const void* data, DWORD len)
   //fprintf(stderr, "CIOSAudioRenderer::AddPackets len %d free %d\n", len, free); 
   if (len > free) len = free;
 
-  av_fifo_generic_write(m_Buffer, (unsigned char *)data, len, NULL);
+  m_dllAvUtil->av_fifo_generic_write(m_Buffer, (unsigned char *)data, len, NULL);
   
   Resume();
   
@@ -279,7 +285,7 @@ float CIOSAudioRenderer::GetDelay()
   //fprintf(stderr, "CIOSAudioRenderer::GetDelay %f\n", (float)av_fifo_size(m_Buffer)/(float)m_AvgBytesPerSec); 
 
   //return 0;
-  return (float)av_fifo_size(m_Buffer)/(float)m_AvgBytesPerSec;
+  return (float)m_dllAvUtil->av_fifo_size(m_Buffer)/(float)m_AvgBytesPerSec;
 }
 
 float CIOSAudioRenderer::GetCacheTime()
@@ -302,12 +308,12 @@ unsigned int CIOSAudioRenderer::GetChunkLen()
 
 void CIOSAudioRenderer::WaitCompletion()
 {
-  //fprintf(stderr, "CIOSAudioRenderer::WaitCompletion %u\n", av_fifo_size(m_Buffer)); 
+  //fprintf(stderr, "CIOSAudioRenderer::WaitCompletion %u\n", m_dllAvUtil->av_fifo_size(m_Buffer)); 
 
-  if (av_fifo_size(m_Buffer) == 0) // The cache is already empty. There is nothing to wait for.
+  if (m_dllAvUtil->av_fifo_size(m_Buffer) == 0) // The cache is already empty. There is nothing to wait for.
     return;
 
-  long long timeleft=(1000000LL*av_fifo_size(m_Buffer))/m_AvgBytesPerSec;
+  long long timeleft=(1000000LL * m_dllAvUtil->av_fifo_size(m_Buffer))/m_AvgBytesPerSec;
   usleep((int)timeleft);
 
   Stop();
@@ -321,7 +327,7 @@ OSStatus CIOSAudioRenderer::OnRender(AudioUnitRenderActionFlags *ioActionFlags, 
   if (!m_Initialized)
     CLog::Log(LOGERROR, "CIOSAudioRenderer::OnRender: Callback to de/unitialized renderer.");
 
-  int amt=av_fifo_size(m_Buffer);
+  int amt=m_dllAvUtil->av_fifo_size(m_Buffer);
   int req=(inNumberFrames)*m_packetSize;
 
   //fprintf(stderr, "CIOSAudioRenderer::OnRender req %d amt %d m_packetSize %d\n", req, amt, m_packetSize); 
@@ -330,11 +336,11 @@ OSStatus CIOSAudioRenderer::OnRender(AudioUnitRenderActionFlags *ioActionFlags, 
     amt=req;
 
   if(amt) {
-    int buffered = av_fifo_size(m_Buffer);
+    int buffered = m_dllAvUtil->av_fifo_size(m_Buffer);
     int len = amt;
     
     if (len > buffered) len = buffered;
-    av_fifo_generic_read(m_Buffer, (unsigned char *)ioData->mBuffers[m_OutputBufferIndex].mData, len, NULL);
+    m_dllAvUtil->av_fifo_generic_read(m_Buffer, (unsigned char *)ioData->mBuffers[m_OutputBufferIndex].mData, len, NULL);
   } else {
     //fprintf(stderr, "CIOSAudioRenderer::OnRender Pause\n"); 
     Pause();
