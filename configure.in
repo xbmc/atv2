@@ -1645,11 +1645,13 @@ XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/ffmpeg], [
   if test "$host_vendor" = "apple" ; then
     ./configure \
       --extra-cflags="$CFLAGS $FFMPEG_EXTRACFLAGS -w -D_DARWIN_C_SOURCE -Dattribute_deprecated=" \
-      --extra-ldflags="-Wl,-undefined,dynamic_lookup" \
+      --extra-ldflags="-Wl,-undefined,dynamic_lookup -lc" \
       `if test "$cross_compiling" = "yes"; then echo --enable-cross-compile; fi` \
       `if test "$use_arch" != "no"; then echo --arch=$use_arch; fi`\
       `if test "$use_cpu" != "no"; then echo --cpu=$use_cpu; fi`\
       --target-os=$(tolower $(uname -s)) \
+      --disable-amd3dnow \
+      --disable-armv5te --disable-armv6t2 \
       --disable-amd3dnow \
       --disable-static \
       `if test "$use_debug" = "no"; then echo --disable-debug; fi` \
@@ -1670,8 +1672,6 @@ XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/ffmpeg], [
       --enable-gpl \
       --enable-protocol=http \
       --enable-pthreads \
-      --enable-memalign-hack \
-      --enable-runtime-cpudetect \
       --cc="$CC" \
       --as="$AS" &&
     sed -i "" -e "s# -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 # #" config.mak &&
