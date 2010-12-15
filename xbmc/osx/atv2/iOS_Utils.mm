@@ -52,10 +52,10 @@ int  GetFrappBundlePath(char* path, uint32_t *bufsize)
 {
 	NSString *pathname;
 	
-  pathname = [[NSBundle bundleForClass:[XBMCAppliance class]] pathForResource:@"XBMC" ofType:nil];
+  pathname = [[NSBundle bundleForClass:[XBMCAppliance class]] bundlePath];
   strcpy(path, [pathname UTF8String]);
   *bufsize = strlen(path);
-  
+
   return 0;
 }
 /*  // Get the path to the target PNG icon
