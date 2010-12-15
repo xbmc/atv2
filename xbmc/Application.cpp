@@ -857,7 +857,7 @@ bool CApplication::InitDirectoriesOSX()
   	char     given_path[2*MAXPATHLEN];
 
     GetFrappBundlePath(given_path, &path_size);
-    strcat(given_path, "XBMCData/XBMCHome/");
+    strcat(given_path, "/XBMCData/XBMCHome/");
     //xbmcPath = "/private/var/mobile/Applications/94DE54CA-43CC-44D5-8311-1D64D290316A/XBMC.app/XBMCData/XBMCHome";
     xbmcPath = given_path;
   #endif

@@ -720,7 +720,7 @@ void CUtil::GetHomePath(CStdString& strPath, const CStdString& strTarget)
 
     #if defined(__arm__)
       result = GetFrappBundlePath(given_path, &path_size);
-      strcat(given_path, "XBMCData/XBMCHome/");
+      strcat(given_path, "/XBMCData/XBMCHome/");
       //strcpy(given_path, "/private/var/mobile/Applications/94DE54CA-43CC-44D5-8311-1D64D290316A/XBMC.app/XBMCData/XBMCHome");
       /*
       // Convert to real path.
