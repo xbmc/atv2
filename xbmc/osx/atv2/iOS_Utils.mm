@@ -52,18 +52,23 @@ int  GetFrappBundlePath(char* path, uint32_t *bufsize)
 {
 	NSString *pathname;
 
-  #if 1
+  id is_frapp = NSClassFromString(@"BRAppliance");
+  //if (is_frapp)
+  if (YES)
+  {
     pathname = [[NSBundle bundleForClass:[XBMCAppliance class]] bundlePath];
     strcpy(path, [pathname UTF8String]);
     *bufsize = strlen(path);
-  #else
+  }
+  else
+  {
     pathname = [[NSBundle mainBundle] executablePath];
     strcpy(path, [pathname UTF8String]);
     *bufsize = strlen(path);
     *bufsize -= 4;
     path[*bufsize] = 0;
     NSLog(@"%s executable_path %s", __PRETTY_FUNCTION__, path);
-  #endif
+  }
   return 0;
 }
 /*  // Get the path to the target PNG icon
