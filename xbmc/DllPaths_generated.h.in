@@ -68,20 +68,26 @@
 #if defined(_LINUX) && !defined(__APPLE__)
 #define DLL_PATH_FLAC_CODEC    "@FLAC_SONAME@"
 #define DLL_PATH_MODPLUG_CODEC "@MODPLUG_SONAME@"
+#define DLL_PATH_OGG_CODEC     "@VORBISFILE_SONAME@"
 #else
 #define DLL_PATH_FLAC_CODEC    "special://xbmcbin/system/players/paplayer/libFLAC-@ARCH@.so"
 #define DLL_PATH_MODPLUG_CODEC "special://xbmcbin/system/players/paplayer/libmodplug-@ARCH@.so"
-#endif
-#define DLL_PATH_OGG_CODEC     "@VORBISFILE_SONAME@"
+#define DLL_PATH_OGG_CODEC     "@executable_path/Appliances/XBMC.frappliance/Frameworks/@VORBISFILE_SONAME@"
 
+#endif
 /* dvdplayer */
 #define DLL_PATH_LIBASS        "special://xbmcbin/system/players/dvdplayer/libass-@ARCH@.so"
 #define DLL_PATH_LIBA52        "special://xbmcbin/system/players/dvdplayer/liba52-@ARCH@.so"
 #define DLL_PATH_LIBDTS        "special://xbmcbin/system/players/dvdplayer/libdts-@ARCH@.so"
 #define DLL_PATH_LIBMPEG2      "special://xbmcbin/system/players/dvdplayer/libmpeg2-@ARCH@.so"
 #define DLL_PATH_LIBDVDNAV     "special://xbmcbin/system/players/dvdplayer/libdvdnav-@ARCH@.so"
+#if defined(_LINUX) && !defined(__APPLE__)
 #define DLL_PATH_LIBFAAD       "@FAAD_SONAME@"
 #define DLL_PATH_LIBMAD        "@MAD_SONAME@"
+#else
+#define DLL_PATH_LIBFAAD       "@executable_path/Appliances/XBMC.frappliance/Frameworks/@FAAD_SONAME@"
+#define DLL_PATH_LIBMAD        "@executable_path/Appliances/XBMC.frappliance/Frameworks/@MAD_SONAME@"
+#endif
 
 /* ffmpeg */
 #define DLL_PATH_LIBAVCODEC    "special://xbmcbin/system/players/dvdplayer/avcodec-52-@ARCH@.so"
@@ -93,12 +99,15 @@
 /* cdrip */
 #if defined(_LINUX) && !defined(__APPLE__)
 #define DLL_PATH_LAME_ENC      "libmp3lame.so.0"
-#else
-#define DLL_PATH_LAME_ENC      "special://xbmcbin/system/cdrip/lame_enc-@ARCH@.so"
-#endif
 #define DLL_PATH_OGG           "@OGG_SONAME@"
 #define DLL_PATH_VORBIS_ENC    "@VORBISENC_SONAME@"
 #define DLL_PATH_VORBIS        "@VORBIS_SONAME@"
+#else
+#define DLL_PATH_LAME_ENC      "special://xbmcbin/system/cdrip/lame_enc-@ARCH@.so"
+#define DLL_PATH_OGG           "@executable_path/Appliances/XBMC.frappliance/Frameworks/@OGG_SONAME@"
+#define DLL_PATH_VORBIS_ENC    "@executable_path/Appliances/XBMC.frappliance/Frameworks/@VORBISENC_SONAME@"
+#define DLL_PATH_VORBIS        "@executable_path/Appliances/XBMC.frappliance/Frameworks/@VORBIS_SONAME@"
+#endif
 
 /* broadcom crystalhd */
 #if defined(_LINUX) && !defined(__APPLE__)
