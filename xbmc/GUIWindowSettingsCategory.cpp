@@ -2799,57 +2799,60 @@ void CGUIWindowSettingsCategory::FillInNetworkInterfaces(CSetting *pSetting)
 void CGUIWindowSettingsCategory::FillInAudioDevices(CSetting* pSetting, bool Passthrough)
 {
 #if defined(__APPLE__)
-#if defined(__arm__)
-  if (Passthrough)
-    return;
-  CGUISpinControlEx *pControl = (CGUISpinControlEx *)GetControl(GetSetting(pSetting->GetSetting())->GetID());
-  pControl->Clear();
+  #if defined(__arm__)
+    if (Passthrough)
+      return;
+    CGUISpinControlEx *pControl = (CGUISpinControlEx *)GetControl(GetSetting(pSetting->GetSetting())->GetID());
+    pControl->Clear();
 
-  IOSCoreAudioDeviceList deviceList;
-  CIOSCoreAudioHardware::GetOutputDevices(&deviceList);
+    IOSCoreAudioDeviceList deviceList;
+    CIOSCoreAudioHardware::GetOutputDevices(&deviceList);
 
-  if (CIOSCoreAudioHardware::GetDefaultOutputDevice())
-    pControl->AddLabel("Default Output Device", 0); // This will cause FindAudioDevice to fall back to the system default as configured in 'System Preferences'
-  int activeDevice = 0;
+    // This will cause FindAudioDevice to fall back to the system default as configured in 'System Preferences'
+    if (CIOSCoreAudioHardware::GetDefaultOutputDevice())
+      pControl->AddLabel("Default Output Device", 0);
 
-  CStdString deviceName;
-  for (int i = pControl->GetMaximum(); !deviceList.empty(); i++)
-  {
-    CIOSCoreAudioDevice device(deviceList.front());
-    pControl->AddLabel(device.GetName(deviceName), i);
+    int activeDevice = 0;
+    CStdString deviceName;
+    for (int i = pControl->GetMaximum(); !deviceList.empty(); i++)
+    {
+      CIOSCoreAudioDevice device(deviceList.front());
+      pControl->AddLabel(device.GetName(deviceName), i);
 
-    if (g_guiSettings.GetString("audiooutput.audiodevice").Equals(deviceName))
-      activeDevice = i; // Tag this one
+      // Tag this one
+      if (g_guiSettings.GetString("audiooutput.audiodevice").Equals(deviceName))
+        activeDevice = i; 
 
-    deviceList.pop_front();
-  }
-  pControl->SetValue(activeDevice);
-#else
-  if (Passthrough)
-    return;
-  CGUISpinControlEx *pControl = (CGUISpinControlEx *)GetControl(GetSetting(pSetting->GetSetting())->GetID());
-  pControl->Clear();
+      deviceList.pop_front();
+    }
+    pControl->SetValue(activeDevice);
+  #else
+    if (Passthrough)
+      return;
+    CGUISpinControlEx *pControl = (CGUISpinControlEx *)GetControl(GetSetting(pSetting->GetSetting())->GetID());
+    pControl->Clear();
 
-  CoreAudioDeviceList deviceList;
-  CCoreAudioHardware::GetOutputDevices(&deviceList);
+    CoreAudioDeviceList deviceList;
+    CCoreAudioHardware::GetOutputDevices(&deviceList);
 
-  if (CCoreAudioHardware::GetDefaultOutputDevice())
-    pControl->AddLabel("Default Output Device", 0); // This will cause FindAudioDevice to fall back to the system default as configured in 'System Preferences'
-  int activeDevice = 0;
+    // This will cause FindAudioDevice to fall back to the system default as configured in 'System Preferences'
+    if (CCoreAudioHardware::GetDefaultOutputDevice())
+      pControl->AddLabel("Default Output Device", 0);
 
-  CStdString deviceName;
-  for (int i = pControl->GetMaximum(); !deviceList.empty(); i++)
-  {
-    CCoreAudioDevice device(deviceList.front());
-    pControl->AddLabel(device.GetName(deviceName), i);
+    int activeDevice = 0;
+    CStdString deviceName;
+    for (int i = pControl->GetMaximum(); !deviceList.empty(); i++)
+    {
+      CCoreAudioDevice device(deviceList.front());
+      pControl->AddLabel(device.GetName(deviceName), i);
 
-    if (g_guiSettings.GetString("audiooutput.audiodevice").Equals(deviceName))
-      activeDevice = i; // Tag this one
+      if (g_guiSettings.GetString("audiooutput.audiodevice").Equals(deviceName))
+        activeDevice = i; // Tag this one
 
-    deviceList.pop_front();
-  }
-  pControl->SetValue(activeDevice);
-#endif
+      deviceList.pop_front();
+    }
+    pControl->SetValue(activeDevice);
+  #endif
 #else
   CGUISpinControlEx *pControl = (CGUISpinControlEx *)GetControl(GetSetting(pSetting->GetSetting())->GetID());
   pControl->Clear();
