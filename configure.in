@@ -1651,7 +1651,9 @@ XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/ffmpeg], [
       `if test "$use_cpu" != "no"; then echo --cpu=$use_cpu; fi`\
       --target-os=$(tolower $(uname -s)) \
       --disable-amd3dnow \
-      --disable-armv5te --disable-armv6t2 \
+      --disable-armv5te \
+      --disable-armv6t2 \
+      --disable-neon \
       --disable-amd3dnow \
       --disable-static \
       `if test "$use_debug" = "no"; then echo --disable-debug; fi` \
