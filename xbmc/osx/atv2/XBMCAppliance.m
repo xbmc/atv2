@@ -48,6 +48,8 @@
 }
 - (void) selectCategoryWithIdentifier:(id)identifier;
 - (id) topShelfView;
+// added in 4.1+
+- (void) refresh;
 @end
 @implementation XBMCTopShelfController
 //
@@ -62,6 +64,9 @@
 	[imageControl setImage:gpImage];
 	
 	return topShelf;
+}
+- (void) refresh
+{
 }
 @end
 
