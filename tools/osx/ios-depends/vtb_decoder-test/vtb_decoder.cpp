@@ -33,15 +33,16 @@ typedef struct _VTDecompressionOutputCallback VTDecompressionOutputCallback;
 typedef void (*VTDecompressionOutputCallbackFunc) (void *data, CFDictionaryRef unk1,
   OSStatus result, uint32_t unk2, CVBufferRef cvbuf);
 
+/*
 enum _VTFormat
 {
-  kVTFormatH264 = 'avc1', // kCMVideoCodecType_H264
-  kVTFormatJPEG = 'jpeg'  // kCMVideoCodecType_JPEG
-  //kCMVideoCodecType_JPEG             = 'jpeg',
-  //kCMVideoCodecType_H264             = 'avc1', // MPEG-4 Part 10, Advanced Video 
-  //kCMVideoCodecType_MPEG4Video       = 'mp4v', // MPEG-4 Part 2 video format.
-  //kCMVideoCodecType_MPEG2Video       = 'mp2v',
+  kCMVideoCodecType_JPEG             = 'jpeg',
+  kCMVideoCodecType_H264             = 'avc1', // MPEG-4 Part 10, Advanced Video 
+  kCMVideoCodecType_MPEG4Video       = 'mp4v', // MPEG-4 Part 2 video format.
+  kCMVideoCodecType_MPEG2Video       = 'mp2v',
 };
+*/
+
 enum {
   kVDADecoderDecoderFlags_DontEmitFrame = 1 << 0
 };
@@ -215,6 +216,8 @@ static int64_t GetFrameDisplayTimeFromDictionary(CFDictionaryRef inFrameInfoDict
 CMFormatDescriptionRef
 vtdec_create_format_description(AppContext *ctx)
 {
+  printf("vtdec_create_format_description\n");
+
   CMFormatDescriptionRef fmt_desc;
   OSStatus status;
 
@@ -233,8 +236,10 @@ vtdec_create_format_description(AppContext *ctx)
 }
 
 CMFormatDescriptionRef
-vtdec_create_format_description_from_codec_data(AppContext *ctx)
+vtdec_create_format_description_from_codec_data(AppContext *ctx, UInt32 atom)
 {
+  printf("vtdec_create_format_description_from_codec_data\n");
+
   CMFormatDescriptionRef fmt_desc;
   OSStatus status;
 
@@ -243,7 +248,7 @@ vtdec_create_format_description_from_codec_data(AppContext *ctx)
     ctx->format_id,
     ctx->sourceWidth,
     ctx->sourceHeight,
-    'avcC',
+    atom,
     ctx->codec_context->extradata,
     ctx->codec_context->extradata_size,
     &fmt_desc);
@@ -323,7 +328,12 @@ vtdec_create_session(AppContext *ctx)
     &outputCallback,
     &session);
   if (status)
-    printf("VTDecompressionSessionCreate failed %d\n", (int)status);
+  {
+    if (status == -8971)
+      printf("VTDecompressionSessionCreate failed: codecExtensionNotFoundErr\n");
+    else
+      printf("VTDecompressionSessionCreate failed %d\n", (int)status);
+  }
 
   CFRelease(destinationPixelBufferAttributes);
 
@@ -454,25 +464,52 @@ int main (int argc, char * const argv[])
     goto fail;
   }
   
-  if ( ctx.codec_context->codec_id != CODEC_ID_H264) {
-    fprintf(stderr, "ERROR: Invalid FFmpegFileReader Codec Format (not h.264)\n");
-    goto fail;
-  }
-  
   ctx.sourceWidth = ctx.codec_context->width;
   ctx.sourceHeight = ctx.codec_context->height;
   printf("video width(%d), height(%d), extradata_size(%d), extradata(%x)\n",
     (int)ctx.sourceWidth, (int)ctx.sourceHeight,
     ctx.codec_context->extradata_size, ctx.codec_context->extradata[0]);
-  
-  // initialize video decoder.
-  ctx.format_id = kVTFormatH264;
-  if (ctx.codec_context->extradata_size) {
-    ctx.fmt_desc = vtdec_create_format_description_from_codec_data(&ctx);
-  } else {
-    ctx.fmt_desc = vtdec_create_format_description(&ctx);
+
+  switch(ctx.codec_context->codec_id)
+  {
+    case CODEC_ID_H264:
+      printf("CODEC_ID_H264\n");
+      ctx.format_id = kCMVideoCodecType_H264;
+      if (ctx.codec_context->extradata_size) {
+        ctx.fmt_desc = vtdec_create_format_description_from_codec_data(&ctx, 'avcC');
+      } else {
+        ctx.fmt_desc = vtdec_create_format_description(&ctx);
+      }
+    break;
+    case CODEC_ID_MPEG4:
+      printf("CODEC_ID_MPEG4\n");
+      ctx.format_id = kCMVideoCodecType_MPEG4Video;
+      if (ctx.codec_context->extradata_size) {
+        // mp4a
+        // esds
+        ctx.fmt_desc = vtdec_create_format_description_from_codec_data(&ctx, 'esds');
+      } else {
+        ctx.fmt_desc = vtdec_create_format_description(&ctx);
+      }
+    break;
+    case CODEC_ID_MPEG2VIDEO:
+      printf("CODEC_ID_MPEG2VIDEO\n");
+      ctx.format_id = kCMVideoCodecType_MPEG2Video;
+      if (ctx.codec_context->extradata_size) {
+        // mp2p
+        // mp2t
+        ctx.fmt_desc = vtdec_create_format_description_from_codec_data(&ctx, '1234');
+      } else {
+        ctx.fmt_desc = vtdec_create_format_description(&ctx);
+      }
+    break;
+    default:
+      fprintf(stderr, "ERROR: Invalid FFmpegFileReader Codec Format (not h.264) = %d\n",
+        ctx.codec_context->codec_id);
+      goto fail;
+    break;
   }
-  
+
   ctx.session = vtdec_create_session(&ctx);
   if (!ctx.session) {
     fprintf(stderr, "ERROR: vtdec_create_session\n");

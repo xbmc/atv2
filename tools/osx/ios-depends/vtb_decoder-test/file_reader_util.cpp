@@ -83,8 +83,8 @@ bool FFmpegFileReader::Initialize() {
     m_profile = m_codec_context->profile;
     m_has_b_frames = m_codec_context->has_b_frames;
     //m_converter = new FFmpegBitstreamConverter("h264_mp4toannexb", m_codec_context);
-  } else if (m_codec_context->codec_id == CODEC_ID_MPEG4) {
-    m_converter = new FFmpegBitstreamConverter("mpeg4video_es", m_codec_context);
+//  } else if (m_codec_context->codec_id == CODEC_ID_MPEG4) {
+//    m_converter = new FFmpegBitstreamConverter("mpeg4video_es", m_codec_context);
   } else if (m_codec_context->codec_id == CODEC_ID_WMV3) {
     m_converter = new FFmpegBitstreamConverter("vc1_asftorcv", m_codec_context);
   } else if (m_codec_context->codec_id == CODEC_ID_VC1) {
