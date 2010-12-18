@@ -37,7 +37,6 @@ CIOSAudioRenderer::CIOSAudioRenderer() :
   m_Initialized(false),
   m_CurrentVolume(0),
   m_OutputBufferIndex(0),
-  m_EnableVolumeControl(true),
   m_AvgBytesPerSec(0),
   m_BufferLen(0),
   m_NumChunks(0),
@@ -78,19 +77,13 @@ bool CIOSAudioRenderer::Initialize(IAudioCallback* pCallback, const CStdString& 
 
   // TODO: If debugging, output information about all devices/streams
 
-  AudioDeviceID outputDevice = CIOSCoreAudioHardware::GetDefaultOutputDevice();
+  AudioComponentInstance outputDevice = CIOSCoreAudioHardware::GetDefaultOutputDevice();
   if (!outputDevice) // Not a lot to be done with no device. TODO: Should we just grab the first existing device?
     return false;
 
-  // TODO: Determine if the device is in-use/locked by another process.
-
   // Attach our output object to the device
-  m_AudioDevice.Open(outputDevice);
+  m_AudioDevice.SetDevice(outputDevice);
 
-  // Create the Output AudioUnit Component
-  if (!m_AUOutput.Open(kAudioUnitType_Output, kAudioUnitSubType_RemoteIO, kAudioUnitManufacturer_Apple))
-    return false;
-  
   CLog::Log(LOGDEBUG, "CIOSAudioRenderer::InitializePCM:    using supplied channel map for audio source");
 
   // Set the input stream format for the AudioUnit (this is what is being sent to us)
@@ -106,7 +99,7 @@ bool CIOSAudioRenderer::Initialize(IAudioCallback* pCallback, const CStdString& 
   inputFormat.mFramesPerPacket = 1;                         // The smallest amount of indivisible data. Always 1 for uncompressed audio 	
   inputFormat.mBytesPerPacket = inputFormat.mBytesPerFrame * inputFormat.mFramesPerPacket;
   inputFormat.mReserved = 0;
-  if (!m_AUOutput.SetInputFormat(&inputFormat))
+  if (!m_AudioDevice.SetInputFormat(&inputFormat))
     return false;
   
   m_AvgBytesPerSec = inputFormat.mSampleRate * inputFormat.mBytesPerFrame;      // 1 sample per channel per frame
@@ -128,25 +121,23 @@ bool CIOSAudioRenderer::Initialize(IAudioCallback* pCallback, const CStdString& 
   m_packetSize = inputFormat.mFramesPerPacket*inputFormat.mChannelsPerFrame*(inputFormat.mBitsPerChannel/8); 
     
   // Setup the callback function that the AudioUnit will use to request data	
-  if (!m_AUOutput.SetRenderProc(RenderCallback, this))
+  if (!m_AudioDevice.SetRenderProc(RenderCallback, this))
     return false;
 
-  // Initialize the Output AudioUnit
-  if (!m_AUOutput.Initialize())
+  // Start the audio device
+  if (!m_AudioDevice.Open())
     return false;
 
   // Log some information about the stream
   AudioStreamBasicDescription inputDesc_end, outputDesc_end;
   CStdString formatString;
-  m_AUOutput.GetInputFormat(&inputDesc_end);
-  m_AUOutput.GetOutputFormat(&outputDesc_end);
+  m_AudioDevice.GetInputFormat(&inputDesc_end);
+  m_AudioDevice.GetOutputFormat(&outputDesc_end);
   CLog::Log(LOGDEBUG, "CIOSAudioRenderer::Initialize: Input Stream Format %s", (char*)IOSStreamDescriptionToString(inputDesc_end, formatString));
   CLog::Log(LOGDEBUG, "CIOSAudioRenderer::Initialize: Output Stream Format %s", (char*)IOSStreamDescriptionToString(outputDesc_end, formatString));
 
   m_Pause = true;                       // Suspend rendering. We will start once we have some data.
   m_Initialized = true;
-
-  SetCurrentVolume(g_settings.m_nVolumeLevel);
 
   CLog::Log(LOGDEBUG, "CIOSAudioRenderer::Initialize: Renderer Configuration - Chunk Len: %u, Max Cache: %u (%0.0fms).", m_ChunkSize, m_BufferLen, 1000.0 *(float)m_BufferLen/(float)m_AvgBytesPerSec);
   CLog::Log(LOGINFO, "CIOSAudioRenderer::Initialize: Successfully configured audio output.");
@@ -166,11 +157,10 @@ bool CIOSAudioRenderer::Deinitialize()
   // Reset our state
   CLog::Log(LOGDEBUG, "CIOSAudioRenderer::Deinitialize: deleted remapping buffer");
   
-  m_AUOutput.Close();
+  m_AudioDevice.Close();
   Sleep(10);
   m_AudioDevice.Close();
   m_Initialized = false;
-  m_EnableVolumeControl = true;
   m_AvgBytesPerSec = 0;
   m_BufferLen = 0;
   m_NumChunks = 0;
@@ -193,7 +183,7 @@ bool CIOSAudioRenderer::Pause()
 {
   if (!m_Pause)
   {
-    m_AUOutput.Stop();
+    //m_AudioDevice.Stop();
     m_Pause = true;
   }
   return true;
@@ -203,7 +193,7 @@ bool CIOSAudioRenderer::Resume()
 {
   if (m_Pause)
   {
-    m_AUOutput.Start();
+    m_AudioDevice.Start();
     m_Pause = false;
   }
   return true;
@@ -211,7 +201,7 @@ bool CIOSAudioRenderer::Resume()
 
 bool CIOSAudioRenderer::Stop()
 {
-  m_AUOutput.Stop();
+  m_AudioDevice.Stop();
 
   m_Pause = true;
   // Deinitialize (and thus Stop) could be called twice so check that m_Buffer still exists
@@ -231,24 +221,10 @@ LONG CIOSAudioRenderer::GetCurrentVolume() const
 
 void CIOSAudioRenderer::Mute(bool bMute)
 {
-  if (bMute)
-    SetCurrentVolume(0);
-  else
-    SetCurrentVolume(m_CurrentVolume);
 }
 
 bool CIOSAudioRenderer::SetCurrentVolume(LONG nVolume)
 {
-  if (m_EnableVolumeControl) // Don't change actual volume for encoded streams
-  {
-    // Convert milliBels to percent
-    Float32 volPct = pow(10.0f, (float)nVolume/2000.0f);
-
-    // Try to set the volume. If it fails there is not a lot to be done.
-    if (!m_AUOutput.SetCurrentVolume(volPct))
-      return false;
-  }
-  m_CurrentVolume = nVolume; // Store the volume setpoint. We need this to check for 'mute'
   return true;
 }
 
