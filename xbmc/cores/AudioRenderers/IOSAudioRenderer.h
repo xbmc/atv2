@@ -69,12 +69,10 @@ class CIOSAudioRenderer : public IAudioRenderer
     bool m_Initialized; // Prevent multiple init/deinit
 
     long m_CurrentVolume; // Courtesy of the jerk that made GetCurrentVolume a const...
+    bool m_EnableVolumeControl;
 
-    CIOSAUOutputDevice m_AUOutput;
     CIOSCoreAudioDevice m_AudioDevice;
     UInt32 m_OutputBufferIndex;
-
-    bool m_EnableVolumeControl;
 
     // Stream format
     size_t m_AvgBytesPerSec;
