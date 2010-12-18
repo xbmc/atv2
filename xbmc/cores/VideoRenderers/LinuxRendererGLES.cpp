@@ -48,6 +48,7 @@
   #include "../dvdplayer/DVDCodecs/Video/DVDVideoCodecVideoToolBox.h"
   #include <CoreVideo/CoreVideo.h>
 #endif
+
 using namespace Shaders;
 
 CLinuxRendererGLES::YUVBUFFER::YUVBUFFER()
@@ -1805,6 +1806,9 @@ void CLinuxRendererGLES::UploadCVRefTexture(int index)
     YUVPLANE &plane = m_buffers[index].fields[0][0];
 
     CVPixelBufferLockBaseAddress(cvBufferRef, kCVPixelBufferLock_ReadOnly);
+    #if !TARGET_OS_IPHONE
+      int rowbytes = CVPixelBufferGetBytesPerRow(cvBufferRef);
+    #endif
     int bufferWidth = CVPixelBufferGetWidth(cvBufferRef);
     int bufferHeight = CVPixelBufferGetHeight(cvBufferRef);
     unsigned char *bufferBase = (unsigned char *)CVPixelBufferGetBaseAddress(cvBufferRef);
@@ -1813,9 +1817,26 @@ void CLinuxRendererGLES::UploadCVRefTexture(int index)
     VerifyGLState();
 
     glBindTexture(m_textureTarget, plane.id);
+    #if !TARGET_OS_IPHONE
+      #ifdef GL_UNPACK_ROW_LENGTH
+        // Set row pixels
+        glPixelStorei( GL_UNPACK_ROW_LENGTH, rowbytes);
+      #endif
+      #ifdef GL_TEXTURE_STORAGE_HINT_APPLE
+        // Set storage hint. Can also use GL_STORAGE_SHARED_APPLE see docs.
+        glTexParameteri(m_textureTarget, GL_TEXTURE_STORAGE_HINT_APPLE , GL_STORAGE_CACHED_APPLE);
+      #endif
+    #endif
+
     // Using BGRA extension to pull in video frame data directly
-    //glTexImage2D(m_textureTarget, 0, GL_RGBA, bufferWidth, bufferHeight, 0, GL_BGRA, GL_UNSIGNED_BYTE, bufferBase);
     glTexSubImage2D(m_textureTarget, 0, 0, 0, bufferWidth, bufferHeight, GL_BGRA, GL_UNSIGNED_BYTE, bufferBase);
+
+    #if !TARGET_OS_IPHONE
+      #ifdef GL_UNPACK_ROW_LENGTH
+        // Unset row pixels
+        glPixelStorei( GL_UNPACK_ROW_LENGTH, 0);
+      #endif
+    #endif
     glBindTexture(m_textureTarget, 0);
 
     glDisable(m_textureTarget);
@@ -1871,6 +1892,19 @@ bool CLinuxRendererGLES::CreateCVRefTexture(int index)
   VerifyGLState();
 
   glBindTexture(m_textureTarget, plane.id);
+  #if !TARGET_OS_IPHONE
+    #ifdef GL_UNPACK_ROW_LENGTH
+      // Set row pixels
+      glPixelStorei(GL_UNPACK_ROW_LENGTH, m_sourceWidth);
+    #endif
+    #ifdef GL_TEXTURE_STORAGE_HINT_APPLE
+      // Set storage hint. Can also use GL_STORAGE_SHARED_APPLE see docs.
+      glTexParameteri(m_textureTarget, GL_TEXTURE_STORAGE_HINT_APPLE , GL_STORAGE_CACHED_APPLE);
+      // Set client storage
+    #endif
+    glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, GL_TRUE);
+  #endif
+
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	// This is necessary for non-power-of-two textures
@@ -1878,6 +1912,11 @@ bool CLinuxRendererGLES::CreateCVRefTexture(int index)
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
   glTexImage2D(m_textureTarget, 0, GL_RGBA, plane.texwidth, plane.texheight, 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL);
+
+  #if !TARGET_OS_IPHONE
+    // turn off client storage so it doesn't get picked up for the next texture
+    glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, GL_FALSE);
+  #endif
   glBindTexture(m_textureTarget, 0);
   glDisable(m_textureTarget);
 
