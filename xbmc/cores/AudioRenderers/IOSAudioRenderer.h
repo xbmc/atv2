@@ -75,6 +75,9 @@ class CIOSAudioRenderer : public IAudioRenderer
     UInt32 m_OutputBufferIndex;
 
     // Stream format
+    int m_BitsPerChannel;
+    int m_ChannelsPerFrame;
+
     size_t m_AvgBytesPerSec;
     AVFifoBuffer *m_Buffer;
     unsigned int m_BufferLen; ///< must always be num_chunks * chunk_size

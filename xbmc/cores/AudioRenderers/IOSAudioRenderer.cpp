@@ -29,6 +29,25 @@
 #include "utils/TimeUtils.h"
 #include "dvdplayer/Codecs/DllAvCodec.h"
 
+// Reorder PCM from AAC layout to Core Audio layout.
+// TODO(fbarchard): Switch layout when ffmpeg is updated.
+namespace {
+template<class Format>
+static void SwizzleToCoreAudioLayout(Format* b, uint32_t filled) {
+  static const int kNumSurroundChannels = 6;
+  Format aac[kNumSurroundChannels];
+  for (uint32_t i = 0; i < filled; i += sizeof(aac), b += kNumSurroundChannels) {
+    memcpy(aac, b, sizeof(aac));
+    b[0] = aac[1];  // L
+    b[1] = aac[2];  // R
+    b[2] = aac[0];  // C
+    b[3] = aac[5];  // LFE
+    b[4] = aac[3];  // Ls
+    b[5] = aac[4];  // Rs
+  }
+}
+}  // namespace
+
 //***********************************************************************************************
 // Contruction/Destruction
 //***********************************************************************************************
@@ -102,6 +121,9 @@ bool CIOSAudioRenderer::Initialize(IAudioCallback* pCallback, const CStdString& 
   if (!m_AudioDevice.SetInputFormat(&inputFormat))
     return false;
   
+  m_BitsPerChannel = inputFormat.mBitsPerChannel;
+  m_ChannelsPerFrame = inputFormat.mChannelsPerFrame;
+
   m_AvgBytesPerSec = inputFormat.mSampleRate * inputFormat.mBytesPerFrame;      // 1 sample per channel per frame
   m_EnableVolumeControl = true;
 
@@ -320,6 +342,24 @@ OSStatus CIOSAudioRenderer::OnRender(AudioUnitRenderActionFlags *ioActionFlags, 
     
     if (len > buffered) len = buffered;
     m_dllAvUtil->av_fifo_generic_read(m_Buffer, (unsigned char *)ioData->mBuffers[m_OutputBufferIndex].mData, len, NULL);
+
+    // convert channel order from ffmepg to coreaudio for 5.1 audio.
+    if (m_ChannelsPerFrame == 6)
+    {
+      void *mdata_buffer = ioData->mBuffers[m_OutputBufferIndex].mData;
+      switch(m_BitsPerChannel)
+      {
+        case 8:
+          SwizzleToCoreAudioLayout(reinterpret_cast<uint8_t*>(mdata_buffer), len);
+        break;
+        case 16:
+          SwizzleToCoreAudioLayout(reinterpret_cast<int16_t*>(mdata_buffer), len);
+        break;
+        case 32:
+          SwizzleToCoreAudioLayout(reinterpret_cast<int32_t*>(mdata_buffer), len);
+        break;
+      }
+    }
   } else {
     //fprintf(stderr, "CIOSAudioRenderer::OnRender Pause\n"); 
     Pause();
