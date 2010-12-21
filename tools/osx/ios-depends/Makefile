@@ -9,7 +9,7 @@ SUBDIRS = \
 	libvorbis libmad fribidi libwavpack libmpeg2 \
 	faad2 libcdio libsamplerate \
 	boost \
-	mysqlclient smbclient python5
+	mysqlclient samba python5
 
 	#glib2 libmms /
 
