@@ -35,6 +35,7 @@ $(SOURCE): $(ARCHIVE)
 	cp -rf $(SOURCE)/data/usr/samba/bin/* $(PREFIX)/bin
 	cp -rf $(SOURCE)/data/usr/samba/lib/* $(PREFIX)/lib
 	cp -rf $(SOURCE)/data/usr/samba/sbin/* $(PREFIX)/lib
+	cd $(PREFIX)/lib; ln -s libsmbclient.dylib.0 libsmbclient.dylib
 	ln -sf $(PREFIX)/lib/libsmbclient.dylib.0 $(PREFIX)/lib/libsmbclient.dylib
 	install_name_tool -change bin/libtalloc.dylib.1 $(PREFIX)/lib/libtalloc.dylib.1 \
 		-id $(PREFIX)/lib/libsmbclient.dylib $(PREFIX)/lib/libsmbclient.dylib.0
