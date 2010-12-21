@@ -29,20 +29,23 @@ all: $(LIBDYLIB) .installed
 
 $(ARCHIVE):
 	$(RETRIEVE_TOOL) $(RETRIEVE_TOOL_FLAGS) $(BASE_URL)/$(ARCHIVE)
+	echo $(ARCHIVE) > .gitignore
 
 $(SOURCE): $(ARCHIVE)
 	-rm -rf $(SOURCE)
 	$(ARCHIVE_TOOL) $(ARCHIVE_TOOL_FLAGS) $(ARCHIVE)
-	echo $(ARCHIVE) > .gitignore
 	echo $(SOURCE) >> .gitignore
 	sed -i bak -e "s/'libtoolize'/'glibtoolize'/" $(SOURCE)/bin/autoreconf.in
 	cd $(SOURCE); $(CONFIGURE)
 
 $(LIBDYLIB): $(SOURCE)
-	make -C $(SOURCE)
+	# skip make in man because we don't have help2man
+	make -C $(SOURCE)/bin
+	make -C $(SOURCE)/lib
 
 .installed:
-	make -C $(SOURCE) install
+	make -C $(SOURCE)/bin install
+	make -C $(SOURCE)/lib install
 	touch $@
 
 clean:

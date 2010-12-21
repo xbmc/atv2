@@ -342,7 +342,7 @@ case $host in
   arm-apple-darwin*)
      use_vdadecoder=no
      ARCH="arm-osx"
-     SYSROOT="-miphoneos-version-min=4.1 -isysroot /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.1.sdk"
+     SYSROOT="-miphoneos-version-min=4.1 -isysroot $SDKROOT"
      ARCHTYPE=$HOSTTYPE
      AC_SUBST([ARCHTYPE])
      AC_SUBST(ARCH_DEFINES, "-D_ARMEL")
