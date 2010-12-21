@@ -2,17 +2,15 @@
 TOP := $(dir $(lastword $(MAKEFILE_LIST)))
 
 platform_os=iPhoneOS
-platform_os_version=4.1
+platform_sdk_version=4.2
+platform_min_version=iphoneos-version-min=4.1
 platform_gcc_version=4.2.1
 platform_host=arm-apple-darwin10
 platform_path=/Developer/Platforms/iPhoneOS.platform/Developer
-platform_os_min=iphoneos-version-min=${platform_os_version}
 platform_os_cflags=-march=armv7 -mcpu=cortex-a8 -mfpu=neon -ftree-vectorize -mfloat-abi=softfp -pipe -Wno-trigraphs -fpascal-strings -O0 -Wreturn-type -Wunused-variable -fmessage-length=0 -gdwarf-2
 platform_os_ldflags=-march=armv7 -mcpu=cortex-a8
 prefix_path=$(shell cd $(TOP); pwd)/build
-#prefix_path:=$(shell cd ../../../build/xbmc-ios-${platform_os_version}; pwd)
-#prefix_path=`pwd`/../../../build/xbmc-ios-${platform_os_version}
-platform_sdk_path=${platform_path}/SDKs/${platform_os}${platform_os_version}.sdk
+platform_sdk_path=${platform_path}/SDKs/${platform_os}${platform_sdk_version}.sdk
 platform_bin_path=${platform_path}/usr/bin
 
 export NM=/usr/bin/nm
@@ -20,11 +18,11 @@ export CPP=/usr/bin/cpp
 export CXXCPP=${CPP} -I${platform_sdk_path}/usr/include/c++/${platform_gcc_version}/${platform_host}
 export CPPFLAGS=-I${platform_sdk_path}/usr/include  -I${prefix_path}/include
 export CC=${platform_bin_path}/${platform_host}-gcc-${platform_gcc_version}
-export CFLAGS=-std=c99 -no-cpp-precomp -m${platform_os_min} -isysroot ${platform_sdk_path} -I${platform_sdk_path}/usr/include ${platform_os_cflags}
+export CFLAGS=-std=c99 -no-cpp-precomp -m${platform_min_version} -isysroot ${platform_sdk_path} -I${platform_sdk_path}/usr/include ${platform_os_cflags}
 export LD=${platform_bin_path}/ld
-export LDFLAGS=-m${platform_os_min} -isysroot ${platform_sdk_path} -L${platform_sdk_path}/usr/lib ${platform_os_ldflags} -L${prefix_path}/lib
+export LDFLAGS=-m${platform_min_version} -isysroot ${platform_sdk_path} -L${platform_sdk_path}/usr/lib ${platform_os_ldflags} -L${prefix_path}/lib
 export CXX=${platform_bin_path}/${platform_host}-g++-${platform_gcc_version} -I${platform_sdk_path}/usr/include/c++/${platform_gcc_version}/${platform_host}
-export CXXFLAGS=-m${platform_os_min} -isysroot ${platform_sdk_path} ${platform_os_cflags}
+export CXXFLAGS=-m${platform_min_version} -isysroot ${platform_sdk_path} ${platform_os_cflags}
 export AR=${platform_bin_path}/ar
 #export AS=${platform_bin_path}/as
 export AS=${prefix_path)/bin/gas-preprocessor.pl ${CC}

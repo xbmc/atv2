@@ -40,7 +40,7 @@ $(SOURCE): $(ARCHIVE)
 	echo $(ARCHIVE) > .gitignore
 	echo $(SOURCE) >> .gitignore
 	cd $(SOURCE); patch -p1 < ../01-fontconfig-cross-compile-fix.patch
-	cd $(SOURCE); ACLOCAL="aclocal -I $(PREFIX)/share/aclocal" autoreconf -vif; automake
+	cd $(SOURCE); autoreconf -vif; automake
 	cd $(SOURCE); $(CONFIGURE)
 
 $(LIBDYLIB): $(SOURCE)

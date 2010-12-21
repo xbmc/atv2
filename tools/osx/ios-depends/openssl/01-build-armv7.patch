@@ -8,7 +8,7 @@ diff -ruN openssl-1.0.0a/Makefile openssl-1.0.0a.mod/Makefile
 -CC= /Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/arm-apple-darwin10-gcc-4.2.1
 -CFLAG= -fPIC -fno-common -DOPENSSL_PIC -DZLIB -DOPENSSL_THREADS -D_REENTRANT -DDSO_DLFCN -DHAVE_DLFCN_H -arch i386 -O3 -fomit-frame-pointer -DL_ENDIAN
 +CC= /Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/gcc-4.2
-+CFLAG= -isysroot /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.1.sdk -fPIC -fno-common -DOPENSSL_PIC -DZLIB -DOPENSSL_THREADS -D_REENTRANT -DDSO_DLFCN -DHAVE_DLFCN_H -arch armv7 -O3 -fomit-frame-pointer -DL_ENDIAN
++CFLAG= -isysroot /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.2.sdk -fPIC -fno-common -DOPENSSL_PIC -DZLIB -DOPENSSL_THREADS -D_REENTRANT -DDSO_DLFCN -DHAVE_DLFCN_H -arch armv7 -O3 -fomit-frame-pointer -DL_ENDIAN
  DEPFLAG= -DOPENSSL_NO_GMP -DOPENSSL_NO_JPAKE -DOPENSSL_NO_MD2 -DOPENSSL_NO_RC5 -DOPENSSL_NO_RFC3779 -DOPENSSL_NO_STORE
  PEX_LIBS= -Wl,-search_paths_first
  EX_LIBS=  -lz
