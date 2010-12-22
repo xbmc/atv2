@@ -30,34 +30,39 @@ namespace MathUtils
   // to assert in these functions
   inline int round_int (double x)
   {
-    assert(x > static_cast<double>(INT_MIN / 2) - 1.0);
-    assert(x < static_cast <double>(INT_MAX / 2) + 1.0);
-    const float round_to_nearest = 0.5f;
-    int i;
+    #if !defined(__arm__)
+      assert(x > static_cast<double>(INT_MIN / 2) - 1.0);
+      assert(x < static_cast <double>(INT_MAX / 2) + 1.0);
+      const float round_to_nearest = 0.5f;
 
-#ifndef _LINUX
-    __asm
-    {
-      fld x
-      fadd st, st (0)
-      fadd round_to_nearest
-      fistp i
-      sar i, 1
-    }
-#else
-    #if defined(__powerpc__) || defined(__ppc__) || defined(__arm__)
-        i = floor(x + round_to_nearest);
+      int i;
+
+      #ifndef _LINUX
+          __asm
+          {
+            fld x
+            fadd st, st (0)
+            fadd round_to_nearest
+            fistp i
+            sar i, 1
+          }
+      #else
+          #if defined(__powerpc__) || defined(__ppc__) 
+              i = floor(x + round_to_nearest);
+          #else
+              __asm__ __volatile__ (
+                  "fadd %%st\n\t"
+                  "fadd %%st(1)\n\t"
+                  "fistpl %0\n\t"
+                  "sarl $1, %0\n"
+                  : "=m"(i) : "u"(round_to_nearest), "t"(x) : "st"
+              );
+          #endif
+      #endif
+      return (i);
     #else
-        __asm__ __volatile__ (
-            "fadd %%st\n\t"
-            "fadd %%st(1)\n\t"
-            "fistpl %0\n\t"
-            "sarl $1, %0\n"
-            : "=m"(i) : "u"(round_to_nearest), "t"(x) : "st"
-        );
+      return lrint(x);
     #endif
-#endif
-    return (i);
   }
 
   inline int ceil_int (double x)
