@@ -33,7 +33,7 @@
 // TODO(fbarchard): Switch layout when ffmpeg is updated.
 namespace {
 template<class Format>
-static void SwizzleToCoreAudioLayout(Format* b, uint32_t filled) {
+static void SwizzleToCoreAudio51Layout(Format* b, uint32_t filled) {
   static const int kNumSurroundChannels = 6;
   Format aac[kNumSurroundChannels];
   for (uint32_t i = 0; i < filled; i += sizeof(aac), b += kNumSurroundChannels) {
@@ -350,13 +350,13 @@ OSStatus CIOSAudioRenderer::OnRender(AudioUnitRenderActionFlags *ioActionFlags, 
       switch(m_BitsPerChannel)
       {
         case 8:
-          SwizzleToCoreAudioLayout(reinterpret_cast<uint8_t*>(mdata_buffer), len);
+          SwizzleToCoreAudio51Layout(reinterpret_cast<uint8_t*>(mdata_buffer), len);
         break;
         case 16:
-          SwizzleToCoreAudioLayout(reinterpret_cast<int16_t*>(mdata_buffer), len);
+          SwizzleToCoreAudio51Layout(reinterpret_cast<int16_t*>(mdata_buffer), len);
         break;
         case 32:
-          SwizzleToCoreAudioLayout(reinterpret_cast<int32_t*>(mdata_buffer), len);
+          SwizzleToCoreAudio51Layout(reinterpret_cast<int32_t*>(mdata_buffer), len);
         break;
       }
     }
