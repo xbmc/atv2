@@ -327,8 +327,7 @@ vtdec_create_session(AppContext *ctx)
     destinationPixelBufferAttributes,
     &outputCallback,
     &session);
-  if (status)
-  {
+  if (status) {
     if (status == -8971)
       printf("VTDecompressionSessionCreate failed: codecExtensionNotFoundErr\n");
     else
@@ -403,7 +402,10 @@ vtdec_decode_buffer(AppContext *ctx, void *demux_buff, size_t demux_size, uint64
   decoderFlags = 0;
   status = VTDecompressionSessionDecodeFrame(ctx->session, sample_buff, decoderFlags, frameinfo, 0);
   if (status != 0) {
-    printf("VTDecompressionSessionDecodeFrame returned %d\n", (int)status);
+    if (status == -8971)
+      printf("VTDecompressionSessionDecodeFrame failed: codecBadDataErr\n");
+    else
+      printf("VTDecompressionSessionDecodeFrame returned %d\n", (int)status);
   }
 
   status = VTDecompressionSessionWaitForAsynchronousFrames(ctx->session);
@@ -504,7 +506,7 @@ int main (int argc, char * const argv[])
       }
     break;
     default:
-      fprintf(stderr, "ERROR: Invalid FFmpegFileReader Codec Format (not h.264) = %d\n",
+      fprintf(stderr, "ERROR: Invalid FFmpegFileReader Codec Format (not h264/mpeg4) = %d\n",
         ctx.codec_context->codec_id);
       goto fail;
     break;
