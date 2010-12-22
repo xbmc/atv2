@@ -218,7 +218,7 @@ CreateFormatDescription(VTFormatId format_id, int width, int height)
 }
 // helper function to create a avcC atom format descriptor
 static CMFormatDescriptionRef
-CreateFormatDescriptionFromCodecData(VTFormatId format_id, int width, int height, const uint8_t *extradata, int extradata_size)
+CreateFormatDescriptionFromCodecData(VTFormatId format_id, int width, int height, const uint8_t *extradata, int extradata_size, uint32_t atom)
 {
   CMFormatDescriptionRef fmt_desc;
   OSStatus status;
@@ -228,7 +228,7 @@ CreateFormatDescriptionFromCodecData(VTFormatId format_id, int width, int height
     format_id,
     width,
     height,
-    'avcC',
+    atom,
     extradata,
     extradata_size,
     &fmt_desc);
@@ -522,8 +522,15 @@ bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &o
     switch (hints.codec)
     {
       case CODEC_ID_MPEG4:
-        m_fmt_desc = CreateFormatDescription(kVTFormatMPEG4Video, width, height);
         m_pFormatName = "vtb-mpeg4";
+        if (extrasize) {
+          // mp4a
+          // esds
+          m_fmt_desc = CreateFormatDescriptionFromCodecData(
+            kVTFormatMPEG4Video, width, height, extradata, extrasize, 'esds');
+        } else {
+          m_fmt_desc = CreateFormatDescription(kVTFormatMPEG4Video, width, height);
+        }
       break;
 
       case CODEC_ID_MPEG2VIDEO:
@@ -544,7 +551,8 @@ bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &o
         if (extradata[0] == 1)
         {
           // valid avcC atom data always starts with the value 1 (version)
-          m_fmt_desc = CreateFormatDescriptionFromCodecData(kVTFormatH264, width, height, extradata, extrasize);
+          m_fmt_desc = CreateFormatDescriptionFromCodecData(
+            kVTFormatH264, width, height, extradata, extrasize, 'avcC');
           CLog::Log(LOGNOTICE, "%s - using avcC atom of size(%d)", __FUNCTION__, extrasize);
         }
         else
@@ -570,7 +578,9 @@ bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &o
             // extract the avcC atom data into extradata getting size into extrasize
             extrasize = m_dllAvFormat->url_close_dyn_buf(pb, &extradata);
             // CFDataCreate makes a copy of extradata contents
-            m_fmt_desc = CreateFormatDescriptionFromCodecData(kVTFormatH264, width, height, extradata, extrasize);
+            m_fmt_desc = CreateFormatDescriptionFromCodecData(
+              kVTFormatH264, width, height, extradata, extrasize, 'avcC');
+
             // done with the converted  new extradata, we MUST free using av_free
             m_dllAvUtil->av_free(extradata);
             CLog::Log(LOGNOTICE, "%s - created avcC atom of size(%d)", __FUNCTION__, extrasize);
@@ -892,6 +902,12 @@ CDVDVideoCodecVideoToolBox::VTDecoderCallback(
   // Warning, this is an async callback. There can be multiple frames in flight.
   CDVDVideoCodecVideoToolBox *ctx = (CDVDVideoCodecVideoToolBox*)refcon;
 
+  if (status != kVTDecoderNoErr)
+  {
+    //CLog::Log(LOGDEBUG, "%s - status error (%d)", __FUNCTION__, (int)status);
+    return;
+  }
+  
   if (imageBuffer == NULL)
   {
     //CLog::Log(LOGDEBUG, "%s - imageBuffer is NULL", __FUNCTION__);
