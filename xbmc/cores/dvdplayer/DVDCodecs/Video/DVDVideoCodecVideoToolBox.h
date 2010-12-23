@@ -23,6 +23,8 @@
 #if defined(__APPLE__) && defined(__arm__)
 //#if defined(HAVE_VIDEOTOOLBOXDECODER)
 
+#include <queue>
+
 #include "DVDVideoCodec.h"
 #include <CoreVideo/CoreVideo.h>
 #include <CoreMedia/CoreMedia.h>
@@ -76,7 +78,7 @@ protected:
   pthread_mutex_t   m_queue_mutex;    // mutex protecting queue manipulation
   frame_queue       *m_display_queue; // display-order queue - next display frame is always at the queue head
   int32_t           m_queue_depth;    // we will try to keep the queue depth around 16+1 frames
-  
+
   bool              m_convert_bytestream;
   DllAvUtil         *m_dllAvUtil;
   DllAvFormat       *m_dllAvFormat;

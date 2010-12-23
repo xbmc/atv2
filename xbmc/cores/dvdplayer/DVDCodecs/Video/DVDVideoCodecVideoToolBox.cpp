@@ -45,8 +45,7 @@ extern "C"
 
 //-----------------------------------------------------------------------------------
 // /System/Library/PrivateFrameworks/VideoToolbox.framework
-enum VTFormat
-{
+enum VTFormat {
   kVTFormatJPEG         = 'jpeg', // kCMVideoCodecType_JPEG
   kVTFormatH264         = 'avc1', // kCMVideoCodecType_H264 (MPEG-4 Part 10))
   kVTFormatMPEG4Video   = 'mp4v', // kCMVideoCodecType_MPEG4Video (MPEG-4 Part 2)
@@ -76,8 +75,6 @@ enum {
 typedef UInt32 VTFormatId;
 typedef CFTypeRef VTDecompressionSessionRef;
 
-//typedef void (*VTDecompressionOutputCallbackFunc) (void *data, CFDictionaryRef unk1,
-//  OSStatus result, uint32_t unk2, CVBufferRef cvbuf);
 typedef void (*VTDecompressionOutputCallbackFunc)(
   void            *refCon,
   CFDictionaryRef frameInfo,
@@ -92,6 +89,8 @@ struct _VTDecompressionOutputCallback
   void *refcon;
 };
 
+extern CFStringRef kVTVideoDecoderSpecification_EnableSandboxedVideoDecoder;
+
 extern OSStatus VTDecompressionSessionCreate(
   CFAllocatorRef allocator,
   CMFormatDescriptionRef videoFormatDescription,
@@ -104,6 +103,9 @@ extern OSStatus VTDecompressionSessionDecodeFrame(
   VTDecompressionSessionRef session, CMSampleBufferRef sbuf,
   uint32_t decoderFlags, CFDictionaryRef frameInfo, uint32_t unk1);
 
+extern OSStatus VTDecompressionSessionCopyProperty(VTDecompressionSessionRef session, CFTypeRef key, void* unk, CFTypeRef * value);
+extern OSStatus VTDecompressionSessionCopySupportedPropertyDictionary(VTDecompressionSessionRef session, CFDictionaryRef * dict);
+extern OSStatus VTDecompressionSessionSetProperty(VTDecompressionSessionRef session, CFStringRef propName, CFTypeRef propValue);
 extern void VTDecompressionSessionInvalidate(VTDecompressionSessionRef session);
 extern void VTDecompressionSessionRelease(VTDecompressionSessionRef session);
 extern VTDecompressionSessionRef VTDecompressionSessionRetain(VTDecompressionSessionRef session);
@@ -124,7 +126,94 @@ extern void FigBlockBufferRelease(CMBlockBufferRef buf);
 }
 #endif
 
-////////////////////////////////////////////////////////////////////////////////////////////
+//-----------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------
+// helper functions for debuging VTDecompression
+char* vtutil_string_to_utf8(CFStringRef s)
+{
+  char *result;
+  CFIndex size;
+
+  size = CFStringGetMaximumSizeForEncoding(CFStringGetLength (s), kCFStringEncodingUTF8);
+  result = (char*)malloc(size + 1);
+  CFStringGetCString(s, result, size + 1, kCFStringEncodingUTF8);
+
+  return result;
+}
+
+char* vtutil_object_to_string(CFTypeRef obj)
+{
+  char *result;
+  CFStringRef s;
+
+  if (obj == NULL)
+    return strdup ("(null)");
+
+  s = CFCopyDescription(obj);
+  result = vtutil_string_to_utf8(s);
+  CFRelease(s);
+
+  return result;
+}
+
+typedef struct
+{
+  VTDecompressionSessionRef session;
+} VTDumpDecompressionPropCtx;
+
+void
+vtdec_session_dump_property(CFStringRef prop_name, CFDictionaryRef prop_attrs, VTDumpDecompressionPropCtx *dpc)
+{
+  char *name_str;
+  CFTypeRef prop_value;
+  OSStatus status;
+
+  name_str = vtutil_string_to_utf8(prop_name);
+  if (true) {
+    char *attrs_str;
+
+    attrs_str = vtutil_object_to_string(prop_attrs);
+    CLog::Log(LOGDEBUG, "%s = %s\n", name_str, attrs_str);
+    free(attrs_str);
+  }
+
+  status = VTDecompressionSessionCopyProperty(dpc->session, prop_name, NULL, &prop_value);
+  if (status == kVTDecoderNoErr) {
+    char *value_str;
+
+    value_str = vtutil_object_to_string(prop_value);
+    CLog::Log(LOGDEBUG, "%s = %s\n", name_str, value_str);
+    free(value_str);
+
+    if (prop_value != NULL)
+      CFRelease(prop_value);
+  } else {
+    CLog::Log(LOGDEBUG, "%s = <failed to query: %d>\n", name_str, (int)status);
+  }
+
+  free(name_str);
+}
+
+void vtdec_session_dump_properties(VTDecompressionSessionRef session)
+{
+  VTDumpDecompressionPropCtx dpc = { session };
+  CFDictionaryRef dict;
+  OSStatus status;
+
+  status = VTDecompressionSessionCopySupportedPropertyDictionary(session, &dict);
+  if (status != kVTDecoderNoErr)
+    goto error;
+  CFDictionaryApplyFunction(dict, (CFDictionaryApplierFunction)vtdec_session_dump_property, &dpc);
+  CFRelease(dict);
+
+  return;
+
+error:
+  CLog::Log(LOGDEBUG, "failed to dump properties\n");
+}
+
+//-----------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------
 // helper function that inserts an int32_t into a dictionary
 static void
 CFDictionarySetSInt32(CFMutableDictionaryRef dictionary, CFStringRef key, SInt32 numberSInt32)
@@ -278,7 +367,175 @@ CreateSampleBufferFrom(CMFormatDescriptionRef fmt_desc, void *demux_buff, size_t
 
   return sBufOut;
 }
-////////////////////////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------
+/* MPEG-4 esds (elementary stream descriptor) */
+typedef struct {
+  int version;
+  long flags;
+
+  uint16_t esid;
+  uint8_t stream_priority;
+
+  uint8_t  objectTypeId;
+  uint8_t  streamType;
+  uint32_t bufferSizeDB;
+  uint32_t maxBitrate;
+  uint32_t avgBitrate;
+
+  int      decoderConfigLen;
+  uint8_t* decoderConfig;
+} quicktime_esds_t;
+
+unsigned int descrLength(unsigned int len)
+{
+  int i;
+  for(i=1; len>>(7*i); i++);
+  return len + 1 + i;
+}
+
+void putDescr(ByteIOContext *pb, int tag, unsigned int size)
+{
+  int i= descrLength(size) - size - 2;
+  put_byte(pb, tag);
+  for(; i>0; i--)
+    put_byte(pb, (size>>(7*i)) | 0x80);
+  put_byte(pb, size & 0x7F);
+}
+
+void quicktime_write_esds(ByteIOContext *pb, quicktime_esds_t *esds)
+{
+  //quicktime_atom_t atom;
+  int decoderSpecificInfoLen = esds->decoderConfigLen ? descrLength(esds->decoderConfigLen):0;
+  //quicktime_atom_write_header(file, &atom, "esds");
+
+  put_byte(pb, 0);  // Version
+  put_be24(pb, 0);  // Flags
+
+  // ES descriptor
+  putDescr(pb, 0x03, 3 + descrLength(13 + decoderSpecificInfoLen) + descrLength(1));
+
+  put_be16(pb, esds->esid);
+  put_byte(pb, esds->stream_priority);
+  // DecoderConfig descriptor
+  putDescr(pb, 0x04, 13 + esds->decoderConfigLen);
+  // Object type indication
+  put_byte(pb, esds->objectTypeId); // objectTypeIndication
+  put_byte(pb, esds->streamType);   // streamType
+
+  put_be24(pb, esds->bufferSizeDB); // buffer size
+  put_be32(pb, esds->maxBitrate);   // max bitrate
+  put_be32(pb, esds->avgBitrate);   // average bitrate
+
+  // DecoderSpecific info descriptor
+  if (decoderSpecificInfoLen) {
+    putDescr(pb, 0x05, esds->decoderConfigLen);
+    put_buffer(pb, esds->decoderConfig, esds->decoderConfigLen);
+  }
+  // SL descriptor
+  putDescr(pb, 0x06, 1);
+  put_byte(pb, 0x02);
+
+/*
+  put_byte(pb, 0);  // Version
+
+  // ES descriptor
+  putDescr(pb, 0x03, 3 + descrLength(13 + decoderSpecificInfoLen) + descrLength(1));
+  put_be16(pb, esds->esid);
+  put_byte(pb, 0x00); // flags (= no flags)
+
+  // DecoderConfig descriptor
+  putDescr(pb, 0x04, 13 + decoderSpecificInfoLen);
+
+  // Object type indication
+  put_byte(pb, esds->objectTypeId);
+
+  // the following fields is made of 6 bits to identify the streamtype (4 for video, 5 for audio)
+  // plus 1 bit to indicate upstream and 1 bit set to 1 (reserved)
+  put_byte(pb, esds->streamType); // flags (0x11 = Visualstream)
+
+  put_be24(pb, esds->bufferSizeDB); // buffer size
+  //put_byte(pb,  track->enc->rc_buffer_size>>(3+16));    // Buffersize DB (24 bits)
+  //put_be16(pb, (track->enc->rc_buffer_size>>3)&0xFFFF); // Buffersize DB
+
+  put_be32(pb, esds->maxBitrate);   // max bitrate
+  put_be32(pb, esds->avgBitrate);   // average bitrate
+  //put_be32(pb, FFMAX(track->enc->bit_rate, track->enc->rc_max_rate)); // maxbitrate (FIXME should be max rate in any 1 sec window)
+  //if(track->enc->rc_max_rate != track->enc->rc_min_rate || track->enc->rc_min_rate==0)
+  //    put_be32(pb, 0); // vbr
+  //else
+  //    put_be32(pb, track->enc->rc_max_rate); // avg bitrate
+
+  // DecoderSpecific info descriptor
+  if (decoderSpecificInfoLen) {
+    putDescr(pb, 0x05, esds->decoderConfigLen);
+    put_buffer(pb, esds->decoderConfig, esds->decoderConfigLen);
+  }
+
+  // SL descriptor
+  putDescr(pb, 0x06, 1);
+  put_byte(pb, 0x02);
+*/
+}
+
+quicktime_esds_t* quicktime_set_esds(const uint8_t * decoderConfig, int decoderConfigLen)
+{
+  // ffmpeg's codec->avctx->extradata, codec->avctx->extradata_size
+  // are decoderConfig/decoderConfigLen
+  quicktime_esds_t *esds;
+
+  esds = (quicktime_esds_t*)malloc(sizeof(quicktime_esds_t));
+  memset(esds, 0, sizeof(quicktime_esds_t));
+
+  esds->version         = 0;
+  esds->flags           = 0;
+  
+  esds->esid            = 0;
+  esds->stream_priority = 0;      // 16 ?
+  
+  esds->objectTypeId    = 32;     // 32 = CODEC_ID_MPEG4, 33 = CODEC_ID_H264
+  // the following fields is made of 6 bits to identify the streamtype (4 for video, 5 for audio)
+  // plus 1 bit to indicate upstream and 1 bit set to 1 (reserved)
+  esds->streamType      = 0x11;
+  esds->bufferSizeDB    = 64000;  // Hopefully not important :)
+  
+  // Maybe correct these later?
+  esds->maxBitrate      = 200000; // 0 for vbr
+  esds->avgBitrate      = 200000;
+  
+  esds->decoderConfigLen = decoderConfigLen;
+  esds->decoderConfig = (uint8_t*)malloc(esds->decoderConfigLen);
+  memcpy(esds->decoderConfig, decoderConfig, esds->decoderConfigLen);
+  return esds;
+}
+
+void quicktime_esds_dump(quicktime_esds_t * esds)
+{
+  int i;
+  printf("esds: \n");
+  printf(" Version:          %d\n",       esds->version);
+  printf(" Flags:            0x%06lx\n",  esds->flags);
+  printf(" ES ID:            0x%04x\n",   esds->esid);
+  printf(" Priority:         0x%02x\n",   esds->stream_priority);
+  printf(" objectTypeId:     %d\n",       esds->objectTypeId);
+  printf(" streamType:       0x%02x\n",   esds->streamType);
+  printf(" bufferSizeDB:     %d\n",       esds->bufferSizeDB);
+
+  printf(" maxBitrate:       %d\n",       esds->maxBitrate);
+  printf(" avgBitrate:       %d\n",       esds->avgBitrate);
+  printf(" decoderConfigLen: %d\n",       esds->decoderConfigLen);
+  printf(" decoderConfig:");
+  for(i = 0; i < esds->decoderConfigLen; i++) {
+    if(!(i % 16))
+      printf("\n ");
+    printf("%02x ", esds->decoderConfig[i]);
+  }
+  printf("\n");
+}
+
+//-----------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------
 // TODO: refactor this so as not to need these ffmpeg routines.
 // These are not exposed in ffmpeg's API so we dupe them here.
 // AVC helper functions for muxers,
@@ -478,8 +735,8 @@ const int isom_write_avcc(DllAvUtil *av_util_ctx, DllAvFormat *av_format_ctx,
   return 0;
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////
+//-----------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------
 CDVDVideoCodecVideoToolBox::CDVDVideoCodecVideoToolBox() : CDVDVideoCodec()
 {
   m_vt_session = NULL;
@@ -506,7 +763,6 @@ bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &o
 {
   //if (g_guiSettings.GetBool("videoplayer.usevideotoolbox") && !hints.software)
   {
-    CCocoaAutoPool pool;
     int32_t width, height, profile, level;
     uint8_t *extradata; // extra data for codec to use
     unsigned int extrasize; // size of extra data
@@ -524,10 +780,27 @@ bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &o
       case CODEC_ID_MPEG4:
         m_pFormatName = "vtb-mpeg4";
         if (extrasize) {
-          // mp4a
-          // esds
+          ByteIOContext *pb;
+          quicktime_esds_t *esds;
+
+          if (url_open_dyn_buf(&pb) < 0)
+            return false;
+
+          esds = quicktime_set_esds(extradata, extrasize);
+          quicktime_write_esds(pb, esds);
+
+          // unhook from ffmpeg's extradata
+          extradata = NULL;
+          // extract the esds atom decoderConfig from extradata
+          extrasize = url_close_dyn_buf(pb, &extradata);
+          free(esds->decoderConfig);
+          free(esds);
+
           m_fmt_desc = CreateFormatDescriptionFromCodecData(
             kVTFormatMPEG4Video, width, height, extradata, extrasize, 'esds');
+
+          // done with the converted extradata, we MUST free using av_free
+          av_free(extradata);
         } else {
           m_fmt_desc = CreateFormatDescription(kVTFormatMPEG4Video, width, height);
         }
@@ -613,7 +886,7 @@ bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &o
       return false;
     }
 
-    // allocate a YV12 DVDVideoPicture buffer.
+    // setup a DVDVideoPicture buffer.
     // first make sure all properties are reset.
     memset(&m_videobuffer, 0, sizeof(DVDVideoPicture));
 
@@ -639,8 +912,6 @@ bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &o
 
 void CDVDVideoCodecVideoToolBox::Dispose()
 {
-  CCocoaAutoPool pool;
-
   DestroyVTSession();
   if (m_fmt_desc)
   {
@@ -656,6 +927,10 @@ void CDVDVideoCodecVideoToolBox::Dispose()
     m_videobuffer.cvBufferRef = NULL;
     m_videobuffer.iFlags = 0;
   }
+  
+  while (m_queue_depth)
+    DisplayQueuePop();
+
   if (m_dllAvUtil)
   {
     delete m_dllAvUtil;
@@ -675,8 +950,6 @@ void CDVDVideoCodecVideoToolBox::SetDropState(bool bDrop)
 
 int CDVDVideoCodecVideoToolBox::Decode(BYTE* pData, int iSize, double dts, double pts)
 {
-  CCocoaAutoPool pool;
-  //
   if (pData)
   {
     OSStatus status;
@@ -719,6 +992,9 @@ int CDVDVideoCodecVideoToolBox::Decode(BYTE* pData, int iSize, double dts, doubl
       CFRelease(frameInfo);
       FigSampleBufferRelease(sampleBuff);
       return VC_ERROR;
+      // VTDecompressionSessionDecodeFrame returned 8969 (codecBadDataErr)
+      // VTDecompressionSessionDecodeFrame returned -12350
+      // VTDecompressionSessionDecodeFrame returned -12902
     }
 
     // wait for decoding to finish
@@ -747,18 +1023,14 @@ int CDVDVideoCodecVideoToolBox::Decode(BYTE* pData, int iSize, double dts, doubl
 
 void CDVDVideoCodecVideoToolBox::Reset(void)
 {
-  CCocoaAutoPool pool;
-
   while (m_queue_depth)
     DisplayQueuePop();
-
+  
   m_sort_time_offset = (CurrentHostCounter() * 1000.0) / CurrentHostFrequency();
 }
 
 bool CDVDVideoCodecVideoToolBox::GetPicture(DVDVideoPicture* pDvdVideoPicture)
 {
-  CCocoaAutoPool pool;
-
   // clone the video picture buffer settings.
   *pDvdVideoPicture = m_videobuffer;
 
@@ -774,23 +1046,24 @@ bool CDVDVideoCodecVideoToolBox::GetPicture(DVDVideoPicture* pDvdVideoPicture)
   pDvdVideoPicture->iHeight         = m_display_queue->height;
   pDvdVideoPicture->iDisplayWidth   = m_display_queue->width;
   pDvdVideoPicture->iDisplayHeight  = m_display_queue->height;
+  pDvdVideoPicture->vtb = this;
   pDvdVideoPicture->cvBufferRef     = m_display_queue->pixel_buffer_ref;
-  CVPixelBufferRetain(pDvdVideoPicture->cvBufferRef);
+  m_display_queue->pixel_buffer_ref = NULL;
   pthread_mutex_unlock(&m_queue_mutex);
 
-  // now we can pop the top frame.
+  // now we can pop the top frame
   DisplayQueuePop();
 
-  //CLog::Log(LOGNOTICE, "%s - VTBDecoderDecode dts(%f), pts(%f), cvBufferRef(%p)", __FUNCTION__,
-  //  pDvdVideoPicture->dts, pDvdVideoPicture->pts, pDvdVideoPicture->cvBufferRef);
+//  CLog::Log(LOGDEBUG, "%s - VTBDecoderDecode dts(%f), pts(%f), cvBufferRef(%p)", __FUNCTION__,
+//    pDvdVideoPicture->dts, pDvdVideoPicture->pts, pDvdVideoPicture->cvBufferRef);
 
   return VC_PICTURE | VC_BUFFER;
 }
 
 bool CDVDVideoCodecVideoToolBox::ClearPicture(DVDVideoPicture* pDvdVideoPicture)
 {
-  // release any previous retained cvbuffer reference that
-  // has not been passed up to renderer (ie. dropped frames).
+  // release any previous retained image buffer ref that
+  // has not been passed up to renderer (ie. dropped frames, etc).
   if (pDvdVideoPicture->cvBufferRef)
     CVBufferRelease(pDvdVideoPicture->cvBufferRef);
 
@@ -799,7 +1072,6 @@ bool CDVDVideoCodecVideoToolBox::ClearPicture(DVDVideoPicture* pDvdVideoPicture)
 
 void CDVDVideoCodecVideoToolBox::DisplayQueuePop(void)
 {
-  CCocoaAutoPool pool;
   if (!m_display_queue || m_queue_depth == 0)
     return;
 
@@ -811,7 +1083,8 @@ void CDVDVideoCodecVideoToolBox::DisplayQueuePop(void)
   pthread_mutex_unlock(&m_queue_mutex);
 
   // and release it
-  CVBufferRelease(top_frame->pixel_buffer_ref);
+  if (top_frame->pixel_buffer_ref)
+    CVBufferRelease(top_frame->pixel_buffer_ref);
   free(top_frame);
 }
 
@@ -849,14 +1122,7 @@ CDVDVideoCodecVideoToolBox::CreateVTSession(int width, int height, CMFormatDescr
   CFDictionarySetSInt32(destinationPixelBufferAttributes,
     kCVPixelBufferHeightKey, height);
   CFDictionarySetSInt32(destinationPixelBufferAttributes,
-    kCVPixelBufferBytesPerRowAlignmentKey, 2 * width);
-  //CFDictionarySetValue(destinationPixelBufferAttributes,
-  //  kCVPixelBufferOpenGLCompatibilityKey, kCFBooleanTrue);
-
-  // This codec accepts YCbCr input in the form of '2vuy' format pixel buffers.
-  // We recommend explicitly defining the gamma level and YCbCr matrix that should be used.
-  //CFDictionarySetDouble(destinationPixelBufferAttributes, kCVImageBufferGammaLevelKey, 2.2);
-  //CFDictionaryAddValue(destinationPixelBufferAttributes, kCVImageBufferYCbCrMatrixKey, kCVImageBufferYCbCrMatrix_ITU_R_601_4);
+    kCVPixelBufferBytesPerRowAlignmentKey, 16);
 
   outputCallback.callback = VTDecoderCallback;
   outputCallback.refcon = this;
@@ -877,6 +1143,20 @@ CDVDVideoCodecVideoToolBox::CreateVTSession(int width, int height, CMFormatDescr
     m_vt_session = (void*)vt_session;
 
   CFRelease(destinationPixelBufferAttributes);
+/*
+  vtdec_session_dump_properties(m_vt_session);
+
+  #if TARGET_OS_IPHONE
+  status = VTDecompressionSessionSetProperty(m_vt_session, 
+    kVTVideoDecoderSpecification_EnableSandboxedVideoDecoder, kCFBooleanTrue);
+  if (status) {
+    if (status == -12900)
+      CLog::Log(LOGERROR, "VTDecompressionSessionSetProperty failed: -12900\n");
+    else
+      CLog::Log(LOGERROR, "VTDecompressionSessionSetProperty failed %d\n", (int)status);
+  }
+  #endif
+*/
 }
 
 void
@@ -898,7 +1178,6 @@ CDVDVideoCodecVideoToolBox::VTDecoderCallback(
   UInt32             infoFlags,
   CVBufferRef        imageBuffer)
 {
-  CCocoaAutoPool pool;
   // Warning, this is an async callback. There can be multiple frames in flight.
   CDVDVideoCodecVideoToolBox *ctx = (CDVDVideoCodecVideoToolBox*)refcon;
 
@@ -907,7 +1186,6 @@ CDVDVideoCodecVideoToolBox::VTDecoderCallback(
     //CLog::Log(LOGDEBUG, "%s - status error (%d)", __FUNCTION__, (int)status);
     return;
   }
-  
   if (imageBuffer == NULL)
   {
     //CLog::Log(LOGDEBUG, "%s - imageBuffer is NULL", __FUNCTION__);

@@ -197,12 +197,22 @@ CDVDVideoCodec* CDVDFactoryCodec::CreateVideoCodec( CDVDStreamInfo &hint )
 
 #if defined(__APPLE__) && defined(__arm__)
 //#if defined(HAVE_VIDEOTOOLBOXDECODER)
-  if (hint.width > 720 && g_sysinfo.HasVideoToolBoxDecoder())
+  if (!hint.software)
   {
-    if (!hint.software && hint.codec == CODEC_ID_H264)
+    if (g_sysinfo.HasVideoToolBoxDecoder())
     {
-      CLog::Log(LOGINFO, "Trying Apple VideoToolBox Decoder...");
-      if ( (pCodec = OpenCodec(new CDVDVideoCodecVideoToolBox(), hint, options)) ) return pCodec;
+      switch(hint.codec)
+      {
+        case CODEC_ID_H264:
+        case CODEC_ID_MPEG4:
+          if (hint.codec == CODEC_ID_H264 && hint.ptsinvalid)
+            break;
+          CLog::Log(LOGINFO, "Apple VideoToolBox Decoder...");
+          if ( (pCodec = OpenCodec(new CDVDVideoCodecVideoToolBox(), hint, options)) ) return pCodec;
+        break;
+        default:
+        break;
+      }
     }
   }
 #endif
