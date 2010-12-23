@@ -527,12 +527,14 @@ void CLinuxRendererGLES::RenderUpdate(bool clear, DWORD flags, DWORD alpha)
   {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    m_pYUVShader->SetAlpha(alpha / 255.0f);
+    if (m_pYUVShader)
+      m_pYUVShader->SetAlpha(alpha / 255.0f);
   }
   else
   {
     glDisable(GL_BLEND);
-    m_pYUVShader->SetAlpha(1.0f);
+    if (m_pYUVShader)
+      m_pYUVShader->SetAlpha(1.0f);
   }
 
   if ((flags & RENDER_FLAG_ODD) && (flags & RENDER_FLAG_EVEN))
@@ -1843,7 +1845,7 @@ void CLinuxRendererGLES::UploadCVRefTexture(int index)
     VerifyGLState();
 
     CVPixelBufferUnlockBaseAddress(cvBufferRef, kCVPixelBufferLock_ReadOnly);
-    CVBufferRelease(cvBufferRef);
+    CVBufferRelease(m_buffers[index].cvBufferRef);
     m_buffers[index].cvBufferRef = NULL;
   }
 
