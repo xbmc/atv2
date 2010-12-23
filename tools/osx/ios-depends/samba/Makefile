@@ -22,7 +22,7 @@ ARCHIVE_TOOL_FLAGS=xf
 # configuration settings
 export CFLAGS+=-undefined dynamic_lookup
 export CXXFLAGS+=-undefined dynamic_lookup
-export LDFLAGS+=-Wl,-read_only_relocs,suppress -lc
+export LDFLAGS+=-Wl,-read_only_relocs,suppress -Wl,-unexported_symbol,_MD5* -lc
 # believe it or not, this is how you setup samba for cross-compile
 CONFIGURE=./configure --prefix=$(PREFIX) --host=$(HOST) --enable-shared=yes \
   --without-cluster-support --disable-swat --without-ldap --with-fhs \
@@ -104,10 +104,13 @@ $(LIBDYLIB): $(SOURCE)
 	cp -f $(SOURCE)/source/bin/libtalloc.dylib.1 $(PREFIX)/lib/
 	cp -f $(SOURCE)/source/bin/libsmbclient.dylib.0 $(PREFIX)/lib/
 	cd $(PREFIX)/lib; ln -sf libsmbclient.dylib.0 libsmbclient.dylib
-	install_name_tool -change bin/libtalloc.dylib.1 $(PREFIX)/lib/libtalloc.dylib.1 \
-		-id $(PREFIX)/lib/libsmbclient.dylib $(PREFIX)/lib/libsmbclient.dylib.0
+	install_name_tool -id $(PREFIX)/lib/libtdb.dylib.1 $(PREFIX)/lib/libtdb.dylib.1
+	install_name_tool -id $(PREFIX)/lib/libtalloc.dylib.1 $(PREFIX)/lib/libtalloc.dylib.1
+	install_name_tool -id $(PREFIX)/lib/libsmbclient.dylib.0 $(PREFIX)/lib/libsmbclient.dylib.0
 	install_name_tool -change bin/libtdb.dylib.1 $(PREFIX)/lib/libtdb.dylib.1 \
-                -id $(PREFIX)/lib/libsmbclient.dylib $(PREFIX)/lib/libsmbclient.dylib.0
+                $(PREFIX)/lib/libsmbclient.dylib.0
+	install_name_tool -change bin/libtalloc.dylib.1 $(PREFIX)/lib/libtalloc.dylib.1 \
+		$(PREFIX)/lib/libsmbclient.dylib.0
 	touch $@
 
 clean:
