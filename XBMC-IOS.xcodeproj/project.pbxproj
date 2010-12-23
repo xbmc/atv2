@@ -6899,13 +6899,10 @@
 					"\"$(SRCROOT)/xbmc/lib/libshout\"",
 					"\"$(SRCROOT)/tools/osx/ios-depends/build/lib\"",
 				);
-				OTHER_LDFLAGS = (
-					"-Wl,-undefined,dynamic_lookup",
-					"-Wl,-read_only_relocs,suppress",
-				);
+				OTHER_LDFLAGS = "";
 				PLIST_FILE_OUTPUT_FORMAT = xml;
 				PRODUCT_NAME = XBMC;
-				SDKROOT = iphoneos4.1;
+				SDKROOT = iphoneos4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = ". tools/osx/ios-depends/build/include tools/osx/ios-depends/build/include/freetype2 tools/osx/ios-depends/build/include/mysql tools/osx/ios-depends/build/lib/glib-2.0/include tools/osx/ios-depends/build/include/glib-2.0 xbmc/cores/dvdplayer/Codecs/ffmpeg";
 				VALIDATE_PRODUCT = NO;
@@ -6993,13 +6990,10 @@
 					"\"$(SRCROOT)/xbmc/lib/libshout\"",
 					"\"$(SRCROOT)/tools/osx/ios-depends/build/lib\"",
 				);
-				OTHER_LDFLAGS = (
-					"-Wl,-undefined,dynamic_lookup",
-					"-Wl,-read_only_relocs,suppress",
-				);
+				OTHER_LDFLAGS = "";
 				PLIST_FILE_OUTPUT_FORMAT = xml;
 				PRODUCT_NAME = XBMC;
-				SDKROOT = iphoneos4.1;
+				SDKROOT = iphoneos4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = ". tools/osx/ios-depends/build/include tools/osx/ios-depends/build/include/freetype2 tools/osx/ios-depends/build/include/mysql tools/osx/ios-depends/build/lib/glib-2.0/include tools/osx/ios-depends/build/include/glib-2.0 xbmc/cores/dvdplayer/Codecs/ffmpeg";
 				VALIDATE_PRODUCT = NO;
@@ -7019,7 +7013,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 4.1;
 				ONLY_ACTIVE_ARCH = NO;
 				PREBINDING = NO;
-				SDKROOT = iphoneos4.1;
+				SDKROOT = iphoneos4.2;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALID_ARCHS = armv7;
 				WRAPPER_EXTENSION = "";
@@ -7037,7 +7031,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 4.1;
 				ONLY_ACTIVE_ARCH = NO;
 				PREBINDING = NO;
-				SDKROOT = iphoneos4.1;
+				SDKROOT = iphoneos4.2;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALID_ARCHS = armv7;
 				WRAPPER_EXTENSION = "";
