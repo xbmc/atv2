@@ -103,6 +103,7 @@ $(LIBDYLIB): $(SOURCE)
 	cp -f $(SOURCE)/source/bin/libtdb.dylib.1 $(PREFIX)/lib/
 	cp -f $(SOURCE)/source/bin/libtalloc.dylib.1 $(PREFIX)/lib/
 	cp -f $(SOURCE)/source/bin/libsmbclient.dylib.0 $(PREFIX)/lib/
+	cd $(PREFIX)/lib; ln -sf libsmbclient.dylib.0 libsmbclient.dylib
 	install_name_tool -change bin/libtalloc.dylib.1 $(PREFIX)/lib/libtalloc.dylib.1 \
 		-id $(PREFIX)/lib/libsmbclient.dylib $(PREFIX)/lib/libsmbclient.dylib.0
 	install_name_tool -change bin/libtdb.dylib.1 $(PREFIX)/lib/libtdb.dylib.1 \
