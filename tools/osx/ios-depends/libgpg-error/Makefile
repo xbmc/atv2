@@ -7,11 +7,11 @@
 include ../config.mk
 
 # lib name, version
-LIBNAME=afpfs-ng
-VERSION=0.8.1
+LIBNAME=libgpg-error
+VERSION=1.10
 SOURCE=$(LIBNAME)-$(VERSION)
 # download location and format
-BASE_URL=http://downloads.sourceforge.net/sourceforge/afpfs-ng/
+BASE_URL=ftp://ftp.gnupg.org/gcrypt/libgpg-error
 ARCHIVE=$(SOURCE).tar.bz2
 
 RETRIEVE_TOOL=/usr/bin/curl
@@ -23,10 +23,9 @@ ARCHIVE_TOOL_FLAGS=xf
 export CFLAGS+=-undefined dynamic_lookup
 export CXXFLAGS+=-undefined dynamic_lookup
 export LDFLAGS+=-Wl,-read_only_relocs,suppress
-CONFIGURE=./configure --prefix=$(PREFIX) --host=$(HOST) --enable-shared=yes \
---disable-fuse ac_cv_func_malloc_0_nonnull=yes
+CONFIGURE=./configure --prefix=$(PREFIX) --host=$(HOST) --enable-shared=yes
 
-LIBDYLIB=$(SOURCE)/lib/.libs/libafpclient.dylib
+LIBDYLIB=$(SOURCE)/.libs/libgpg-error.dylib
 
 CLEAN_FILES=$(ARCHIVE) $(SOURCE)
 
@@ -40,8 +39,6 @@ $(SOURCE): $(ARCHIVE)
 	-rm -rf $(SOURCE)
 	$(ARCHIVE_TOOL) $(ARCHIVE_TOOL_FLAGS) $(ARCHIVE)
 	echo $(SOURCE) >> .gitignore
-	cd $(SOURCE); patch -p1 <../01-gcrypt.patch
-	cd $(SOURCE); autoreconf -vif
 	cd $(SOURCE); $(CONFIGURE)
 
 $(LIBDYLIB): $(SOURCE)
@@ -57,3 +54,4 @@ clean:
 
 distclean::
 	rm -rf $(SOURCE) .installed
+

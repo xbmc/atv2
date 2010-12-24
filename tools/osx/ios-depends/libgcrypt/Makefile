@@ -7,11 +7,11 @@
 include ../config.mk
 
 # lib name, version
-LIBNAME=afpfs-ng
-VERSION=0.8.1
+LIBNAME=libgcrypt
+VERSION=1.4.0
 SOURCE=$(LIBNAME)-$(VERSION)
 # download location and format
-BASE_URL=http://downloads.sourceforge.net/sourceforge/afpfs-ng/
+BASE_URL=ftp://ftp.gnupg.org/gcrypt/libgcrypt
 ARCHIVE=$(SOURCE).tar.bz2
 
 RETRIEVE_TOOL=/usr/bin/curl
@@ -20,13 +20,13 @@ ARCHIVE_TOOL=tar
 ARCHIVE_TOOL_FLAGS=xf
 
 # configuration settings
-export CFLAGS+=-undefined dynamic_lookup
+export CFLAGS+=-undefined dynamic_lookup -fgnu89-inline
 export CXXFLAGS+=-undefined dynamic_lookup
 export LDFLAGS+=-Wl,-read_only_relocs,suppress
 CONFIGURE=./configure --prefix=$(PREFIX) --host=$(HOST) --enable-shared=yes \
---disable-fuse ac_cv_func_malloc_0_nonnull=yes
+  ac_cv_func_gethrtime=no
 
-LIBDYLIB=$(SOURCE)/lib/.libs/libafpclient.dylib
+LIBDYLIB=$(SOURCE)/.libs/libgcrypt.dylib
 
 CLEAN_FILES=$(ARCHIVE) $(SOURCE)
 
@@ -40,7 +40,6 @@ $(SOURCE): $(ARCHIVE)
 	-rm -rf $(SOURCE)
 	$(ARCHIVE_TOOL) $(ARCHIVE_TOOL_FLAGS) $(ARCHIVE)
 	echo $(SOURCE) >> .gitignore
-	cd $(SOURCE); patch -p1 <../01-gcrypt.patch
 	cd $(SOURCE); autoreconf -vif
 	cd $(SOURCE); $(CONFIGURE)
 
@@ -57,3 +56,4 @@ clean:
 
 distclean::
 	rm -rf $(SOURCE) .installed
+
