@@ -362,7 +362,7 @@ OSStatus CIOSAudioRenderer::OnRender(AudioUnitRenderActionFlags *ioActionFlags, 
     }
   } else {
     //fprintf(stderr, "CIOSAudioRenderer::OnRender Pause\n"); 
-    Pause();
+    //Pause();
   }
 
   if (!m_EnableVolumeControl && m_CurrentVolume <= VOLUME_MINIMUM)
