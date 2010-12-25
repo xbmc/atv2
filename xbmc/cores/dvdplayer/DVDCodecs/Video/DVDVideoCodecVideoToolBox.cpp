@@ -365,6 +365,11 @@ CreateSampleBufferFrom(CMFormatDescriptionRef fmt_desc, void *demux_buff, size_t
 
   FigBlockBufferRelease(newBBufOut);
 
+  /*
+  CLog::Log(LOGDEBUG, "%s - CreateSampleBufferFrom size %ld demux_buff [0x%08x] sBufOut [0x%08x]",
+            __FUNCTION__, demux_size, (unsigned int)demux_buff, (unsigned int)sBufOut);
+  */
+  
   return sBufOut;
 }
 
@@ -766,7 +771,11 @@ bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &o
     int32_t width, height, profile, level;
     uint8_t *extradata; // extra data for codec to use
     unsigned int extrasize; // size of extra data
-
+    m_dllAvUtil = new DllAvUtil;
+    m_dllAvFormat = new DllAvFormat;
+    if (!m_dllAvUtil->Load() || !m_dllAvFormat->Load())
+      return false;
+    
     //
     width  = hints.width;
     height = hints.height;
@@ -774,6 +783,9 @@ bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &o
     profile = hints.profile;
     extrasize = hints.extrasize;
     extradata = (uint8_t*)hints.extradata;
+    //m_codex_extrasize = hints.extrasize;
+    //m_codex_extradata = malloc(m_codex_extrasize);
+    //memcpy(m_codex_extradata, hints.extradata, m_codex_extrasize);
  
     switch (hints.codec)
     {
@@ -802,7 +814,7 @@ bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &o
           // done with the converted extradata, we MUST free using av_free
           av_free(extradata);
         } else {
-          m_fmt_desc = CreateFormatDescription(kVTFormatMPEG4Video, width, height);
+          m_fmt_desc = CreateFormatDescription(kVTFormatMPEG4Video, width, height);          
         }
       break;
 
@@ -833,16 +845,12 @@ bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &o
           if (extradata[0] == 0 && extradata[1] == 0 && extradata[2] == 0 && extradata[3] == 1)
           {
             // video content is from x264 or from bytestream h264 (AnnexB format)
-            // NAL reformating to bitstream format needed
-            m_dllAvUtil = new DllAvUtil;
-            m_dllAvFormat = new DllAvFormat;
-            if (!m_dllAvUtil->Load() || !m_dllAvFormat->Load())
-              return false;
+            // NAL reformating to bitstream format required
 
             ByteIOContext *pb;
             if (m_dllAvFormat->url_open_dyn_buf(&pb) < 0)
               return false;
-
+            
             m_convert_bytestream = true;
             // create a valid avcC atom data from ffmpeg's extradata
             isom_write_avcc(m_dllAvUtil, m_dllAvFormat, pb, extradata, extrasize);
@@ -853,9 +861,10 @@ bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &o
             // CFDataCreate makes a copy of extradata contents
             m_fmt_desc = CreateFormatDescriptionFromCodecData(
               kVTFormatH264, width, height, extradata, extrasize, 'avcC');
-
+            
             // done with the converted  new extradata, we MUST free using av_free
             m_dllAvUtil->av_free(extradata);
+            
             CLog::Log(LOGNOTICE, "%s - created avcC atom of size(%d)", __FUNCTION__, extrasize);
           }
           else
@@ -871,10 +880,12 @@ bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &o
         return false;
       break;
     }
-    
-    if (m_fmt_desc == NULL)
-      return false;
 
+    if(m_fmt_desc == NULL) {
+      CLog::Log(LOGNOTICE, "%s - created avcC atom of failed", __FUNCTION__);
+      return false;
+    }
+    
     CreateVTSession(width, height, m_fmt_desc);
     if (m_vt_session == NULL)
     {
@@ -957,27 +968,33 @@ int CDVDVideoCodecVideoToolBox::Decode(BYTE* pData, int iSize, double dts, doubl
     uint32_t decoderFlags = 0;
     CFDictionaryRef frameInfo;
     CMSampleBufferRef sampleBuff;
-
+    ByteIOContext *pb;
+    int demux_size = 0;
+    uint8_t *demux_buff = NULL;
+    
     if (m_convert_bytestream)
     {
       // convert demuxer packet from bytestream (AnnexB) to bitstream
-      ByteIOContext *pb;
-      int demux_size;
-      uint8_t *demux_buff;
 
       if(m_dllAvFormat->url_open_dyn_buf(&pb) < 0)
-      {
         return VC_ERROR;
-      }
+
       demux_size = avc_parse_nal_units(m_dllAvFormat, pb, pData, iSize);
       demux_size = m_dllAvFormat->url_close_dyn_buf(pb, &demux_buff);
       sampleBuff = CreateSampleBufferFrom(m_fmt_desc, demux_buff, demux_size);
-      m_dllAvUtil->av_free(demux_buff);
     }
     else
     {
       sampleBuff = CreateSampleBufferFrom(m_fmt_desc, pData, iSize);
     }
+    
+    if (!sampleBuff)
+    {
+      if (demux_size) m_dllAvUtil->av_free(demux_buff);
+      CLog::Log(LOGNOTICE, "%s - CreateSampleBufferFrom failed", __FUNCTION__);
+      return VC_ERROR;
+    }
+    
     sort_time = (CurrentHostCounter() * 1000.0) / CurrentHostFrequency();
     frameInfo = CreateDictionaryWithDisplayTime(sort_time - m_sort_time_offset, dts, pts);
 
@@ -991,10 +1008,12 @@ int CDVDVideoCodecVideoToolBox::Decode(BYTE* pData, int iSize, double dts, doubl
         __FUNCTION__, (int)status);
       CFRelease(frameInfo);
       FigSampleBufferRelease(sampleBuff);
+      if (demux_size) m_dllAvUtil->av_free(demux_buff);
       return VC_ERROR;
       // VTDecompressionSessionDecodeFrame returned 8969 (codecBadDataErr)
       // VTDecompressionSessionDecodeFrame returned -12350
       // VTDecompressionSessionDecodeFrame returned -12902
+      // VTDecompressionSessionDecodeFrame returned -12911
     }
 
     // wait for decoding to finish
@@ -1004,11 +1023,13 @@ int CDVDVideoCodecVideoToolBox::Decode(BYTE* pData, int iSize, double dts, doubl
         __FUNCTION__, (int)status);
       CFRelease(frameInfo);
       FigSampleBufferRelease(sampleBuff);
+      if (demux_size) m_dllAvUtil->av_free(demux_buff);
       return VC_ERROR;
     }
 
     CFRelease(frameInfo);
     FigSampleBufferRelease(sampleBuff);
+    if (demux_size) m_dllAvUtil->av_free(demux_buff);
   }
 
   // TODO: queue depth is related to the number of reference frames in encoded h.264.
@@ -1143,9 +1164,10 @@ CDVDVideoCodecVideoToolBox::CreateVTSession(int width, int height, CMFormatDescr
     m_vt_session = (void*)vt_session;
 
   CFRelease(destinationPixelBufferAttributes);
-/*
-  vtdec_session_dump_properties(m_vt_session);
 
+  //vtdec_session_dump_properties(m_vt_session);
+
+  /*
   #if TARGET_OS_IPHONE
   status = VTDecompressionSessionSetProperty(m_vt_session, 
     kVTVideoDecoderSpecification_EnableSandboxedVideoDecoder, kCFBooleanTrue);
@@ -1156,7 +1178,7 @@ CDVDVideoCodecVideoToolBox::CreateVTSession(int width, int height, CMFormatDescr
       CLog::Log(LOGERROR, "VTDecompressionSessionSetProperty failed %d\n", (int)status);
   }
   #endif
-*/
+  */
 }
 
 void
