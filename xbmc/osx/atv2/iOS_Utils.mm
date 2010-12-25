@@ -26,7 +26,6 @@
 #endif
 
 #import "iOS_Utils.h"
-#import "XBMCAppliance.h"
 
 CCocoaAutoPool::CCocoaAutoPool()
 {
@@ -48,31 +47,55 @@ void  Destroy_AutoReleasePool(void *aPool)
   [(NSAutoreleasePool*)aPool release];
 }
 
-int  GetFrappBundlePath(char* path, uint32_t *bufsize)
+int  GetIOSFrameworkPath(char* path, uint32_t *pathsize)
 {
+  // see if we can figure out who we are
 	NSString *pathname;
 
-  id is_frapp = NSClassFromString(@"BRAppliance");
-  //if (is_frapp)
-  if (YES)
+  // a) XBMC frappliance running under ATV2
+  Class XBMCfrapp = NSClassFromString(@"XBMCAppliance");
+  if (XBMCfrapp != NULL)
   {
-    pathname = [[NSBundle bundleForClass:[XBMCAppliance class]] bundlePath];
+    pathname = [[NSBundle bundleForClass:XBMCfrapp] pathForResource:@"Frameworks" ofType:@""];
     strcpy(path, [pathname UTF8String]);
-    *bufsize = strlen(path);
+    *pathsize = strlen(path);
+    NSLog(@"%s XBMC Frameworks path %s", __PRETTY_FUNCTION__, path);
+    return 0;
   }
-  else
-  {
-    pathname = [[NSBundle mainBundle] executablePath];
-    strcpy(path, [pathname UTF8String]);
-    *bufsize = strlen(path);
-    *bufsize -= 4;
-    path[*bufsize] = 0;
-    NSLog(@"%s executable_path %s", __PRETTY_FUNCTION__, path);
-  }
+
+  // b) XBMC application running under IOS
+  // c) XBMC application running under OSX
+  pathname = [[NSBundle mainBundle] privateFrameworksPath];
+  strcpy(path, [pathname UTF8String]);
+  *pathsize = strlen(path);
+  NSLog(@"%s XBMC Frameworks path %s", __PRETTY_FUNCTION__, path);
+
   return 0;
 }
-/*  // Get the path to the target PNG icon
-  NSString* pngFile = [[NSString stringWithFormat:@"~/Library/Application Support/XBMC/userdata/Thumbnails/%@-%@.png",
-    bundleIdentifier, iconName] stringByExpandingTildeInPath];
-*/
+
+int  GetIOSExecutablePath(char* path, uint32_t *pathsize)
+{
+  // see if we can figure out who we are
+	NSString *pathname;
+
+  // a) XBMC frappliance running under ATV2
+  Class XBMCfrapp = NSClassFromString(@"XBMCAppliance");
+  if (XBMCfrapp != NULL)
+  {
+    pathname = [[NSBundle bundleForClass:XBMCfrapp] pathForResource:@"XBMC" ofType:@""];
+    strcpy(path, [pathname UTF8String]);
+    *pathsize = strlen(path);
+    //NSLog(@"%s XBMC frapp executable_path %s", __PRETTY_FUNCTION__, path);
+    return 0;
+  }
+
+  // b) XBMC application running under IOS
+  // c) XBMC application running under OSX
+  pathname = [[NSBundle mainBundle] executablePath];
+  strcpy(path, [pathname UTF8String]);
+  *pathsize = strlen(path);
+  //NSLog(@"%s XBMC app executable_path %s", __PRETTY_FUNCTION__, path);
+
+  return 0;
+}
 #endif

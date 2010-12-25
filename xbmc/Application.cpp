@@ -446,7 +446,7 @@ void CApplication::Preflight()
 #endif
 
   // run any platform preflight scripts.
-#ifdef __APPLE__
+#if defined(__APPLE__) && !defined(__arm__)
   CStdString install_path;
 
   CUtil::GetHomePath(install_path);
@@ -850,20 +850,12 @@ bool CApplication::InitDirectoriesOSX()
 
   CStdString xbmcPath;
   CUtil::GetHomePath(xbmcPath);
-
-
-  #if defined(__arm__)
-  	uint32_t path_size = 2*MAXPATHLEN;
-  	char     given_path[2*MAXPATHLEN];
-
-    GetFrappBundlePath(given_path, &path_size);
-    strcat(given_path, "/XBMCData/XBMCHome/");
-    //xbmcPath = "/private/var/mobile/Applications/94DE54CA-43CC-44D5-8311-1D64D290316A/XBMC.app/XBMCData/XBMCHome";
-    xbmcPath = given_path;
-  #endif
-
   setenv("XBMC_HOME", xbmcPath.c_str(), 0);
-
+  
+  // setup path to our internal dylibs so loader can find them
+  CStdString frameworksPath = CUtil::GetFrameworksPath();
+  CSpecialProtocol::SetXBMCFrameworksPath(frameworksPath);
+  
   // OSX always runs with m_bPlatformDirectories == true
   if (m_bPlatformDirectories)
   {

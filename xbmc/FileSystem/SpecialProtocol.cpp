@@ -50,6 +50,11 @@ void CSpecialProtocol::SetXBMCBinPath(const CStdString &dir)
   SetPath("xbmcbin", dir);
 }
 
+void CSpecialProtocol::SetXBMCFrameworksPath(const CStdString &dir)
+{
+  SetPath("frameworks", dir);
+}
+
 void CSpecialProtocol::SetHomePath(const CStdString &dir)
 {
   SetPath("home", dir);
@@ -155,6 +160,8 @@ CStdString CSpecialProtocol::TranslatePath(const CURL &url)
     CUtil::AddFileToFolder(GetPath("profile"), FileName, translatedPath);
   else if (RootDir.Equals("masterprofile"))
     CUtil::AddFileToFolder(GetPath("masterprofile"), FileName, translatedPath);
+  else if (RootDir.Equals("frameworks"))
+    CUtil::AddFileToFolder(GetPath("frameworks"), FileName, translatedPath);
 
   // check if we need to recurse in
   if (CUtil::IsSpecial(translatedPath))
