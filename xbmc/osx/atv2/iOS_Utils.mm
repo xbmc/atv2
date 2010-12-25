@@ -59,11 +59,21 @@ int  GetIOSFrameworkPath(char* path, uint32_t *pathsize)
     pathname = [[NSBundle bundleForClass:XBMCfrapp] pathForResource:@"Frameworks" ofType:@""];
     strcpy(path, [pathname UTF8String]);
     *pathsize = strlen(path);
-    //NSLog(@"%s XBMC Frameworks path %s", __PRETTY_FUNCTION__, path);
+    //NSLog(@"%s XBMC Frapp Frameworks path %s", __PRETTY_FUNCTION__, path);
     return 0;
   }
 
   // b) XBMC application running under IOS
+  Class XBMCapp= NSClassFromString(@"XBMCApplication");
+  if (XBMCfrapp != NULL)
+  {
+    pathname = [[NSBundle bundleForClass:XBMCapp] pathForResource:@"Frameworks" ofType:@""];
+    strcpy(path, [pathname UTF8String]);
+    *pathsize = strlen(path);
+    //NSLog(@"%s XBMC IOS Frameworks path %s", __PRETTY_FUNCTION__, path);
+    return 0;
+  }
+
   // c) XBMC application running under OSX
   pathname = [[NSBundle mainBundle] privateFrameworksPath];
   strcpy(path, [pathname UTF8String]);
