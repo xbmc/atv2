@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		18A0B34F129FC3A5007BB966 /* XBMC.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A0B34E129FC3A5007BB966 /* XBMC.png */; };
-		F54D9DD812B56A7D006870F9 /* libfaad.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9DD712B56A7D006870F9 /* libfaad.dylib */; };
-		F54D9DDA12B56A9C006870F9 /* libvorbisfile.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9DD912B56A9C006870F9 /* libvorbisfile.dylib */; };
+		F54D9DD812B56A7D006870F9 /* libfaad.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9DD712B56A7D006870F9 /* libfaad.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F54D9DDA12B56A9C006870F9 /* libvorbisfile.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9DD912B56A9C006870F9 /* libvorbisfile.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
 		F54D9E0712B65FFF006870F9 /* libc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9E0612B65FFF006870F9 /* libc.dylib */; };
 		F54D9E1B12B70DEE006870F9 /* IOSCoreAudio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F54D9E1912B70DEE006870F9 /* IOSCoreAudio.cpp */; };
 		F54D9E1E12B70E14006870F9 /* posix-realtime-stub.c in Sources */ = {isa = PBXBuildFile; fileRef = F54D9E1C12B70E14006870F9 /* posix-realtime-stub.c */; };
@@ -880,22 +880,22 @@
 		F589AD9D1288C96100D8079E /* XBMC_mutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589AD9A1288C96100D8079E /* XBMC_mutex.cpp */; };
 		F589ADC31288CC6100D8079E /* XBMCEAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = F589ADB91288CC6100D8079E /* XBMCEAGLView.mm */; };
 		F589AE171288DDE400D8079E /* libfontconfig.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE161288DDE400D8079E /* libfontconfig.dylib */; };
-		F589AE1B1288DE0800D8079E /* libsamplerate.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE1A1288DE0800D8079E /* libsamplerate.dylib */; };
-		F589AE1D1288DE1B00D8079E /* libcdio.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE1C1288DE1B00D8079E /* libcdio.dylib */; };
-		F589AE211288DE6400D8079E /* libfribidi.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE201288DE6400D8079E /* libfribidi.dylib */; };
-		F589AE231288DE7200D8079E /* libvorbis.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE221288DE7200D8079E /* libvorbis.dylib */; };
-		F589AE271288DE8A00D8079E /* libwavpack.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE261288DE8A00D8079E /* libwavpack.dylib */; };
-		F589AE291288DE9600D8079E /* libmpeg2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE281288DE9600D8079E /* libmpeg2.dylib */; };
-		F589AE2B1288DEA400D8079E /* libmad.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE2A1288DEA400D8079E /* libmad.dylib */; };
-		F589AE2D1288DEB000D8079E /* libogg.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE2C1288DEB000D8079E /* libogg.dylib */; };
+		F589AE1B1288DE0800D8079E /* libsamplerate.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE1A1288DE0800D8079E /* libsamplerate.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F589AE1D1288DE1B00D8079E /* libcdio.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE1C1288DE1B00D8079E /* libcdio.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F589AE211288DE6400D8079E /* libfribidi.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE201288DE6400D8079E /* libfribidi.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F589AE231288DE7200D8079E /* libvorbis.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE221288DE7200D8079E /* libvorbis.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F589AE271288DE8A00D8079E /* libwavpack.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE261288DE8A00D8079E /* libwavpack.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F589AE291288DE9600D8079E /* libmpeg2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE281288DE9600D8079E /* libmpeg2.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F589AE2B1288DEA400D8079E /* libmad.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE2A1288DEA400D8079E /* libmad.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F589AE2D1288DEB000D8079E /* libogg.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE2C1288DEB000D8079E /* libogg.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
 		F589AE2F1288DEC900D8079E /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE2E1288DEC900D8079E /* libcrypto.dylib */; };
 		F589AE311288DEE000D8079E /* libpcre.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE301288DEE000D8079E /* libpcre.dylib */; };
 		F589AE331288DEE900D8079E /* libpcrecpp.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE321288DEE900D8079E /* libpcrecpp.dylib */; };
 		F589AE351288DEF900D8079E /* liblzo2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE341288DEF900D8079E /* liblzo2.dylib */; };
 		F589AE371288DEFE00D8079E /* liblzo.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE361288DEFE00D8079E /* liblzo.dylib */; };
-		F589AE391288DF1F00D8079E /* libmysqlclient.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE381288DF1F00D8079E /* libmysqlclient.dylib */; };
-		F589AE3B1288DF2A00D8079E /* libvorbisenc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE3A1288DF2A00D8079E /* libvorbisenc.dylib */; };
-		F589AE3D1288DF4A00D8079E /* libpython2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE3C1288DF4A00D8079E /* libpython2.5.dylib */; };
+		F589AE391288DF1F00D8079E /* libmysqlclient.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE381288DF1F00D8079E /* libmysqlclient.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F589AE3B1288DF2A00D8079E /* libvorbisenc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE3A1288DF2A00D8079E /* libvorbisenc.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F589AE3D1288DF4A00D8079E /* libpython2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE3C1288DF4A00D8079E /* libpython2.5.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
 		F589AE431288E02000D8079E /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE421288E02000D8079E /* libiconv.dylib */; };
 		F589AE451288E06100D8079E /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE441288E06100D8079E /* libbz2.dylib */; };
 		F589AE471288E07400D8079E /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE461288E07400D8079E /* libz.dylib */; };
@@ -904,7 +904,7 @@
 		F589AE4D1288E0A300D8079E /* libm.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE4C1288E0A300D8079E /* libm.dylib */; };
 		F589AE531288E20900D8079E /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE521288E20900D8079E /* libsqlite3.dylib */; };
 		F589AE6A128909F000D8079E /* libfreetype.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE1E1288DE2700D8079E /* libfreetype.dylib */; };
-		F589AE7512890B9E00D8079E /* libcmyth.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE6E12890B9E00D8079E /* libcmyth.a */; };
+		F589AE7512890B9E00D8079E /* libcmyth.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE6E12890B9E00D8079E /* libcmyth.a */; settings = {ATTRIBUTES = (Weak, ); }; };
 		F589AE7612890B9E00D8079E /* librefmem.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE6F12890B9E00D8079E /* librefmem.a */; };
 		F589AE7712890B9E00D8079E /* libapetag.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE7012890B9E00D8079E /* libapetag.a */; };
 		F589AE7812890B9E00D8079E /* libhttpapi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE7112890B9E00D8079E /* libhttpapi.a */; };
@@ -912,10 +912,10 @@
 		F589AE7A12890B9F00D8079E /* libjsoncpp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE7312890B9E00D8079E /* libjsoncpp.a */; };
 		F589AE7B12890B9F00D8079E /* libmicrohttpd.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE7412890B9E00D8079E /* libmicrohttpd.a */; };
 		F589AE8212890BEF00D8079E /* libsquish-arm-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE7D12890BEF00D8079E /* libsquish-arm-osx.a */; };
-		F589AE8312890BEF00D8079E /* librtv-arm-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE7E12890BEF00D8079E /* librtv-arm-osx.a */; };
-		F589AE8412890BEF00D8079E /* libxbms-arm-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE7F12890BEF00D8079E /* libxbms-arm-osx.a */; };
-		F589AE8512890BEF00D8079E /* libxdaap-arm-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE8012890BEF00D8079E /* libxdaap-arm-osx.a */; };
-		F589AE8612890BF000D8079E /* libshout-arm-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE8112890BEF00D8079E /* libshout-arm-osx.a */; };
+		F589AE8312890BEF00D8079E /* librtv-arm-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE7E12890BEF00D8079E /* librtv-arm-osx.a */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F589AE8412890BEF00D8079E /* libxbms-arm-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE7F12890BEF00D8079E /* libxbms-arm-osx.a */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F589AE8512890BEF00D8079E /* libxdaap-arm-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE8012890BEF00D8079E /* libxdaap-arm-osx.a */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F589AE8612890BF000D8079E /* libshout-arm-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE8112890BEF00D8079E /* libshout-arm-osx.a */; settings = {ATTRIBUTES = (Weak, ); }; };
 		F589AE9B128913BB00D8079E /* LinuxRendererGLES.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589AE9A128913BB00D8079E /* LinuxRendererGLES.cpp */; };
 		F589AEA61289209500D8079E /* MatrixGLES.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589AEA41289209500D8079E /* MatrixGLES.cpp */; };
 		F589AF57128A131900D8079E /* RenderSystemGLES.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589AF55128A131900D8079E /* RenderSystemGLES.cpp */; };
@@ -5877,7 +5877,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "#!/bin/bash\n\necho \"copy root files\"\n\nif [ \"$ACTION\" = build ] ; then\n\n# for external testing\nTARGET_NAME=$PRODUCT_NAME.$WRAPPER_EXTENSION\n#SRCROOT=/Users/Shared/xbmc_svn/XBMC\n#TARGET_BUILD_DIR=/Users/Shared/xbmc_svn/XBMC/build/Debug\n\n# rsync command with exclusions for items we don't want in the app package\nSYNC=\"rsync -av --exclude CVS* --exclude .svn* --exclude .cvsignore* --exclude .cvspass* --exclude .DS_Store* --exclude *.dll --exclude *.DLL --exclude *linux.* --exclude *.zlib --exclude *.a\"\n\n# rsync command for excluding pngs and jpgs as well. Note that if the skin itself is not compiled\n# using XBMCTex then excluding the pngs and jpgs will most likely make the skin unusable \n#SYNCSKIN=\"rsync -av --exclude CVS* --exclude .svn* --exclude .cvsignore* --exclude .cvspass* --exclude .DS_Store* --exclude *.dll  --exclude *.DLL --exclude *linux.* --exclude *.png --exclude *.jpg --exclude *.bat\"\nSYNCSKIN=\"rsync -av --exclude CVS* --exclude .svn* --exclude .cvsignore* --exclude .cvspass* --exclude .DS_Store* --exclude *.dll  --exclude *.DLL --exclude *linux.*  --exclude *.bat\"\n\n# rsync command for including everything but the skins\nADDONSYNC=\"rsync -av --exclude CVS* --exclude .svn* --exclude .cvsignore* --exclude .cvspass* --exclude .DS_Store* --exclude skin.confluence\"\n\n# binary name is XBMC but we build XBMC.bin so to get a clean binary each time\nmv $TARGET_BUILD_DIR/$TARGET_NAME/XBMC.bin $TARGET_BUILD_DIR/$TARGET_NAME/XBMC\n\nmkdir -p \"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome\"\nmkdir -p \"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome/addons\"\nmkdir -p \"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome/language\"\nmkdir -p \"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome/media\"\nmkdir -p \"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome/sounds\"\nmkdir -p \"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome/system\"\nmkdir -p \"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome/userdata\"\nmkdir -p \"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome/media\"\nmkdir -p \"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome/tools/osx\"\n\n${SYNC} \"$SRCROOT/LICENSE.GPL\" \t\"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/\"\n${SYNC} \"$SRCROOT/xbmc/osx/Credits.html\" \t\"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/\"\n#${SYNC} \"$SRCROOT/tools/osx\"\t\"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome/tools\"\n${ADDONSYNC} \"$SRCROOT/addons\"\t\t\"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome\"\n${SYNC} \"$SRCROOT/language\"\t\t\"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome\"\n${SYNC} \"$SRCROOT/media\" \t\t\"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome\"\n${SYNCSKIN} \"$SRCROOT/addons/skin.confluence\" \t\"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome/addons\"\n${SYNC} \"$SRCROOT/addons/skin.confluence/backgrounds\" \t\"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome/addons/skin.confluence\"\n${SYNC} \"$SRCROOT/addons/skin.confluence/icon.png\" \t\"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome/addons/skin.confluence\"\n${SYNC} \"$SRCROOT/sounds\" \t\t\"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome\"\n${SYNC} \"$SRCROOT/system\" \t\t\"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome\"\n${SYNC} \"$SRCROOT/userdata\" \t\"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome\"\n\n# copy extra packages if applicable\nif [ -d \"$SRCROOT/extras/system\" ]; then\n\t${SYNC} \"$SRCROOT/extras/system/\" \"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome\"\nfi\n\n# copy extra user packages if applicable\nif [ -d \"$SRCROOT/extras/user\" ]; then\n\tmkdir -p \"$TARGET_BUILD_DIR/$TARGET_NAME/Resources/XBMC/extras/user\"\n\t${SYNC} \"$SRCROOT/extras/user/\" \"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome/extras/user\"\nfi\n\nfi";
+			shellScript = "#!/bin/bash\n\necho \"copy root files\"\n\nif [ \"$ACTION\" = build ] ; then\n\n# for external testing\nTARGET_NAME=$PRODUCT_NAME.$WRAPPER_EXTENSION\n#SRCROOT=/Users/Shared/xbmc_svn/XBMC\n#TARGET_BUILD_DIR=/Users/Shared/xbmc_svn/XBMC/build/Debug\n\n# rsync command with exclusions for items we don't want in the app package\nSYNC=\"rsync -av --exclude CVS* --exclude .svn* --exclude .cvsignore* --exclude .cvspass* --exclude .DS_Store* --exclude *.dll --exclude *.DLL --exclude *linux.* --exclude *.zlib --exclude *.a --exclude *.pyd --exclude *x86-osx.so --exclude *powerpc-osx.so\"\n\n# rsync command for excluding pngs and jpgs as well. Note that if the skin itself is not compiled\n# using XBMCTex then excluding the pngs and jpgs will most likely make the skin unusable \n#SYNCSKIN=\"rsync -av --exclude CVS* --exclude .svn* --exclude .cvsignore* --exclude .cvspass* --exclude .DS_Store* --exclude *.dll  --exclude *.DLL --exclude *linux.* --exclude *.png --exclude *.jpg --exclude *.bat\"\nSYNCSKIN=\"rsync -av --exclude CVS* --exclude .svn* --exclude .cvsignore* --exclude .cvspass* --exclude .DS_Store* --exclude *.dll  --exclude *.DLL --exclude *linux.*  --exclude *.bat\"\n\n# rsync command for including everything but the skins\nADDONSYNC=\"rsync -av --exclude CVS* --exclude .svn* --exclude .cvsignore* --exclude .cvspass* --exclude .DS_Store* --exclude skin.confluence\"\n\n# binary name is XBMC but we build XBMC.bin so to get a clean binary each time\nmv $TARGET_BUILD_DIR/$TARGET_NAME/XBMC.bin $TARGET_BUILD_DIR/$TARGET_NAME/XBMC\n\nmkdir -p \"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome\"\nmkdir -p \"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome/addons\"\nmkdir -p \"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome/language\"\nmkdir -p \"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome/media\"\nmkdir -p \"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome/sounds\"\nmkdir -p \"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome/system\"\nmkdir -p \"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome/userdata\"\nmkdir -p \"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome/media\"\nmkdir -p \"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome/tools/osx\"\n\n${SYNC} \"$SRCROOT/LICENSE.GPL\" \t\"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/\"\n${SYNC} \"$SRCROOT/xbmc/osx/Credits.html\" \t\"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/\"\n#${SYNC} \"$SRCROOT/tools/osx\"\t\"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome/tools\"\n${ADDONSYNC} \"$SRCROOT/addons\"\t\t\"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome\"\n${SYNC} \"$SRCROOT/language\"\t\t\"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome\"\n${SYNC} \"$SRCROOT/media\" \t\t\"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome\"\n${SYNCSKIN} \"$SRCROOT/addons/skin.confluence\" \t\"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome/addons\"\n${SYNC} \"$SRCROOT/addons/skin.confluence/backgrounds\" \t\"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome/addons/skin.confluence\"\n${SYNC} \"$SRCROOT/addons/skin.confluence/icon.png\" \t\"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome/addons/skin.confluence\"\n${SYNC} \"$SRCROOT/sounds\" \t\t\"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome\"\n${SYNC} \"$SRCROOT/system\" \t\t\"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome\"\n${SYNC} \"$SRCROOT/userdata\" \t\"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome\"\n\n# copy extra packages if applicable\nif [ -d \"$SRCROOT/extras/system\" ]; then\n\t${SYNC} \"$SRCROOT/extras/system/\" \"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome\"\nfi\n\n# copy extra user packages if applicable\nif [ -d \"$SRCROOT/extras/user\" ]; then\n\tmkdir -p \"$TARGET_BUILD_DIR/$TARGET_NAME/Resources/XBMC/extras/user\"\n\t${SYNC} \"$SRCROOT/extras/user/\" \"$TARGET_BUILD_DIR/$TARGET_NAME/XBMCData/XBMCHome/extras/user\"\nfi\n\nfi";
 			showEnvVarsInLog = 0;
 		};
 		F589B48D128A697C00D8079E /* copy frameworks */ = {
@@ -6818,6 +6818,7 @@
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_FLOATING_POINT_LIBRARY_CALLS = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -6842,7 +6843,6 @@
 					xbmc/cores/dvdplayer,
 					xbmc/utils,
 					xbmc/lib,
-					xbmc/lib/libPython/Python/Include,
 					lib/jsoncpp/jsoncpp/include,
 					lib/cpluff/libcpluff,
 					lib/libmicrohttpd/src/include,
@@ -6910,6 +6910,7 @@
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
 				);
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_FLOATING_POINT_LIBRARY_CALLS = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -6933,7 +6934,6 @@
 					xbmc/cores/dvdplayer,
 					xbmc/utils,
 					xbmc/lib,
-					xbmc/lib/libPython/Python/Include,
 					lib/jsoncpp/jsoncpp/include,
 					lib/cpluff/libcpluff,
 					lib/libmicrohttpd/src/include,
