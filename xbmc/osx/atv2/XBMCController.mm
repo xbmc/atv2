@@ -133,8 +133,8 @@ XBMCEAGLView  *m_glView;
   screensize.width  = [BRWindow interfaceFrame].size.width;
   screensize.height = [BRWindow interfaceFrame].size.height;
 
-  NSLog(@"%s UpdateResolutions width=%f, height=%f", 
-		__PRETTY_FUNCTION__, screensize.width, screensize.height);
+  //NSLog(@"%s UpdateResolutions width=%f, height=%f", 
+	//	__PRETTY_FUNCTION__, screensize.width, screensize.height);
 
   return screensize;
 }
@@ -142,7 +142,7 @@ XBMCEAGLView  *m_glView;
 
 - (id) init
 {  
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
 
   self = [super init];
   if ( !self )
@@ -171,7 +171,7 @@ XBMCEAGLView  *m_glView;
 
 - (void)dealloc
 {
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
 
 	[mp_xbmclient release];
 
@@ -189,7 +189,7 @@ XBMCEAGLView  *m_glView;
 
 - (void)controlWasActivated
 {
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
   
   [super controlWasActivated];
 
@@ -201,7 +201,7 @@ XBMCEAGLView  *m_glView;
 
 - (void)controlWasDeactivated
 {
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
 
 
   [m_glView stopAnimation];
@@ -214,15 +214,15 @@ XBMCEAGLView  *m_glView;
 
 - (BOOL) recreateOnReselect
 { 
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
   return YES;
 }
 
 - (eATVClientEvent) ATVClientEventFromBREvent:(BREvent*) f_event
 {
-  BOOL downEvent = [f_event value];
   int remoteAction = [f_event remoteAction];
-  DLOG(@"got action %i %@", remoteAction, (downEvent)? @"pressed":@"released");
+  //BOOL downEvent = [f_event value];
+  //DLOG(@"got action %i %@", remoteAction, (downEvent)? @"pressed":@"released");
   
   switch (remoteAction)
   {
@@ -296,7 +296,7 @@ XBMCEAGLView  *m_glView;
 
 - (BOOL)brEventAction:(BREvent*)event
 {
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
 
 	if ([m_glView isAnimating])
   {

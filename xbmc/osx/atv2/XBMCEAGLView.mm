@@ -78,7 +78,7 @@ enum {
 //--------------------------------------------------------------
 - (id)initWithFrame:(CGRect)frame
 {
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
   if ((self = [super initWithFrame:frame]))
   {
     // Get the layer
@@ -115,7 +115,7 @@ enum {
 //--------------------------------------------------------------
 - (void) dealloc
 {
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
   [self deleteFramebuffer];    
   [context release];
   
@@ -130,7 +130,7 @@ enum {
 //--------------------------------------------------------------
 - (void)setContext:(EAGLContext *)newContext
 {
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
   if (context != newContext)
   {
     [self deleteFramebuffer];
@@ -147,7 +147,7 @@ enum {
 {
   if (context && !defaultFramebuffer)
   {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
+    //NSLog(@"%s", __PRETTY_FUNCTION__);
     [EAGLContext setCurrentContext:context];
     
     // Create default framebuffer object.
@@ -172,7 +172,7 @@ enum {
 {
   if (context)
   {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
+    //NSLog(@"%s", __PRETTY_FUNCTION__);
     [EAGLContext setCurrentContext:context];
     
     if (defaultFramebuffer)
@@ -322,7 +322,7 @@ enum {
   // signal we are dead
   [myLock unlockWithCondition:TRUE];
 
-  NSLog(@"%s:exit", __PRETTY_FUNCTION__);
+  //NSLog(@"%s:exit", __PRETTY_FUNCTION__);
 
   [outerpool release];
 }
@@ -353,7 +353,7 @@ enum {
 //--------------------------------------------------------------
 - (void) initDisplayLink
 {
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
   displayLink = [NSClassFromString(@"CADisplayLink") 
     displayLinkWithTarget:self
     selector:@selector(runDisplayLink)];
@@ -364,14 +364,14 @@ enum {
 //--------------------------------------------------------------
 - (void) deinitDisplayLink
 {
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
   [displayLink invalidate];
   displayLink = nil;
 }
 //--------------------------------------------------------------
 - (double) getDisplayLinkFPS;
 {
-  NSLog(@"%s:displayFPS(%f)", __PRETTY_FUNCTION__, displayFPS);
+  //NSLog(@"%s:displayFPS(%f)", __PRETTY_FUNCTION__, displayFPS);
   return displayFPS;
 }
 @end

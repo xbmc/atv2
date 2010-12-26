@@ -65,8 +65,7 @@ bool CWinSystemIOS::DestroyWindowSystem()
 
 bool CWinSystemIOS::CreateNewWindow(const CStdString& name, bool fullScreen, RESOLUTION_INFO& res, PHANDLE_EVENT_FUNC userFunction)
 {
-	
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
 	
   if(!SetFullScreen(fullScreen, res, false))
     return false;
@@ -90,8 +89,7 @@ bool CWinSystemIOS::DestroyWindow()
 
 bool CWinSystemIOS::ResizeWindow(int newWidth, int newHeight, int newLeft, int newTop)
 {
-	
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
 	
   if (m_nWidth != newWidth || m_nHeight != newHeight)
   {
@@ -106,8 +104,7 @@ bool CWinSystemIOS::ResizeWindow(int newWidth, int newHeight, int newLeft, int n
 
 bool CWinSystemIOS::SetFullScreen(bool fullScreen, RESOLUTION_INFO& res, bool blankOtherDisplays)
 {
-	
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
 	
   m_nWidth      = res.iWidth;
   m_nHeight     = res.iHeight;
@@ -125,8 +122,8 @@ void CWinSystemIOS::UpdateResolutions()
   CGSize screensize = [g_xbmcController getScreenSize];
   double fps = [g_xbmcController getDisplayLinkFPS];
 
-  NSLog(@"%s UpdateResolutions width=%f, height=%f, fps=%f", 
-		__PRETTY_FUNCTION__, screensize.width, screensize.height, fps);
+  //NSLog(@"%s UpdateResolutions width=%f, height=%f, fps=%f", 
+	//	__PRETTY_FUNCTION__, screensize.width, screensize.height, fps);
 
   UpdateDesktopResolution(g_settings.m_ResInfo[RES_DESKTOP], 0, screensize.width, screensize.height, fps);
   [pool release];
