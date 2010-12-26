@@ -1,5 +1,5 @@
 /*
-*      Copyright (C) 2005-2008 Team XBMC
+*      Copyright (C) 2005-2010 Team XBMC
 *      http://www.xbmc.org
 *
 *  This Program is free software; you can redistribute it and/or modify
@@ -24,7 +24,6 @@
 #define WINDOW_EVENTS_IOS_H
 
 #include "WinEvents.h"
-#import  <vector>
 
 class CWinEventsIOS : public CWinEventsBase
 {

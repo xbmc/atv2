@@ -1,5 +1,5 @@
 /*
-*      Copyright (C) 2005-2008 Team XBMC
+*      Copyright (C) 2005-2010 Team XBMC
 *      http://www.xbmc.org
 *
 *  This Program is free software; you can redistribute it and/or modify
@@ -18,18 +18,12 @@
 *  http://www.gnu.org/copyleft/gpl.html
 *
 */
-
-#define BOOL XBMC_BOOL 
 #include "system.h"
 #include "WinEvents.h"
 #include "WinEventsIOS.h"
-#include "Application.h"
 #include "XBMC_vkeys.h"
-#include "MouseStat.h"
+#include "Application.h"
 #include "WindowingFactory.h"
-#undef BOOL
-
-#import <UIKit/UIKit.h>
 
 PHANDLE_EVENT_FUNC CWinEventsBase::m_pEventFunc = NULL;
 
@@ -42,7 +36,8 @@ void CWinEventsIOS::MessagePush(XBMC_Event *newEvent)
 
 bool CWinEventsIOS::MessagePump()
 {
-  for (vector<XBMC_Event>::iterator it = events.begin(); it!=events.end(); ++it) {
+  for (vector<XBMC_Event>::iterator it = events.begin(); it!=events.end(); ++it)
+  {
     events.erase (events.begin(),events.begin()+1);
     g_application.OnEvent(*it);
     return true;
