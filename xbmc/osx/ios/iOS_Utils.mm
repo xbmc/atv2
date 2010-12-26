@@ -26,7 +26,7 @@
 #endif
 
 #import "iOS_Utils.h"
-#import "XBMCApplication.h"
+//#import "XBMCApplication.h"
 
 CCocoaAutoPool::CCocoaAutoPool()
 {
@@ -48,12 +48,11 @@ void  Destroy_AutoReleasePool(void *aPool)
   [(NSAutoreleasePool*)aPool release];
 }
 
+/*
 int  GetFrappBundlePath(char* path, uint32_t *bufsize)
 {
   NSString *pathname;
 	
-  //pathname = [[NSBundle bundleForClass:[XBMCApplicationDelegate class]] pathForResource:@"XBMC" ofType:nil];
-
   pathname = [[NSBundle mainBundle] executablePath];
 
   strcpy(path, [pathname UTF8String]);
@@ -65,5 +64,31 @@ int  GetFrappBundlePath(char* path, uint32_t *bufsize)
   
   return 0;
 }
+*/
 
+int  GetIOSExecutablePath(char* path, uint32_t *pathsize)
+{
+  // see if we can figure out who we are
+	NSString *pathname;
+
+  // a) XBMC frappliance running under ATV2
+  Class XBMCfrapp = NSClassFromString(@"XBMCAppliance");
+  if (XBMCfrapp != NULL)
+  {
+    pathname = [[NSBundle bundleForClass:XBMCfrapp] pathForResource:@"XBMC" ofType:@""];
+    strcpy(path, [pathname UTF8String]);
+    *pathsize = strlen(path);
+    //NSLog(@"%s XBMC frapp executable_path %s", __PRETTY_FUNCTION__, path);
+    return 0;
+  }
+
+  // b) XBMC application running under IOS
+  // c) XBMC application running under OSX
+  pathname = [[NSBundle mainBundle] executablePath];
+  strcpy(path, [pathname UTF8String]);
+  *pathsize = strlen(path);
+  //NSLog(@"%s XBMC app executable_path %s", __PRETTY_FUNCTION__, path);
+
+  return 0;
+}
 #endif

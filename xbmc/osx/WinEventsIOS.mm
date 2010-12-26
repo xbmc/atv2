@@ -33,34 +33,19 @@
 
 PHANDLE_EVENT_FUNC CWinEventsBase::m_pEventFunc = NULL;
 
-XBMC_Event g_newEvent;
-bool g_bNewEvent = false;
-
-//NSLock *lockMessage = [[NSLock alloc] init];
+static std::vector<XBMC_Event> events;
 
 void CWinEventsIOS::MessagePush(XBMC_Event *newEvent)
 {
-  //NSLog(@"%s", __PRETTY_FUNCTION__);
-  
-  //if([lockMessage tryLock]) {
-    memcpy(&g_newEvent, newEvent, sizeof(XBMC_Event));
-    g_bNewEvent = true;
-    //[lockMessage unlock];
-  //}
+  events.push_back(*newEvent);
 }
 
 bool CWinEventsIOS::MessagePump()
 {
-  //NSLog(@"%s", __PRETTY_FUNCTION__);
-  
-  //if([lockMessage tryLock]) {
-    if(g_bNewEvent) {
-      g_application.OnEvent(g_newEvent);
-      g_bNewEvent = false;
-      //[lockMessage unlock];
-      return true;
-    }
-  //}
-  
+  for (vector<XBMC_Event>::iterator it = events.begin(); it!=events.end(); ++it) {
+    events.erase (events.begin(),events.begin()+1);
+    g_application.OnEvent(*it);
+    return true;
+  }
   return false;
 }
