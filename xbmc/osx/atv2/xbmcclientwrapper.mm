@@ -144,12 +144,17 @@ XBMCClientWrapperImpl::XBMCClientWrapperImpl(bool f_universal_mode, const std::s
 	//PRINT_SIGNATURE();
 	
   populateEventMap();
-  if(m_universal_mode){
+  if (m_universal_mode)
+  {
     //DLOG(@"XBMCClientWrapperImpl started in universal mode sending to address %s", fcr_address.c_str());
     populateSequenceMap();
-  } else {
+  }
+  /*
+  else
+  {
     DLOG(@"XBMCClientWrapperImpl started in normal mode sending to address %s", fcr_address.c_str());
   }
+  */
 
 	//open udp port etc
 	m_socket = socket(AF_INET, SOCK_DGRAM, 0);
