@@ -20,6 +20,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <BackRow/BackRow.h>
+#import "/usr/include/objc/objc-runtime.h"
 
 #import "XBMCAppliance.h"
 #import "XBMCController.h"
@@ -37,7 +38,9 @@
 @implementation BRTopShelfView (specialAdditions)
 - (BRImageControl *)productImage
 {
-	return nil; //MSHookIvar<BRImageControl *>(self, "_productImage");
+  Ivar ivar = object_getInstanceVariable(self, "_productImage", NULL);
+  id result = object_getIvar(self, ivar);
+  return result;
 }
 @end
 
