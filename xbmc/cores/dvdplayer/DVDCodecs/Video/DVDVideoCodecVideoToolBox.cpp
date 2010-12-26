@@ -400,47 +400,47 @@ unsigned int descrLength(unsigned int len)
   return len + 1 + i;
 }
 
-void putDescr(ByteIOContext *pb, int tag, unsigned int size)
+void putDescr(DllAvFormat *av_format_ctx, ByteIOContext *pb, int tag, unsigned int size)
 {
   int i= descrLength(size) - size - 2;
-  put_byte(pb, tag);
+  av_format_ctx->put_byte(pb, tag);
   for(; i>0; i--)
-    put_byte(pb, (size>>(7*i)) | 0x80);
-  put_byte(pb, size & 0x7F);
+    av_format_ctx->put_byte(pb, (size>>(7*i)) | 0x80);
+  av_format_ctx->put_byte(pb, size & 0x7F);
 }
 
-void quicktime_write_esds(ByteIOContext *pb, quicktime_esds_t *esds)
+void quicktime_write_esds(DllAvFormat *av_format_ctx, ByteIOContext *pb, quicktime_esds_t *esds)
 {
   //quicktime_atom_t atom;
   int decoderSpecificInfoLen = esds->decoderConfigLen ? descrLength(esds->decoderConfigLen):0;
   //quicktime_atom_write_header(file, &atom, "esds");
 
-  put_byte(pb, 0);  // Version
-  put_be24(pb, 0);  // Flags
+  av_format_ctx->put_byte(pb, 0);  // Version
+  av_format_ctx->put_be24(pb, 0);  // Flags
 
   // ES descriptor
-  putDescr(pb, 0x03, 3 + descrLength(13 + decoderSpecificInfoLen) + descrLength(1));
+  putDescr(av_format_ctx, pb, 0x03, 3 + descrLength(13 + decoderSpecificInfoLen) + descrLength(1));
 
-  put_be16(pb, esds->esid);
-  put_byte(pb, esds->stream_priority);
+  av_format_ctx->put_be16(pb, esds->esid);
+  av_format_ctx->put_byte(pb, esds->stream_priority);
   // DecoderConfig descriptor
-  putDescr(pb, 0x04, 13 + esds->decoderConfigLen);
+  putDescr(av_format_ctx, pb, 0x04, 13 + esds->decoderConfigLen);
   // Object type indication
-  put_byte(pb, esds->objectTypeId); // objectTypeIndication
-  put_byte(pb, esds->streamType);   // streamType
+  av_format_ctx->put_byte(pb, esds->objectTypeId); // objectTypeIndication
+  av_format_ctx->put_byte(pb, esds->streamType);   // streamType
 
-  put_be24(pb, esds->bufferSizeDB); // buffer size
-  put_be32(pb, esds->maxBitrate);   // max bitrate
-  put_be32(pb, esds->avgBitrate);   // average bitrate
+  av_format_ctx->put_be24(pb, esds->bufferSizeDB); // buffer size
+  av_format_ctx->put_be32(pb, esds->maxBitrate);   // max bitrate
+  av_format_ctx->put_be32(pb, esds->avgBitrate);   // average bitrate
 
   // DecoderSpecific info descriptor
   if (decoderSpecificInfoLen) {
-    putDescr(pb, 0x05, esds->decoderConfigLen);
-    put_buffer(pb, esds->decoderConfig, esds->decoderConfigLen);
+    putDescr(av_format_ctx, pb, 0x05, esds->decoderConfigLen);
+    av_format_ctx->put_buffer(pb, esds->decoderConfig, esds->decoderConfigLen);
   }
   // SL descriptor
-  putDescr(pb, 0x06, 1);
-  put_byte(pb, 0x02);
+  putDescr(av_format_ctx, pb, 0x06, 1);
+  av_format_ctx->put_byte(pb, 0x02);
 
 /*
   put_byte(pb, 0);  // Version
@@ -484,7 +484,7 @@ void quicktime_write_esds(ByteIOContext *pb, quicktime_esds_t *esds)
 */
 }
 
-quicktime_esds_t* quicktime_set_esds(const uint8_t * decoderConfig, int decoderConfigLen)
+quicktime_esds_t* quicktime_set_esds(DllAvFormat *av_format_ctx, const uint8_t * decoderConfig, int decoderConfigLen)
 {
   // ffmpeg's codec->avctx->extradata, codec->avctx->extradata_size
   // are decoderConfig/decoderConfigLen
@@ -795,16 +795,16 @@ bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &o
           ByteIOContext *pb;
           quicktime_esds_t *esds;
 
-          if (url_open_dyn_buf(&pb) < 0)
+          if (m_dllAvFormat->url_open_dyn_buf(&pb) < 0)
             return false;
 
-          esds = quicktime_set_esds(extradata, extrasize);
-          quicktime_write_esds(pb, esds);
+          esds = quicktime_set_esds(m_dllAvFormat, extradata, extrasize);
+          quicktime_write_esds(m_dllAvFormat, pb, esds);
 
           // unhook from ffmpeg's extradata
           extradata = NULL;
           // extract the esds atom decoderConfig from extradata
-          extrasize = url_close_dyn_buf(pb, &extradata);
+          extrasize = m_dllAvFormat->url_close_dyn_buf(pb, &extradata);
           free(esds->decoderConfig);
           free(esds);
 
@@ -812,7 +812,7 @@ bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &o
             kVTFormatMPEG4Video, width, height, extradata, extrasize, 'esds');
 
           // done with the converted extradata, we MUST free using av_free
-          av_free(extradata);
+          m_dllAvUtil->av_free(extradata);
         } else {
           m_fmt_desc = CreateFormatDescription(kVTFormatMPEG4Video, width, height);          
         }

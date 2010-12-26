@@ -97,6 +97,7 @@ public:
   virtual int get_partial_buffer(ByteIOContext *s, unsigned char *buf, int size)=0;
   virtual void put_byte(ByteIOContext *s, int b)=0;
   virtual void put_buffer(ByteIOContext *s, const unsigned char *buf, int size)=0;
+  virtual void put_be24(ByteIOContext *s, unsigned int val)=0;
   virtual void put_be32(ByteIOContext *s, unsigned int val)=0;
   virtual void put_be16(ByteIOContext *s, unsigned int val)=0;
   virtual AVFormatContext *avformat_alloc_context(void)=0;
@@ -161,6 +162,7 @@ public:
   virtual int get_partial_buffer(ByteIOContext *s, unsigned char *buf, int size) { return ::get_partial_buffer(s, buf, size); }
   virtual void put_byte(ByteIOContext *s, int b) { ::put_byte(s, b); }
   virtual void put_buffer(ByteIOContext *s, const unsigned char *buf, int size) { ::put_buffer(s, buf, size); }
+  virtual void put_be24(ByteIOContext *s, unsigned int val) { ::put_be24(s, val); }
   virtual void put_be32(ByteIOContext *s, unsigned int val) { ::put_be32(s, val); }
   virtual void put_be16(ByteIOContext *s, unsigned int val) { ::put_be16(s, val); }
   virtual AVFormatContext *avformat_alloc_context() { return ::avformat_alloc_context(); }
@@ -222,6 +224,7 @@ class DllAvFormat : public DllDynamic, DllAvFormatInterface
   DEFINE_FUNC_ALIGNED3(int, __cdecl, get_partial_buffer, ByteIOContext*, unsigned char *, int)
   DEFINE_FUNC_ALIGNED2(void, __cdecl, put_byte, ByteIOContext*, int)
   DEFINE_FUNC_ALIGNED3(void, __cdecl, put_buffer, ByteIOContext*, const unsigned char *, int)
+  DEFINE_FUNC_ALIGNED2(void, __cdecl, put_be24, ByteIOContext*, unsigned int)
   DEFINE_FUNC_ALIGNED2(void, __cdecl, put_be32, ByteIOContext*, unsigned int)
   DEFINE_FUNC_ALIGNED2(void, __cdecl, put_be16, ByteIOContext*, unsigned int)
 #else
@@ -236,6 +239,7 @@ class DllAvFormat : public DllDynamic, DllAvFormatInterface
   DEFINE_METHOD3(int, get_partial_buffer, (ByteIOContext* p1, unsigned char *p2, int p3))
   DEFINE_METHOD2(void, put_byte, (ByteIOContext* p1, int p2))
   DEFINE_METHOD3(void, put_buffer, (ByteIOContext* p1, const unsigned char *p2, int p3))
+  DEFINE_METHOD2(void, put_be24, (ByteIOContext* p1, unsigned int p2))
   DEFINE_METHOD2(void, put_be32, (ByteIOContext* p1, unsigned int p2))
   DEFINE_METHOD2(void, put_be16, (ByteIOContext* p1, unsigned int p2))
 #endif
@@ -297,6 +301,7 @@ class DllAvFormat : public DllDynamic, DllAvFormatInterface
     RESOLVE_METHOD(get_partial_buffer)
     RESOLVE_METHOD(put_byte)
     RESOLVE_METHOD(put_buffer)
+    RESOLVE_METHOD(put_be24)
     RESOLVE_METHOD(put_be32)
     RESOLVE_METHOD(put_be16)
     RESOLVE_METHOD(avformat_alloc_context)
