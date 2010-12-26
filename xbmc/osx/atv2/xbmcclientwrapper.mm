@@ -145,7 +145,7 @@ XBMCClientWrapperImpl::XBMCClientWrapperImpl(bool f_universal_mode, const std::s
 	
   populateEventMap();
   if(m_universal_mode){
-    DLOG(@"XBMCClientWrapperImpl started in universal mode sending to address %s", fcr_address.c_str());
+    //DLOG(@"XBMCClientWrapperImpl started in universal mode sending to address %s", fcr_address.c_str());
     populateSequenceMap();
   } else {
     DLOG(@"XBMCClientWrapperImpl started in normal mode sending to address %s", fcr_address.c_str());
