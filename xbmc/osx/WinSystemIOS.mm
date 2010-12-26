@@ -117,8 +117,6 @@ bool CWinSystemIOS::SetFullScreen(bool fullScreen, RESOLUTION_INFO& res, bool bl
 
 void CWinSystemIOS::UpdateResolutions()
 {
-  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-  
   CGSize screensize = [g_xbmcController getScreenSize];
   double fps = [g_xbmcController getDisplayLinkFPS];
 
@@ -126,7 +124,6 @@ void CWinSystemIOS::UpdateResolutions()
 	//	__PRETTY_FUNCTION__, screensize.width, screensize.height, fps);
 
   UpdateDesktopResolution(g_settings.m_ResInfo[RES_DESKTOP], 0, screensize.width, screensize.height, fps);
-  [pool release];
 }
 
 bool CWinSystemIOS::IsExtSupported(const char* extension)
@@ -145,25 +142,19 @@ bool CWinSystemIOS::IsExtSupported(const char* extension)
 
 bool CWinSystemIOS::BeginRender()
 {
-  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   bool rtn;
 
   [g_xbmcController setFramebuffer];
 
   rtn = CRenderSystemGLES::BeginRender();
-
-  [pool release];
   return rtn;
 }
 
 bool CWinSystemIOS::EndRender()
 {
-  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   bool rtn;
 
   rtn = CRenderSystemGLES::EndRender();
-
-  [pool release];
   return rtn;
 }
 
@@ -175,24 +166,16 @@ void CWinSystemIOS::DeinitDisplayLink(void)
 }
 double CWinSystemIOS::GetDisplayLinkFPS(void)
 {
-  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   double fps;
 
   fps = [g_xbmcController getDisplayLinkFPS];
-
-  [pool release];
   return fps;
 }
 
 bool CWinSystemIOS::PresentRenderImpl()
 {
-  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-  
   //glFlush;
-  //glFinish();
   [g_xbmcController presentFramebuffer];
-
-  [pool release];
   return true;
 }
 
