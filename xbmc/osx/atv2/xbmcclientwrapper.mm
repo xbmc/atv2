@@ -141,7 +141,7 @@ void XBMCClientWrapperImpl::restartTimer(){
 }
 
 XBMCClientWrapperImpl::XBMCClientWrapperImpl(bool f_universal_mode, const std::string& fcr_address): m_address(fcr_address), m_universal_mode(f_universal_mode), m_timer(0), m_sequence_timeout(0.5){
-	PRINT_SIGNATURE();
+	//PRINT_SIGNATURE();
 	
   populateEventMap();
   if(m_universal_mode){
@@ -161,7 +161,7 @@ XBMCClientWrapperImpl::XBMCClientWrapperImpl(bool f_universal_mode, const std::s
 }
 
 XBMCClientWrapperImpl::~XBMCClientWrapperImpl(){
-	PRINT_SIGNATURE();
+	//PRINT_SIGNATURE();
   resetTimer();
   shutdown(m_socket, SHUT_RDWR);
 }
@@ -324,7 +324,7 @@ void XBMCClientWrapperImpl::populateSequenceMap(){
   return [self initWithUniversalMode:false serverAddress:@"localhost"];
 }
 - (id) initWithUniversalMode:(bool) f_yes_no serverAddress:(NSString*) fp_server{
-	PRINT_SIGNATURE();
+	//PRINT_SIGNATURE();
 	if( ![super init] )
 		return nil; 
 	mp_impl = new XBMCClientWrapperImpl(f_yes_no, [fp_server UTF8String]);
@@ -336,7 +336,7 @@ void XBMCClientWrapperImpl::populateSequenceMap(){
 }
 
 - (void)dealloc{
-	PRINT_SIGNATURE();
+	//PRINT_SIGNATURE();
   delete mp_impl;
 	[super dealloc];
 }
