@@ -20,6 +20,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <BackRow/BackRow.h>
+// objc-runtime.h is missing from iPhoneOS4.2SDK but present in iPhoneSimulator4.2.sdk
+// pull it from runtime system for now
 #import "/usr/include/objc/objc-runtime.h"
 
 #import "XBMCAppliance.h"
