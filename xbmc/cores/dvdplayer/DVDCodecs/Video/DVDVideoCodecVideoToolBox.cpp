@@ -1034,7 +1034,7 @@ int CDVDVideoCodecVideoToolBox::Decode(BYTE* pData, int iSize, double dts, doubl
 
   // TODO: queue depth is related to the number of reference frames in encoded h.264.
   // so we need to buffer until we get N ref frames + 1.
-  if (m_queue_depth < 8)
+  if (m_queue_depth < 4)
   {
     return VC_BUFFER;
   }
@@ -1075,6 +1075,14 @@ bool CDVDVideoCodecVideoToolBox::GetPicture(DVDVideoPicture* pDvdVideoPicture)
   // now we can pop the top frame
   DisplayQueuePop();
 
+  static double old_pts;
+  if (pDvdVideoPicture->pts < old_pts)
+  {
+    CLog::Log(LOGDEBUG, "%s - VTBDecoderDecode dts(%f), pts(%f), cvBufferRef(%p)", __FUNCTION__,
+      pDvdVideoPicture->dts, pDvdVideoPicture->pts, pDvdVideoPicture->cvBufferRef);
+  }
+  old_pts = pDvdVideoPicture->pts;
+  
 //  CLog::Log(LOGDEBUG, "%s - VTBDecoderDecode dts(%f), pts(%f), cvBufferRef(%p)", __FUNCTION__,
 //    pDvdVideoPicture->dts, pDvdVideoPicture->pts, pDvdVideoPicture->cvBufferRef);
 
@@ -1142,8 +1150,8 @@ CDVDVideoCodecVideoToolBox::CreateVTSession(int width, int height, CMFormatDescr
     kCVPixelBufferWidthKey, width);
   CFDictionarySetSInt32(destinationPixelBufferAttributes,
     kCVPixelBufferHeightKey, height);
-  CFDictionarySetSInt32(destinationPixelBufferAttributes,
-    kCVPixelBufferBytesPerRowAlignmentKey, 16);
+  //CFDictionarySetSInt32(destinationPixelBufferAttributes,
+  //  kCVPixelBufferBytesPerRowAlignmentKey, 16);
 
   outputCallback.callback = VTDecoderCallback;
   outputCallback.refcon = this;
@@ -1200,7 +1208,7 @@ CDVDVideoCodecVideoToolBox::VTDecoderCallback(
   UInt32             infoFlags,
   CVBufferRef        imageBuffer)
 {
-  // Warning, this is an async callback. There can be multiple frames in flight.
+  // This is an sync callback due to VTDecompressionSessionWaitForAsynchronousFrames
   CDVDVideoCodecVideoToolBox *ctx = (CDVDVideoCodecVideoToolBox*)refcon;
 
   if (status != kVTDecoderNoErr)
