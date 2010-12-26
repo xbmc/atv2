@@ -89,13 +89,26 @@ int main(int argc, char *argv[]) {
     sigaddset(&set, SIGPIPE);
     sigprocmask(SIG_BLOCK, &set, NULL);
   }
-
+  
   NSLog(@"%s", __PRETTY_FUNCTION__);
 
-  int retVal = UIApplicationMain(argc, argv, nil, nil);
+  @try
+  {
+    
+    UIApplicationMain(argc, argv, nil, nil);
+  
+  } 
+  @catch (id theException) 
+  {
+    NSLog(@"%@", theException);
+  }
+  @finally 
+  {
+    NSLog(@"This always happens.");
+  }
     
   [pool release];
 	
-  return retVal;
+  return noErr;
 
 }

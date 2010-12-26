@@ -24,13 +24,14 @@
 #define WINDOW_EVENTS_IOS_H
 
 #include "WinEvents.h"
+#import  <vector>
 
 class CWinEventsIOS : public CWinEventsBase
 {
 public:
   static void MessagePush(XBMC_Event *newEvent);
   static bool MessagePump();
-
+  
 protected:
 };
 

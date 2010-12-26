@@ -94,7 +94,12 @@ extern NSString* kBRScreenSaverDismissed;
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-  return YES;
+  if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+    return YES;
+  else {
+    return NO;
+  }
+
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
@@ -175,7 +180,7 @@ extern NSString* kBRScreenSaverDismissed;
     newEvent.button.x = lastTouch.x;
     newEvent.button.y = lastTouch.y;
     CWinEventsIOS::MessagePush(&newEvent);
-  } else if([touch tapCount] == 1) {
+  } else /* if([touch tapCount] == 1) */ {
     newEvent.type = XBMC_MOUSEBUTTONUP;
     newEvent.button.button = XBMC_BUTTON_LEFT;  
     newEvent.button.type = XBMC_MOUSEBUTTONUP;
@@ -190,21 +195,6 @@ extern NSString* kBRScreenSaverDismissed;
 { 
   NSLog(@"%s", __PRETTY_FUNCTION__);
 
-  /*
-  uint64_t start_time = CTimeUtils::GetTimeMS();
-  start_time = CTimeUtils::GetTimeMS();
-
-  NSLog(@"%s starttime ", __PRETTY_FUNCTION__, start_time);
-
-  while(1) {
-    if(( CTimeUtils::GetTimeMS() - start_time ) > 30*1000) {
-      break;
-    }
-  }
-  start_time = CTimeUtils::GetTimeMS();
-  NSLog(@"%s endtime ", __PRETTY_FUNCTION__, start_time);
-  */
-  
   NSNotificationCenter *center;
   // first the default notification center, which is all
   // notifications that only happen inside of our program
