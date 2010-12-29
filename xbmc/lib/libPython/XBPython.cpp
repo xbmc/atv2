@@ -425,10 +425,15 @@ void XBPython::Initialize()
       // If this is not the first time we initialize Python, the interpreter
       // lock already exists and we need to lock it as PyEval_InitThreads
       // would not do that in that case.
-      if (PyEval_ThreadsInitialized())
-        PyEval_AcquireLock();
-      else
+      #if defined(__APPLE__) && defined(__arm__)
+        // grrr, we hang at PyEval_ThreadsInitialized after unloading/loading python
         PyEval_InitThreads();
+      #else
+        if (PyEval_ThreadsInitialized())
+          PyEval_AcquireLock();
+        else
+          PyEval_InitThreads();
+      #endif
 
       char* python_argv[1] = { (char*)"" } ;
       PySys_SetArgv(1, python_argv);
