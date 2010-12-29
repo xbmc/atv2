@@ -485,9 +485,11 @@ DYNOBJSXBMC= \
 	xbmc/cores/DllLoader/exports/util/exports_utils.a \
 	xbmc/cores/DllLoader/exports/exports.a
 
+ifneq ($(ARCH), arm-osx)
 ifeq ($(findstring arm,$(ARCH)), arm)
 # Force external python2.5 for now!
 LIBS +=-lpython2.5
+endif
 endif
 
 xbmc.bin: $(OBJSXBMC) $(DYNOBJSXBMC)
