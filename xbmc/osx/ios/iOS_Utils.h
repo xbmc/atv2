@@ -41,7 +41,8 @@ extern "C"
   void*   Create_AutoReleasePool(void);
   void    Destroy_AutoReleasePool(void* pool);
   
-  int     GetFrappBundlePath(char* path, uint32_t* bufsize);
+  int     GetIOSFrameworkPath(char* path, uint32_t *pathsize);
+  int     GetIOSExecutablePath(char* path, uint32_t *pathsize);
 #ifdef __cplusplus
 }
 #endif

@@ -48,23 +48,41 @@ void  Destroy_AutoReleasePool(void *aPool)
   [(NSAutoreleasePool*)aPool release];
 }
 
-/*
-int  GetFrappBundlePath(char* path, uint32_t *bufsize)
+int  GetIOSFrameworkPath(char* path, uint32_t *pathsize)
 {
-  NSString *pathname;
-	
-  pathname = [[NSBundle mainBundle] executablePath];
+  // see if we can figure out who we are
+	NSString *pathname;
 
+  // a) XBMC frappliance running under ATV2
+  Class XBMCfrapp = NSClassFromString(@"XBMCAppliance");
+  if (XBMCfrapp != NULL)
+  {
+    pathname = [[NSBundle bundleForClass:XBMCfrapp] pathForResource:@"Frameworks" ofType:@""];
+    strcpy(path, [pathname UTF8String]);
+    *pathsize = strlen(path);
+    //NSLog(@"%s XBMC Frapp Frameworks path %s", __PRETTY_FUNCTION__, path);
+    return 0;
+  }
+
+  // b) XBMC application running under IOS
+  Class XBMCapp= NSClassFromString(@"XBMCApplication");
+  if (XBMCfrapp != NULL)
+  {
+    pathname = [[NSBundle bundleForClass:XBMCapp] pathForResource:@"Frameworks" ofType:@""];
+    strcpy(path, [pathname UTF8String]);
+    *pathsize = strlen(path);
+    //NSLog(@"%s XBMC IOS Frameworks path %s", __PRETTY_FUNCTION__, path);
+    return 0;
+  }
+
+  // c) XBMC application running under OSX
+  pathname = [[NSBundle mainBundle] privateFrameworksPath];
   strcpy(path, [pathname UTF8String]);
-  *bufsize = strlen(path);
-  *bufsize -= 4;
-  path[*bufsize] = 0;
-  
-  NSLog(@"%s executable_path %s", __PRETTY_FUNCTION__, path);
-  
+  *pathsize = strlen(path);
+  //NSLog(@"%s XBMC Frameworks path %s", __PRETTY_FUNCTION__, path);
+
   return 0;
 }
-*/
 
 int  GetIOSExecutablePath(char* path, uint32_t *pathsize)
 {
