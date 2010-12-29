@@ -391,24 +391,32 @@ void XBPython::Initialize()
       // at http://docs.python.org/using/cmdline.html#environment-variables
 
 #if (!defined USE_EXTERNAL_PYTHON)
-#ifdef _LINUX
-      // Required for python to find optimized code (pyo) files
-      setenv("PYTHONOPTIMIZE", "1", 1);
-      setenv("PYTHONHOME", _P("special://xbmc/system/python").c_str(), 1);
-#ifdef __APPLE__
-      // OSX uses contents from extracted zip, 3X to 4X times faster during Py_Initialize
-      setenv("PYTHONPATH", _P("special://xbmc/system/python/Lib").c_str(), 1);
-#else
-      setenv("PYTHONPATH", _P("special://xbmcbin/system/python/python24.zip").c_str(), 1);
-#endif /* __APPLE__ */
-      setenv("PYTHONCASEOK", "1", 1);
-      CLog::Log(LOGDEBUG, "Python wrapper library linked with internal Python library");
-#endif /* _LINUX */
+  #ifdef _LINUX
+        // Required for python to find optimized code (pyo) files
+        setenv("PYTHONOPTIMIZE", "1", 1);
+        setenv("PYTHONHOME", _P("special://xbmc/system/python").c_str(), 1);
+        #ifdef __APPLE__
+          // OSX uses contents from extracted zip, 3X to 4X times faster during Py_Initialize
+          setenv("PYTHONPATH", _P("special://xbmc/system/python/Lib").c_str(), 1);
+        #else
+          setenv("PYTHONPATH", _P("special://xbmcbin/system/python/python24.zip").c_str(), 1);
+        #endif /* __APPLE__ */
+        setenv("PYTHONCASEOK", "1", 1);
+        CLog::Log(LOGDEBUG, "Python wrapper library linked with internal Python library");
+  #endif /* _LINUX */
 #elif !defined(_WIN32)
       /* PYTHONOPTIMIZE is set off intentionally when using external Python.
          Reason for this is because we cannot be sure what version of Python
          was used to compile the various Python object files (i.e. .pyo,
          .pyc, etc.). */
+      #if defined(__APPLE__) && defined(__arm__)
+          // using external python, it's build looking for xxx/lib/python2.6
+          // so point it to frameworks/usr which is where python2.6 is located
+          setenv("PYTHONHOME", _P("special://frameworks/usr").c_str(), 1);
+          setenv("PYTHONPATH", _P("special://frameworks/usr").c_str(), 1);
+          CLog::Log(LOGDEBUG, "PYTHONHOME -> %s", _P("special://frameworks/usr").c_str());
+          CLog::Log(LOGDEBUG, "PYTHONPATH -> %s", _P("special://frameworks/usr").c_str());
+      #endif
       setenv("PYTHONCASEOK", "1", 1); //This line should really be removed
       CLog::Log(LOGDEBUG, "Python wrapper library linked with system Python library");
 #endif /* USE_EXTERNAL_PYTHON */
