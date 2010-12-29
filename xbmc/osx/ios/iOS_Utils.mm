@@ -24,9 +24,8 @@
 #else
   #import <Cocoa/Cocoa.h>
 #endif
-
+#import <ImageIO/ImageIO.h>
 #import "iOS_Utils.h"
-//#import "XBMCApplication.h"
 
 CCocoaAutoPool::CCocoaAutoPool()
 {
@@ -46,6 +45,15 @@ void* Create_AutoReleasePool(void)
 void  Destroy_AutoReleasePool(void *aPool)
 {
   [(NSAutoreleasePool*)aPool release];
+}
+
+CFURLRef CreateCFURLRefFromFilePath(const char *filepath)
+{
+  NSString *fpath = [NSString stringWithUTF8String:filepath];
+  CFURLRef fileURL = (CFURLRef)[NSURL fileURLWithPath: fpath];
+  [fpath release];
+  
+  return fileURL;
 }
 
 int  GetIOSFrameworkPath(char* path, uint32_t *pathsize)
