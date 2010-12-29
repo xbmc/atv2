@@ -8,8 +8,7 @@ SOURCE=../../../../
 CONFIGURE=./configure --prefix=$(PREFIX) --host=$(HOST) \
   --with-arch=arm --with-cpu=cortex-a8 --enable-external-python --enable-gles \
   --disable-optical-drive --disable-dvdcss --disable-webserver --disable-optimizations \
-  PKG_CONFIG_PATH=$(PREFIX)/lib/pkgconfig \
-  ac_cv_lib_smbclient_main=yes ac_cv_lib_python2_5_main=yes
+  PKG_CONFIG_PATH=$(PREFIX)/lib/pkgconfig
 
 all: configure
 
