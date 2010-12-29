@@ -11,7 +11,7 @@
 include ../config.mk
 
 # lib name, version
-LIBNAME=python
+LIBNAME=Python
 VERSION=2.6.5
 SOURCE=$(LIBNAME)-$(VERSION)
 # download location and format
@@ -37,7 +37,7 @@ CONFIGURE_NATIVE= CFLAGS="" CXXFLAGS="" LDFLAGS="" CPPFLAGS="" \
   LD="ld" \
   ./configure
 
-LIBDYLIB=$(SOURCE)/_install/libpython2.6.dylib
+LIBDYLIB=$(SOURCE)/libpython2.6.dylib
 
 CLEAN_FILES=$(ARCHIVE) $(SOURCE)
 
@@ -65,7 +65,10 @@ $(LIBDYLIB): $(SOURCE)
 	cd $(SOURCE); make HOSTPYTHON=./hostpython HOSTPGEN=./Parser/hostpgen CROSS_COMPILE_TARGET=yes
 
 .installed:
-	cd $(SOURCE); make install HOSTPYTHON=./hostpython CROSS_COMPILE_TARGET=yes prefix=$(shell cd $(SOURCE); pwd)/_install
+	cd $(SOURCE); make install HOSTPYTHON=./hostpython CROSS_COMPILE_TARGET=yes
+	find $(PREFIX)/lib/python2.6 -type f -name *.pyc -exec rm -f {} \;	
+	find $(PREFIX)/lib/python2.6 -type f -name *.pyo -exec rm -f {} \;	
+	find $(PREFIX)/lib/python2.6 -type d -name *test* -exec rm -rf {} \;	
 	touch $@
 
 clean:
