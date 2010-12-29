@@ -27,6 +27,10 @@
 #include "DDSImage.h"
 #include "Util.h"
 #include "SpecialProtocol.h"
+#if defined(__APPLE__)
+  #include <ImageIO/ImageIO.h>
+  #include "iOS_Utils.h"
+#endif
 
 /************************************************************************/
 /*                                                                      */
@@ -166,6 +170,59 @@ bool CBaseTexture::LoadFromFile(const CStdString& texturePath, unsigned int maxW
     return false;
   }
 
+#if defined(__APPLE__)
+  CFURLRef textureURL = CreateCFURLRefFromFilePath(CSpecialProtocol::TranslatePath(texturePath).c_str());
+
+  CGImageSourceRef imageSource = CGImageSourceCreateWithURL(textureURL, NULL);
+  CFRelease(textureURL);
+
+  CGImageRef image = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
+  CFRelease(imageSource);
+
+  unsigned int width  = CGImageGetWidth(image);
+  unsigned int height = CGImageGetHeight(image);
+
+  m_hasAlpha = (CGImageGetAlphaInfo(image) != kCGImageAlphaNone);
+
+  Allocate(width, height, XB_FMT_A8R8G8B8);
+
+// not sure what to do here :)
+//  if (autoRotate && image.exifInfo.Orientation)
+//    m_orientation = image.exifInfo.Orientation - 1;
+  if (originalWidth)
+    *originalWidth = width;
+  if (originalHeight)
+    *originalHeight = height;
+
+  CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+
+  CGContextRef context = CGBitmapContextCreate(m_pixels,
+    width, height, 8, GetPitch(), colorSpace,
+    kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Host);
+
+  CGColorSpaceRelease(colorSpace);
+
+  // Flip so that it isn't upside-down
+  //CGContextTranslateCTM(context, 0, height);
+  //CGContextScaleCTM(context, 1.0f, -1.0f);
+  #if MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_5
+    CGContextClearRect(context, CGRectMake(0, 0, width, height));
+  #else
+    #if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_5
+    // (just a way of checking whether we're running in 10.5 or later)
+    if (CGContextDrawLinearGradient == 0)
+      CGContextClearRect(context, CGRectMake(0, 0, width, height));
+    else
+    #endif
+      CGContextSetBlendMode(context, kCGBlendModeCopy);
+  #endif
+  //CGContextSetBlendMode(context, kCGBlendModeCopy);
+  CGContextDrawImage(context, CGRectMake(0, 0, width, height), image);
+  CGContextRelease(context);
+  CGImageRelease(image);
+
+#else
+
   DllImageLib dll;
   if (!dll.Load())
     return false;
@@ -210,6 +267,7 @@ bool CBaseTexture::LoadFromFile(const CStdString& texturePath, unsigned int maxW
   }
 
   dll.ReleaseImage(&image);
+#endif
 
   ClampToEdge();
 

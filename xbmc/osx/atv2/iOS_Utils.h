@@ -22,6 +22,7 @@
 #define _COCOA_UTILS_H_
 
 #include <string>
+#include <CoreFoundation/CFURL.h>
 
 class CCocoaAutoPool
 {
@@ -41,6 +42,8 @@ extern "C"
   void*   Create_AutoReleasePool(void);
   void    Destroy_AutoReleasePool(void* pool);
   
+  CFURLRef CreateCFURLRefFromFilePath(const char *filepath);
+
   int     GetIOSFrameworkPath(char* path, uint32_t *pathsize);
   int     GetIOSExecutablePath(char* path, uint32_t* pathsize);
 #ifdef __cplusplus
