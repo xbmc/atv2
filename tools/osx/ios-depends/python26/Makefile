@@ -68,7 +68,7 @@ $(LIBDYLIB): $(SOURCE)
 	cd $(SOURCE); make install HOSTPYTHON=./hostpython CROSS_COMPILE_TARGET=yes
 	find $(PREFIX)/lib/python2.6 -type f -name *.pyc -exec rm -f {} \;	
 	find $(PREFIX)/lib/python2.6 -type f -name *.pyo -exec rm -f {} \;	
-	find $(PREFIX)/lib/python2.6 -type d -name *test* -exec rm -rf {} \;	
+	#find $(PREFIX)/lib/python2.6 -type d -name *test* -exec rm -rf {} \;	
 	touch $@
 
 clean:
