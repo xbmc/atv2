@@ -59,7 +59,7 @@ av_cold void ff_rdft_init_arm(RDFTContext *s)
 #if CONFIG_DCA_DECODER
 av_cold void ff_synth_filter_init_arm(SynthFilterContext *s)
 {
-    if (HAVE_NEON)
-        s->synth_filter_float = ff_synth_filter_float_neon;
+//    if (HAVE_NEON)
+//        s->synth_filter_float = ff_synth_filter_float_neon;
 }
 #endif
