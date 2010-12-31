@@ -92,6 +92,7 @@ extern NSString* kBRScreenSaverDismissed;
 @synthesize animating, context, displayLink;
 @synthesize firstTouch;
 @synthesize lastTouch;
+@synthesize lastEvent;
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -113,46 +114,99 @@ extern NSString* kBRScreenSaverDismissed;
 	return orientation;
 }
 
+-(void)sendKey:(uint16_t) key
+{
+  XBMC_Event newEvent;
+  memset(&newEvent, 0, sizeof(newEvent));
+
+  newEvent.key.keysym.unicode = key;
+
+  newEvent.type = XBMC_KEYDOWN;
+  CWinEventsIOS::MessagePush(&newEvent);
+
+  newEvent.type = XBMC_KEYUP;
+  CWinEventsIOS::MessagePush(&newEvent);
+}
+
+#define kMinimumGestureLength  100
+#define kMaximumVariance   10
+
+-(bool)handleSwipe {
+
+  //CGFloat deltaX = fabsf(firstTouch.x - lastTouch.x);
+  //CGFloat deltaY = fabsf(firstTouch.y - lastTouch.y);
+
+  CGFloat deltaX = firstTouch.x - lastTouch.x;
+  CGFloat deltaY = firstTouch.y - lastTouch.y;
+
+  if ( (deltaX > kMinimumGestureLength) && ( deltaY < kMaximumVariance) ) 
+  {
+    //[self handleSwipeLeft];
+    [self sendKey:8];
+    NSLog(@"%s Swipe left", __PRETTY_FUNCTION__);
+  }
+  else if ( (deltaX*(-1) > kMinimumGestureLength) && ( deltaY < kMaximumVariance) ) 
+  {
+    [self sendKey:9];
+    //[self handleSwipeRight];
+    NSLog(@"%s Swipe right", __PRETTY_FUNCTION__);
+  }
+  else if ( (deltaY > kMinimumGestureLength) && ( deltaX < kMaximumVariance) ) 
+  {
+    [self sendKey:'c'];
+    NSLog(@"%s Swipe up", __PRETTY_FUNCTION__);
+  }
+  else if( (deltaY*(-1) > kMinimumGestureLength) && ( deltaX < kMaximumVariance) ) 
+  {
+    [self sendKey:'o' ];
+    NSLog(@"%s Swipe down", __PRETTY_FUNCTION__);
+  }
+
+  NSLog(@"%s handleSwipe x=%f, y=%f", __PRETTY_FUNCTION__, deltaX, deltaY);
+
+  return false;
+}
+
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
   UITouch* touch = [[event touchesForView:self.view] anyObject];
   firstTouch = [touch locationInView:self.view];
   lastTouch = [touch locationInView:self.view];
 
-  NSLog(@"%s touchesBegan x=%d, y=%d ", __PRETTY_FUNCTION__, lastTouch.x, lastTouch.y);
+  NSLog(@"%s touchesBegan x=%d, y=%d count=%d", __PRETTY_FUNCTION__, lastTouch.x, lastTouch.y, touch.tapCount);
 
   XBMC_Event newEvent;
   memset(&newEvent, 0, sizeof(newEvent));
 
   newEvent.type = XBMC_MOUSEBUTTONDOWN;
   newEvent.button.type = XBMC_MOUSEBUTTONDOWN;
-  newEvent.button.button = XBMC_BUTTON_LEFT;
-  newEvent.button.state = XBMC_PRESSED;
   newEvent.button.x = lastTouch.x;
   newEvent.button.y = lastTouch.y;
-  //g_application.OnEvent(newEvent);
+
+  if ([touch tapCount] == 2) {
+    newEvent.button.button = XBMC_BUTTON_RIGHT;
+  } else {
+    newEvent.button.button = XBMC_BUTTON_LEFT;
+  }
   
   CWinEventsIOS::MessagePush(&newEvent);
-  //g_Mouse.SetActive(true);
+  /* Store the tap action for later */
+  memcpy(&lastEvent, &newEvent, sizeof(XBMC_Event));
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
   UITouch *touch = [touches anyObject];
   lastTouch = [touch locationInView:self.view];
 
-  NSLog(@"%s touchesMoved x=%d, y=%d ", __PRETTY_FUNCTION__, lastTouch.x, lastTouch.y);
+  NSLog(@"%s touchesMoved x=%d, y=%d count=%d", __PRETTY_FUNCTION__, lastTouch.x, lastTouch.y, touch.tapCount);
 
   XBMC_Event newEvent;
-  memset(&newEvent, 0, sizeof(newEvent));
+  memcpy(&newEvent, &lastEvent, sizeof(XBMC_Event));
 
-  newEvent.type = XBMC_MOUSEBUTTONDOWN;
   newEvent.motion.x = lastTouch.x;
   newEvent.motion.y = lastTouch.y;
-  newEvent.motion.state = 0;
+  //newEvent.motion.state = 0;
 
   CWinEventsIOS::MessagePush(&newEvent);
-
-  //g_application.OnEvent(newEvent);
-  //g_Mouse.SetActive(true);
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -161,35 +215,18 @@ extern NSString* kBRScreenSaverDismissed;
 
   NSLog(@"%s touchesEnded x=%d, y=%d ", __PRETTY_FUNCTION__, lastTouch.x, lastTouch.y);
 
-  // use double tapp as right mouse key
-  XBMC_Event newEvent;
-  memset(&newEvent, 0, sizeof(newEvent));
+  //[self handleSwipe];
 
-  //XBMC_KEYDOWN
-  
-  if([touch tapCount] == 2) {
-    newEvent.type = XBMC_MOUSEBUTTONUP;
-    newEvent.button.button = XBMC_BUTTON_RIGHT;
-    newEvent.button.type = XBMC_MOUSEBUTTONDOWN;
-    newEvent.button.state = XBMC_PRESSED;
-    newEvent.button.x = lastTouch.x;
-    newEvent.button.y = lastTouch.y;
-    CWinEventsIOS::MessagePush(&newEvent);
-    Sleep(500);
-    newEvent.button.type = XBMC_MOUSEBUTTONUP;
-    newEvent.button.state = XBMC_RELEASED;
-    newEvent.button.x = lastTouch.x;
-    newEvent.button.y = lastTouch.y;
-    CWinEventsIOS::MessagePush(&newEvent);
-  } else /* if([touch tapCount] == 1) */ {
-    newEvent.type = XBMC_MOUSEBUTTONUP;
-    newEvent.button.button = XBMC_BUTTON_LEFT;  
-    newEvent.button.type = XBMC_MOUSEBUTTONUP;
-    newEvent.button.state = XBMC_RELEASED;
-    newEvent.button.x = lastTouch.x;
-    newEvent.button.y = lastTouch.y;
-    CWinEventsIOS::MessagePush(&newEvent);
-  }
+  XBMC_Event newEvent;
+  memcpy(&newEvent, &lastEvent, sizeof(XBMC_Event));
+
+  newEvent.type = XBMC_MOUSEBUTTONUP;
+  newEvent.button.type = XBMC_MOUSEBUTTONUP;
+  newEvent.button.x = lastTouch.x;
+  newEvent.button.y = lastTouch.y;
+  CWinEventsIOS::MessagePush(&newEvent);
+
+  memset(&lastEvent, 0x0, sizeof(XBMC_Event));         
 }
 
 - (void)awakeFromNib
@@ -205,6 +242,8 @@ extern NSString* kBRScreenSaverDismissed;
     name: nil
     object: nil];
 	
+  CWinEventsIOS::Init();
+
   EAGLContext *aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
 	
   if (!aContext)
@@ -243,7 +282,10 @@ extern NSString* kBRScreenSaverDismissed;
   // Tear down context.
   if ([EAGLContext currentContext] == context)
 	  [EAGLContext setCurrentContext:nil];
-	
+  self.context = nil;
+
+  CWinEventsIOS::DeInit();
+
   [context release];	
 	
   [super dealloc];
@@ -283,8 +325,7 @@ extern NSString* kBRScreenSaverDismissed;
 {
   [super viewDidLoad];
   
-  //Setup our Audio Session
-  //OSStatus status = AudioSessionInitialize(NULL, NULL, NULL, NULL);
+  self.view.multipleTouchEnabled=YES;  
 }
 
 - (void)presentFramebuffer
