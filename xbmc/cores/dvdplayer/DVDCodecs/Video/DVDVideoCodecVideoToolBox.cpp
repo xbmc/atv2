@@ -83,8 +83,7 @@ typedef void (*VTDecompressionOutputCallbackFunc)(
   CVBufferRef     imageBuffer);
 
 typedef struct _VTDecompressionOutputCallback VTDecompressionOutputCallback;
-struct _VTDecompressionOutputCallback
-{
+struct _VTDecompressionOutputCallback {
   VTDecompressionOutputCallbackFunc callback;
   void *refcon;
 };
@@ -156,8 +155,7 @@ char* vtutil_object_to_string(CFTypeRef obj)
   return result;
 }
 
-typedef struct
-{
+typedef struct {
   VTDecompressionSessionRef session;
 } VTDumpDecompressionPropCtx;
 
@@ -169,7 +167,8 @@ vtdec_session_dump_property(CFStringRef prop_name, CFDictionaryRef prop_attrs, V
   OSStatus status;
 
   name_str = vtutil_string_to_utf8(prop_name);
-  if (true) {
+  if (true)
+  {
     char *attrs_str;
 
     attrs_str = vtutil_object_to_string(prop_attrs);
@@ -178,7 +177,8 @@ vtdec_session_dump_property(CFStringRef prop_name, CFDictionaryRef prop_attrs, V
   }
 
   status = VTDecompressionSessionCopyProperty(dpc->session, prop_name, NULL, &prop_value);
-  if (status == kVTDecoderNoErr) {
+  if (status == kVTDecoderNoErr)
+  {
     char *value_str;
 
     value_str = vtutil_object_to_string(prop_value);
@@ -187,7 +187,9 @@ vtdec_session_dump_property(CFStringRef prop_name, CFDictionaryRef prop_attrs, V
 
     if (prop_value != NULL)
       CFRelease(prop_value);
-  } else {
+  }
+  else
+  {
     CLog::Log(LOGDEBUG, "%s = <failed to query: %d>\n", name_str, (int)status);
   }
 
@@ -381,7 +383,7 @@ typedef struct {
   long flags;
 
   uint16_t esid;
-  uint8_t stream_priority;
+  uint8_t  stream_priority;
 
   uint8_t  objectTypeId;
   uint8_t  streamType;
@@ -434,7 +436,8 @@ void quicktime_write_esds(DllAvFormat *av_format_ctx, ByteIOContext *pb, quickti
   av_format_ctx->put_be32(pb, esds->avgBitrate);   // average bitrate
 
   // DecoderSpecific info descriptor
-  if (decoderSpecificInfoLen) {
+  if (decoderSpecificInfoLen)
+  {
     putDescr(av_format_ctx, pb, 0x05, esds->decoderConfigLen);
     av_format_ctx->put_buffer(pb, esds->decoderConfig, esds->decoderConfigLen);
   }
@@ -531,7 +534,8 @@ void quicktime_esds_dump(quicktime_esds_t * esds)
   printf(" avgBitrate:       %d\n",       esds->avgBitrate);
   printf(" decoderConfigLen: %d\n",       esds->decoderConfigLen);
   printf(" decoderConfig:");
-  for(i = 0; i < esds->decoderConfigLen; i++) {
+  for(i = 0; i < esds->decoderConfigLen; i++)
+  {
     if(!(i % 16))
       printf("\n ");
     printf("%02x ", esds->decoderConfig[i]);
@@ -783,9 +787,6 @@ bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &o
     profile = hints.profile;
     extrasize = hints.extrasize;
     extradata = (uint8_t*)hints.extradata;
-    //m_codex_extrasize = hints.extrasize;
-    //m_codex_extradata = malloc(m_codex_extrasize);
-    //memcpy(m_codex_extradata, hints.extradata, m_codex_extrasize);
  
     switch (hints.codec)
     {
@@ -825,7 +826,6 @@ bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &o
 
       case CODEC_ID_H264:
         // TODO: need to quality h264 encoding (profile, level and number of reference frame)
-        // source must be H.264 with valid avcC atom data in extradata
         if (extrasize < 7 || extradata == NULL)
         {
           //m_fmt_desc = CreateFormatDescription(kVTFormatH264, width, height);
@@ -881,7 +881,8 @@ bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &o
       break;
     }
 
-    if(m_fmt_desc == NULL) {
+    if(m_fmt_desc == NULL)
+    {
       CLog::Log(LOGNOTICE, "%s - created avcC atom of failed", __FUNCTION__);
       m_pFormatName = "";
       return false;
@@ -992,7 +993,8 @@ int CDVDVideoCodecVideoToolBox::Decode(BYTE* pData, int iSize, double dts, doubl
     
     if (!sampleBuff)
     {
-      if (demux_size) m_dllAvUtil->av_free(demux_buff);
+      if (demux_size)
+        m_dllAvUtil->av_free(demux_buff);
       CLog::Log(LOGNOTICE, "%s - CreateSampleBufferFrom failed", __FUNCTION__);
       return VC_ERROR;
     }
@@ -1010,7 +1012,8 @@ int CDVDVideoCodecVideoToolBox::Decode(BYTE* pData, int iSize, double dts, doubl
         __FUNCTION__, (int)status);
       CFRelease(frameInfo);
       FigSampleBufferRelease(sampleBuff);
-      if (demux_size) m_dllAvUtil->av_free(demux_buff);
+      if (demux_size)
+        m_dllAvUtil->av_free(demux_buff);
       return VC_ERROR;
       // VTDecompressionSessionDecodeFrame returned 8969 (codecBadDataErr)
       // VTDecompressionSessionDecodeFrame returned -12350
@@ -1025,21 +1028,21 @@ int CDVDVideoCodecVideoToolBox::Decode(BYTE* pData, int iSize, double dts, doubl
         __FUNCTION__, (int)status);
       CFRelease(frameInfo);
       FigSampleBufferRelease(sampleBuff);
-      if (demux_size) m_dllAvUtil->av_free(demux_buff);
+      if (demux_size)
+        m_dllAvUtil->av_free(demux_buff);
       return VC_ERROR;
     }
 
     CFRelease(frameInfo);
     FigSampleBufferRelease(sampleBuff);
-    if (demux_size) m_dllAvUtil->av_free(demux_buff);
+    if (demux_size)
+      m_dllAvUtil->av_free(demux_buff);
   }
 
   // TODO: queue depth is related to the number of reference frames in encoded h.264.
   // so we need to buffer until we get N ref frames + 1.
   if (m_queue_depth < 4)
-  {
     return VC_BUFFER;
-  }
 
   return VC_PICTURE | VC_BUFFER;
 }
@@ -1079,10 +1082,8 @@ bool CDVDVideoCodecVideoToolBox::GetPicture(DVDVideoPicture* pDvdVideoPicture)
 
   static double old_pts;
   if (pDvdVideoPicture->pts < old_pts)
-  {
     CLog::Log(LOGDEBUG, "%s - VTBDecoderDecode dts(%f), pts(%f), cvBufferRef(%p)", __FUNCTION__,
       pDvdVideoPicture->dts, pDvdVideoPicture->pts, pDvdVideoPicture->cvBufferRef);
-  }
   old_pts = pDvdVideoPicture->pts;
   
 //  CLog::Log(LOGDEBUG, "%s - VTBDecoderDecode dts(%f), pts(%f), cvBufferRef(%p)", __FUNCTION__,
@@ -1263,7 +1264,9 @@ CDVDVideoCodecVideoToolBox::VTDecoderCallback(
     // we have an empty queue, or this frame earlier than the current queue head.
     newFrame->nextframe = queueWalker;
     ctx->m_display_queue = newFrame;
-  } else {
+  }
+  else
+  {
     // walk the queue and insert this frame where it belongs in display order.
     bool frameInserted = false;
     frame_queue *nextFrame = NULL;
