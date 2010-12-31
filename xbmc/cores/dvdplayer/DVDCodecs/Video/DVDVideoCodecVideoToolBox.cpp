@@ -790,7 +790,6 @@ bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &o
     switch (hints.codec)
     {
       case CODEC_ID_MPEG4:
-        m_pFormatName = "vtb-mpeg4";
         if (extrasize) {
           ByteIOContext *pb;
           quicktime_esds_t *esds;
@@ -816,6 +815,7 @@ bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &o
         } else {
           m_fmt_desc = CreateFormatDescription(kVTFormatMPEG4Video, width, height);          
         }
+        m_pFormatName = "vtb-mpeg4";
       break;
 
       case CODEC_ID_MPEG2VIDEO:
@@ -883,6 +883,7 @@ bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &o
 
     if(m_fmt_desc == NULL) {
       CLog::Log(LOGNOTICE, "%s - created avcC atom of failed", __FUNCTION__);
+      m_pFormatName = "";
       return false;
     }
     
@@ -894,6 +895,7 @@ bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &o
         FigFormatDescriptionRelease(m_fmt_desc);
         m_fmt_desc = NULL;
       }
+      m_pFormatName = "";
       return false;
     }
 
@@ -1169,24 +1171,12 @@ CDVDVideoCodecVideoToolBox::CreateVTSession(int width, int height, CMFormatDescr
     CLog::Log(LOGERROR, "%s - failed with status = (%d)", __FUNCTION__, (int)status);
   }
   else
+  {
+    //vtdec_session_dump_properties(vt_session);
     m_vt_session = (void*)vt_session;
+  }
 
   CFRelease(destinationPixelBufferAttributes);
-
-  //vtdec_session_dump_properties(m_vt_session);
-
-  /*
-  #if TARGET_OS_IPHONE
-  status = VTDecompressionSessionSetProperty(m_vt_session, 
-    kVTVideoDecoderSpecification_EnableSandboxedVideoDecoder, kCFBooleanTrue);
-  if (status) {
-    if (status == -12900)
-      CLog::Log(LOGERROR, "VTDecompressionSessionSetProperty failed: -12900\n");
-    else
-      CLog::Log(LOGERROR, "VTDecompressionSessionSetProperty failed %d\n", (int)status);
-  }
-  #endif
-  */
 }
 
 void
