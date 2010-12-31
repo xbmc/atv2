@@ -18,8 +18,8 @@
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
-#ifndef _COCOA_UTILS_H_
-#define _COCOA_UTILS_H_
+#ifndef _IOS_UTILS_H_
+#define _IOS_UTILS_H_
 
 #include <string>
 #include <CoreFoundation/CFURL.h>

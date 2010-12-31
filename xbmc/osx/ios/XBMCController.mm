@@ -46,6 +46,7 @@
 #import "XBMCApplication.h"
 #import "xbmcclientwrapper.h"
 #import "XBMCDebugHelpers.h"
+#import "iOS_Utils.h"
 
 typedef enum {
   // for originator kBREventOriginatorRemote
@@ -339,7 +340,7 @@ extern NSString* kBRScreenSaverDismissed;
 - (void) runAnimation:(id) arg
 {
 	NSLog(@"%s", __PRETTY_FUNCTION__);
-	NSAutoreleasePool* outerpool = [[NSAutoreleasePool alloc] init];
+  CCocoaAutoPool outerpool;
 	
 	//[NSThread setThreadPriority:1]
 	// Changing to SCHED_RR is safe under OSX, you don't need elevated privileges and the
@@ -393,9 +394,8 @@ extern NSString* kBRScreenSaverDismissed;
 		{
 			while (animating)
 			{
-				NSAutoreleasePool* innerpool = [[NSAutoreleasePool alloc] init];
+        CCocoaAutoPool innerpool;
 				g_application.Run();
-				[innerpool release];
 			}
 			g_Windowing.DestroyWindow();
 		}
@@ -413,8 +413,6 @@ extern NSString* kBRScreenSaverDismissed;
 	[myLock unlockWithCondition:TRUE];
 	
 	NSLog(@"%s:exit", __PRETTY_FUNCTION__);
-	
-	[outerpool release];
 }
 
 //--------------------------------------------------------------

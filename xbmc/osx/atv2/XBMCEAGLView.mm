@@ -40,6 +40,7 @@
 #import <OpenGLES/ES2/glext.h>
 #import "XBMCEAGLView.h"
 #import "XBMCAppliance.h"
+#import "iOS_Utils.h"
 
 // uniform index
 enum {
@@ -249,7 +250,7 @@ enum {
 //--------------------------------------------------------------
 - (void) runAnimation:(id) arg
 {
-  NSAutoreleasePool* outerpool = [[NSAutoreleasePool alloc] init];
+  CCocoaAutoPool outerpool;
 
   //[NSThread setThreadPriority:1]
   // Changing to SCHED_RR is safe under OSX, you don't need elevated privileges and the
@@ -303,9 +304,8 @@ enum {
     {
       while (animating)
       {
-        NSAutoreleasePool* innerpool = [[NSAutoreleasePool alloc] init];
+        CCocoaAutoPool innerpool;
         g_application.Run();
-        [innerpool release];
       }
       g_Windowing.DestroyWindow();
     }
@@ -321,10 +321,6 @@ enum {
 
   // signal we are dead
   [myLock unlockWithCondition:TRUE];
-
-  //NSLog(@"%s:exit", __PRETTY_FUNCTION__);
-
-  [outerpool release];
 }
 
 //--------------------------------------------------------------
