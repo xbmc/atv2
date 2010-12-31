@@ -49,10 +49,10 @@ void  Destroy_AutoReleasePool(void *aPool)
 
 CFURLRef CreateCFURLRefFromFilePath(const char *filepath)
 {
-  NSString *fpath = [NSString stringWithUTF8String:filepath];
-  CFURLRef fileURL = (CFURLRef)[NSURL fileURLWithPath: fpath];
+  NSString *fpath = [[NSString alloc]initWithUTF8String:filepath];
+  CFURLRef fileURL = (CFURLRef)[[NSURL alloc] initFileURLWithPath: fpath];
   [fpath release];
-  
+
   return fileURL;
 }
 
