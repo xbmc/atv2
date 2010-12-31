@@ -17,6 +17,10 @@
 		F54D9E2112B70E46006870F9 /* IOSAudioRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F54D9E1F12B70E46006870F9 /* IOSAudioRenderer.cpp */; };
 		F54D9E3312B70F57006870F9 /* WinEventsIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = F54D9E3212B70F57006870F9 /* WinEventsIOS.mm */; };
 		F54D9E8E12B71457006870F9 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9E8D12B71457006870F9 /* CoreAudio.framework */; };
+		F56B15FB12CD6922009B4C96 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F56B15FA12CD6922009B4C96 /* CoreVideo.framework */; };
+		F56B15FD12CD6930009B4C96 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F56B15FC12CD6930009B4C96 /* AudioToolbox.framework */; };
+		F56B15FF12CD695C009B4C96 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F56B15FE12CD695C009B4C96 /* CoreGraphics.framework */; };
+		F56B161B12CD69DB009B4C96 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F56B161A12CD69DB009B4C96 /* ImageIO.framework */; };
 		F577714112C3BA8E00871432 /* libsmbclient.dylib.0 in Frameworks */ = {isa = PBXBuildFile; fileRef = F577714012C3BA8E00871432 /* libsmbclient.dylib.0 */; };
 		F5899DCE1287212700D8079E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5899DCA1287212700D8079E /* QuartzCore.framework */; };
 		F5899DCF1287212700D8079E /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5899DCB1287212700D8079E /* OpenGLES.framework */; };
@@ -947,6 +951,10 @@
 		F54D9E3212B70F57006870F9 /* WinEventsIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = WinEventsIOS.mm; sourceTree = "<group>"; };
 		F54D9E8D12B71457006870F9 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		F5653BB4128B9441009C7ABB /* libcurl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.dylib; path = "tools/osx/ios-depends/build/lib/libcurl.dylib"; sourceTree = "<group>"; };
+		F56B15FA12CD6922009B4C96 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		F56B15FC12CD6930009B4C96 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		F56B15FE12CD695C009B4C96 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		F56B161A12CD69DB009B4C96 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		F577714012C3BA8E00871432 /* libsmbclient.dylib.0 */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsmbclient.dylib.0; path = "tools/osx/ios-depends/build/lib/libsmbclient.dylib.0"; sourceTree = "<group>"; };
 		F5899DCA1287212700D8079E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		F5899DCB1287212700D8079E /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -2947,6 +2955,10 @@
 				F54D9E8E12B71457006870F9 /* CoreAudio.framework in Frameworks */,
 				F577714112C3BA8E00871432 /* libsmbclient.dylib.0 in Frameworks */,
 				F51BD1F112CA77B500B8BD20 /* libpython2.6.dylib in Frameworks */,
+				F56B15FB12CD6922009B4C96 /* CoreVideo.framework in Frameworks */,
+				F56B15FD12CD6930009B4C96 /* AudioToolbox.framework in Frameworks */,
+				F56B15FF12CD695C009B4C96 /* CoreGraphics.framework in Frameworks */,
+				F56B161B12CD69DB009B4C96 /* ImageIO.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2990,8 +3002,12 @@
 				F5899DCA1287212700D8079E /* QuartzCore.framework */,
 				F5899DCB1287212700D8079E /* OpenGLES.framework */,
 				F5A29EC212A7221B003A610C /* CoreMedia.framework */,
-				F5A29F2612A72246003A610C /* VideoToolbox.framework */,
+				F56B15FC12CD6930009B4C96 /* AudioToolbox.framework */,
 				F54D9E8D12B71457006870F9 /* CoreAudio.framework */,
+				F56B161A12CD69DB009B4C96 /* ImageIO.framework */,
+				F56B15FA12CD6922009B4C96 /* CoreVideo.framework */,
+				F56B15FE12CD695C009B4C96 /* CoreGraphics.framework */,
+				F5A29F2612A72246003A610C /* VideoToolbox.framework */,
 			);
 			name = "System Libs and Frameworks";
 			sourceTree = "<group>";
