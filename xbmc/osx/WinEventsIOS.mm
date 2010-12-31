@@ -24,23 +24,51 @@
 #include "XBMC_vkeys.h"
 #include "Application.h"
 #include "WindowingFactory.h"
+#include "XBMC_mutex.h"
+
+static XBMC_mutex *m_inputMutex = NULL;
 
 PHANDLE_EVENT_FUNC CWinEventsBase::m_pEventFunc = NULL;
 
 static std::vector<XBMC_Event> events;
 
+void CWinEventsIOS::DeInit()
+{
+  XBMC_DestroyMutex(m_inputMutex);
+}
+
+void CWinEventsIOS::Init()
+{
+  m_inputMutex = XBMC_CreateMutex();
+}
+
 void CWinEventsIOS::MessagePush(XBMC_Event *newEvent)
 {
+  XBMC_mutexP(m_inputMutex);
+
   events.push_back(*newEvent);
+
+  XBMC_mutexV(m_inputMutex);
 }
 
 bool CWinEventsIOS::MessagePump()
 {
+  bool ret = false;
+  bool gotEvent = false;
+  XBMC_Event pumpEvent;
+
+  XBMC_mutexP(m_inputMutex);  
   for (vector<XBMC_Event>::iterator it = events.begin(); it!=events.end(); ++it)
   {
+    memcpy(&pumpEvent, (XBMC_Event *)&*it, sizeof(XBMC_Event));
     events.erase (events.begin(),events.begin()+1);
-    g_application.OnEvent(*it);
-    return true;
+    gotEvent = true;
+    break;
   }
-  return false;
+  XBMC_mutexV(m_inputMutex);
+
+  if (gotEvent)
+    ret |= g_application.OnEvent(pumpEvent);
+
+  return ret;
 }

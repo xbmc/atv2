@@ -21,6 +21,8 @@
 #import <OpenGLES/ES2/gl.h>
 #import <AudioToolbox/AudioToolbox.h>
 
+#import "XBMC_events.h"
+
 @class XBMCClientWrapper;
 
 @interface XBMCController : UIViewController
@@ -43,15 +45,19 @@
 	
   UIInterfaceOrientation orientation;
 
+  XBMC_Event lastEvent;
 }
 @property (readonly, nonatomic, getter=isAnimating) BOOL animating;
 @property CGPoint firstTouch;
 @property CGPoint lastTouch;
+@property XBMC_Event lastEvent;
 
 // message from which our instance is obtained
 - (void)startAnimation;
 - (void)stopAnimation;
 
+- (void) sendKey: (uint16_t) key;
+- (bool) handleSwipe;
 - (void) observeDefaultCenterStuff: (NSNotification *) notification;
 - (void) disableScreenSaver;
 - (void) enableScreenSaver;

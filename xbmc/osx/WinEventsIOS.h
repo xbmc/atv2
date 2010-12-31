@@ -28,9 +28,11 @@
 class CWinEventsIOS : public CWinEventsBase
 {
 public:
+  static void Init();
+  static void DeInit();
   static void MessagePush(XBMC_Event *newEvent);
   static bool MessagePump();
-  
+
 protected:
 };
 
