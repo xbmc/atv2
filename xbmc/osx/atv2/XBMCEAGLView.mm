@@ -225,6 +225,8 @@ enum {
 	if (!animating)
 	{
 		animating = TRUE;
+    CWinEventsIOS::Init();
+
     // kick off an animation thread
     animationThreadLock = [[NSConditionLock alloc] initWithCondition: FALSE];
     animationThread = [[NSThread alloc] initWithTarget:self 
@@ -246,6 +248,7 @@ enum {
     if ([animationThread isFinished] == NO)
       [animationThreadLock lockWhenCondition:TRUE];
 	}
+  CWinEventsIOS::DeInit();
 }
 //--------------------------------------------------------------
 - (void) runAnimation:(id) arg
