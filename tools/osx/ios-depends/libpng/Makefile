@@ -12,7 +12,7 @@ LIBNAME=libpng
 VERSION=1.2.38
 SOURCE=$(LIBNAME)-$(VERSION)
 # download location and format
-BASE_URL=http://voxel.dl.sourceforge.net/project/libpng/libpng-stable/1.2.38
+BASE_URL=http://image_magick.veidrodis.com/image_magick/delegates/
 ARCHIVE=$(SOURCE).tar.gz
 
 RETRIEVE_TOOL=/usr/bin/curl
