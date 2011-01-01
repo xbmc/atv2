@@ -121,6 +121,15 @@ bool CIOSAudioRenderer::Initialize(IAudioCallback* pCallback, const CStdString& 
   if (!m_AudioDevice.SetInputFormat(&inputFormat))
     return false;
   
+  AudioStreamBasicDescription outputFormat;
+  m_AudioDevice.GetOutputFormat(&outputFormat);
+  outputFormat.mSampleRate = (Float64)uiSamplesPerSec;
+  if (!m_AudioDevice.SetOutputFormat(&outputFormat))
+  {
+    CLog::Log(LOGDEBUG, "CIOSAudioRenderer::SetOutputFormat failed");
+    //return false;
+  }
+
   m_BitsPerChannel = inputFormat.mBitsPerChannel;
   m_ChannelsPerFrame = inputFormat.mChannelsPerFrame;
 
