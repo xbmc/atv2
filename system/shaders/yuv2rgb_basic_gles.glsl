@@ -31,24 +31,10 @@ uniform mat4      m_yuvmat;
 
 void main()
 {
-/*
-  float Y = texture2D(m_sampY, m_cordY).r;
-  float U = texture2D(m_sampU, m_cordU).r;
-  float V = texture2D(m_sampV, m_cordV).r;
-
-  gl_FragColor.r =  1.13983 * V + Y;
-  gl_FragColor.g = -0.39465 * U + Y;
-  gl_FragColor.g = -0.58060 * V + gl_FragColor.g;
-  gl_FragColor.b =  2.03211 * U + Y;
-  gl_FragColor.a = m_alpha;
-*/
-/*
   vec4 yuv, rgb;
   yuv.rgba = vec4(texture2D(m_sampY, m_cordY).r, texture2D(m_sampU, m_cordU).r, texture2D(m_sampV, m_cordV).r, 1.0);
 
   rgb   = m_yuvmat * yuv;
   rgb.a = m_alpha;
   gl_FragColor = rgb;
-*/
-  gl_FragColor = vec4(texture2D(m_sampY, m_cordY).r);
 }
