@@ -1,7 +1,7 @@
 
 SUBDIRS = \
 	Backrow \
-	gas-preprocessor autoconf automake pkg-config \
+	gas-preprocessor help2man autoconf automake pkg-config \
 	pcre expat gettext readline \
 	liblzo liblzo2 freetype2 fontconfig \
 	openssl libssh2 curl \
@@ -10,8 +10,6 @@ SUBDIRS = \
 	faad2 libcdio libsamplerate \
 	boost \
 	mysqlclient samba python26
-
-	#glib2 libmms /
 
 .PHONY: setup subdirs $(SUBDIRS)
 
@@ -27,11 +25,8 @@ subdirs:
 $(SUBDIRS):
 	$(MAKE) -C $@
 
-libmms: glib2
-gettext: expat
 fontconfig: freetype2
 libmad: gas-preprocessor
-
 
 clean:
 	for d in $(SUBDIRS); do $(MAKE) -C $$d clean; done
