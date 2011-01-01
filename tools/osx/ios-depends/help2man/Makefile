@@ -4,12 +4,14 @@
 #    make
 #    sudo make install
 
+include ../config.mk
+
 # lib name, version
-LIBNAME=autoconf
-VERSION=2.63
+LIBNAME=help2man
+VERSION=1.38.2
 SOURCE=$(LIBNAME)-$(VERSION)
 # download location and format
-BASE_URL=http://ftp.gnu.org/gnu/autoconf
+BASE_URL=http://ftp.gnu.org/gnu/help2man/
 ARCHIVE=$(SOURCE).tar.gz
 
 RETRIEVE_TOOL=/usr/bin/curl
@@ -18,12 +20,16 @@ ARCHIVE_TOOL=tar
 ARCHIVE_TOOL_FLAGS=xf
 
 # configuration settings
-PREFIX:=$(shell cd $(CURDIR)/../build; pwd;)
-CONFIGURE=./configure --prefix=$(PREFIX)
-
-LIBDYLIB=$(SOURCE)/bin/autoconf
+CONFIGURE_NATIVE= CFLAGS="" CXXFLAGS="" LDFLAGS="" CPPFLAGS="" \
+  CPP="/usr/bin/cpp" \
+  CC="gcc-4.2" \
+  CXX="g++-4.2" \
+  LD="ld" \
+  ./configure --prefix=$(PREFIX)
 
 CLEAN_FILES=$(ARCHIVE) $(SOURCE)
+
+LIBDYLIB=$(SOURCE)/help2man
 
 all: $(LIBDYLIB) .installed
 
@@ -35,8 +41,7 @@ $(SOURCE): $(ARCHIVE)
 	-rm -rf $(SOURCE)
 	$(ARCHIVE_TOOL) $(ARCHIVE_TOOL_FLAGS) $(ARCHIVE)
 	echo $(SOURCE) >> .gitignore
-	sed -i bak -e "s/'libtoolize'/'glibtoolize'/" $(SOURCE)/bin/autoreconf.in
-	cd $(SOURCE); $(CONFIGURE)
+	cd $(SOURCE); $(CONFIGURE_NATIVE)
 
 $(LIBDYLIB): $(SOURCE)
 	make -C $(SOURCE)
