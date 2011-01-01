@@ -34,13 +34,13 @@
 #include "Codecs/DllAvFormat.h"
 #include "utils/log.h"
 #include "utils/TimeUtils.h"
-#include "osx/atv2/iOS_Utils.h"
+#include "osx/iOSUtils.h"
 
 #if defined(__cplusplus)
 extern "C"
 {
 #endif
-    
+
 #pragma pack(push, 4)
 
 //-----------------------------------------------------------------------------------
@@ -770,7 +770,7 @@ CDVDVideoCodecVideoToolBox::~CDVDVideoCodecVideoToolBox()
 
 bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &options)
 {
-  //if (g_guiSettings.GetBool("videoplayer.usevideotoolbox") && !hints.software)
+  if (g_guiSettings.GetBool("videoplayer.usevideotoolbox") && !hints.software)
   {
     int32_t width, height, profile, level;
     uint8_t *extradata; // extra data for codec to use
@@ -1288,5 +1288,4 @@ CDVDVideoCodecVideoToolBox::VTDecoderCallback(
   //
   pthread_mutex_unlock(&ctx->m_queue_mutex);	
 }
-
 #endif

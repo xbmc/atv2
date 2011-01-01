@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		18A0B34F129FC3A5007BB966 /* XBMC.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A0B34E129FC3A5007BB966 /* XBMC.png */; };
+		322D9BAF12CDEF9400400943 /* AutoPool.mm in Sources */ = {isa = PBXBuildFile; fileRef = 322D9BAE12CDEF9400400943 /* AutoPool.mm */; };
 		F51BD1F112CA77B500B8BD20 /* libpython2.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F51BD1F012CA77B500B8BD20 /* libpython2.6.dylib */; };
 		F54D9DD812B56A7D006870F9 /* libfaad.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9DD712B56A7D006870F9 /* libfaad.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
 		F54D9DDA12B56A9C006870F9 /* libvorbisfile.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9DD912B56A9C006870F9 /* libvorbisfile.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -21,6 +22,7 @@
 		F56B15FD12CD6930009B4C96 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F56B15FC12CD6930009B4C96 /* AudioToolbox.framework */; };
 		F56B15FF12CD695C009B4C96 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F56B15FE12CD695C009B4C96 /* CoreGraphics.framework */; };
 		F56B161B12CD69DB009B4C96 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F56B161A12CD69DB009B4C96 /* ImageIO.framework */; };
+		F56B169012CF9870009B4C96 /* iOSUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = F56B168F12CF9870009B4C96 /* iOSUtils.mm */; };
 		F577714112C3BA8E00871432 /* libsmbclient.dylib.0 in Frameworks */ = {isa = PBXBuildFile; fileRef = F577714012C3BA8E00871432 /* libsmbclient.dylib.0 */; };
 		F5899DCE1287212700D8079E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5899DCA1287212700D8079E /* QuartzCore.framework */; };
 		F5899DCF1287212700D8079E /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5899DCB1287212700D8079E /* OpenGLES.framework */; };
@@ -925,7 +927,6 @@
 		F589AF57128A131900D8079E /* RenderSystemGLES.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589AF55128A131900D8079E /* RenderSystemGLES.cpp */; };
 		F589AFC5128A21E900D8079E /* GUIShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589AFC3128A21E900D8079E /* GUIShader.cpp */; };
 		F589AFDB128A2E6000D8079E /* WinSystemIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = F589AFD9128A2E6000D8079E /* WinSystemIOS.mm */; };
-		F589B0BF128A5FE200D8079E /* iOS_Utils.mm in Sources */ = {isa = PBXBuildFile; fileRef = F589B0BE128A5FE200D8079E /* iOS_Utils.mm */; };
 		F59E2BF1129A0C5B00F6AB7A /* fstrcmp.c in Sources */ = {isa = PBXBuildFile; fileRef = F59E2BF0129A0C5B00F6AB7A /* fstrcmp.c */; };
 		F5A29BDF12A044E7003A610C /* fastmemcpy-arm.S in Sources */ = {isa = PBXBuildFile; fileRef = F5A29BDE12A044E7003A610C /* fastmemcpy-arm.S */; };
 		F5A29DCF12A70EA3003A610C /* DVDVideoCodecVideoToolBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F5A29DCD12A70EA3003A610C /* DVDVideoCodecVideoToolBox.cpp */; };
@@ -936,6 +937,8 @@
 
 /* Begin PBXFileReference section */
 		18A0B34E129FC3A5007BB966 /* XBMC.png */ = {isa = PBXFileReference; explicitFileType = image.png; name = XBMC.png; path = xbmc/osx/atv2/XBMC.png; sourceTree = "<group>"; };
+		322D9BAD12CDEF9400400943 /* AutoPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoPool.h; sourceTree = "<group>"; };
+		322D9BAE12CDEF9400400943 /* AutoPool.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AutoPool.mm; sourceTree = "<group>"; };
 		8D576316048677EA00EA77CD /* XBMC.frappliance */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XBMC.frappliance; sourceTree = BUILT_PRODUCTS_DIR; };
 		F51BD1F012CA77B500B8BD20 /* libpython2.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpython2.6.dylib; path = "tools/osx/ios-depends/build/lib/libpython2.6.dylib"; sourceTree = "<group>"; };
 		F54D9DD712B56A7D006870F9 /* libfaad.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfaad.dylib; path = "tools/osx/ios-depends/build/lib/libfaad.dylib"; sourceTree = "<group>"; };
@@ -955,6 +958,8 @@
 		F56B15FC12CD6930009B4C96 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		F56B15FE12CD695C009B4C96 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		F56B161A12CD69DB009B4C96 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		F56B168E12CF9870009B4C96 /* iOSUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iOSUtils.h; sourceTree = "<group>"; };
+		F56B168F12CF9870009B4C96 /* iOSUtils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = iOSUtils.mm; sourceTree = "<group>"; };
 		F577714012C3BA8E00871432 /* libsmbclient.dylib.0 */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsmbclient.dylib.0; path = "tools/osx/ios-depends/build/lib/libsmbclient.dylib.0"; sourceTree = "<group>"; };
 		F5899DCA1287212700D8079E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		F5899DCB1287212700D8079E /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -2886,8 +2891,6 @@
 		F589AFC4128A21E900D8079E /* GUIShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GUIShader.h; sourceTree = "<group>"; };
 		F589AFD9128A2E6000D8079E /* WinSystemIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = WinSystemIOS.mm; sourceTree = "<group>"; };
 		F589AFDA128A2E6000D8079E /* WinSystemIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WinSystemIOS.h; sourceTree = "<group>"; };
-		F589B0BD128A5FE200D8079E /* iOS_Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iOS_Utils.h; path = xbmc/osx/atv2/iOS_Utils.h; sourceTree = "<group>"; };
-		F589B0BE128A5FE200D8079E /* iOS_Utils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = iOS_Utils.mm; path = xbmc/osx/atv2/iOS_Utils.mm; sourceTree = "<group>"; };
 		F59E2BF0129A0C5B00F6AB7A /* fstrcmp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fstrcmp.c; sourceTree = "<group>"; };
 		F59FC11E12AD92290063D9F2 /* DVDVideoCodecOpenMax.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVDVideoCodecOpenMax.h; sourceTree = "<group>"; };
 		F59FC11F12AD92290063D9F2 /* DVDVideoCodecOpenMax.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DVDVideoCodecOpenMax.cpp; sourceTree = "<group>"; };
@@ -5492,9 +5495,13 @@
 		F589A7C912879A9C00D8079E /* osx */ = {
 			isa = PBXGroup;
 			children = (
+				322D9BAD12CDEF9400400943 /* AutoPool.h */,
+				322D9BAE12CDEF9400400943 /* AutoPool.mm */,
 				F589ACC21287A78300D8079E /* atv2 */,
 				F54D9E1912B70DEE006870F9 /* IOSCoreAudio.cpp */,
 				F54D9E1A12B70DEE006870F9 /* IOSCoreAudio.h */,
+				F56B168F12CF9870009B4C96 /* iOSUtils.mm */,
+				F56B168E12CF9870009B4C96 /* iOSUtils.h */,
 				F589A7CE12879A9C00D8079E /* CocoaInterface.mm */,
 				F589A7CF12879A9C00D8079E /* CocoaInterface.h */,
 				F589A7D012879A9C00D8079E /* CocoaPowerSyscall.cpp */,
@@ -5746,8 +5753,6 @@
 		F589ACC21287A78300D8079E /* atv2 */ = {
 			isa = PBXGroup;
 			children = (
-				F589B0BD128A5FE200D8079E /* iOS_Utils.h */,
-				F589B0BE128A5FE200D8079E /* iOS_Utils.mm */,
 				F589ACBD1287A76A00D8079E /* XBMCAppliance.m */,
 				F589ACBC1287A76A00D8079E /* XBMCAppliance.h */,
 				F589ACBF1287A77400D8079E /* XBMCController.h */,
@@ -6794,7 +6799,6 @@
 				F589AF57128A131900D8079E /* RenderSystemGLES.cpp in Sources */,
 				F589AFC5128A21E900D8079E /* GUIShader.cpp in Sources */,
 				F589AFDB128A2E6000D8079E /* WinSystemIOS.mm in Sources */,
-				F589B0BF128A5FE200D8079E /* iOS_Utils.mm in Sources */,
 				F59E2BF1129A0C5B00F6AB7A /* fstrcmp.c in Sources */,
 				F5A29BDF12A044E7003A610C /* fastmemcpy-arm.S in Sources */,
 				F5A29DCF12A70EA3003A610C /* DVDVideoCodecVideoToolBox.cpp in Sources */,
@@ -6803,6 +6807,8 @@
 				F54D9E1E12B70E14006870F9 /* posix-realtime-stub.c in Sources */,
 				F54D9E2112B70E46006870F9 /* IOSAudioRenderer.cpp in Sources */,
 				F54D9E3312B70F57006870F9 /* WinEventsIOS.mm in Sources */,
+				322D9BAF12CDEF9400400943 /* AutoPool.mm in Sources */,
+				F56B169012CF9870009B4C96 /* iOSUtils.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

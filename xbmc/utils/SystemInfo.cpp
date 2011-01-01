@@ -42,6 +42,9 @@
 #endif
 #ifdef __APPLE__
   #include "osx/CocoaInterface.h"
+#if defined(__arm__)
+  #include "osx/iOSUtils.h"
+#endif
 #endif
 
 CSysInfo g_sysinfo;
@@ -705,22 +708,22 @@ bool CSysInfo::IsAppleTV()
   return result;
 }
 
+bool CSysInfo::HasVideoToolBoxDecoder()
+{
+  bool        result = false;
+
+#if defined(__APPLE__) && defined(__arm__)//&& defined(HAVE_VIDEOTOOLBOXDECODER)
+  result = iOS_HasVideoToolboxDecoder();
+#endif
+  return result;
+}
+
 bool CSysInfo::HasVDADecoder()
 {
   bool        result = false;
 
 #if defined(__APPLE__) && defined(HAVE_LIBVDADECODER)
   result = Cocoa_HasVDADecoder();
-#endif
-  return result;
-}
-
-bool CSysInfo::HasVideoToolBoxDecoder()
-{
-  bool        result = false;
-
-#if defined(__APPLE__) && defined(__arm__)
-  result = true;
 #endif
   return result;
 }

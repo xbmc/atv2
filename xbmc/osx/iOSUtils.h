@@ -23,29 +23,17 @@
 
 #include <string>
 #include <CoreFoundation/CFURL.h>
-
-class CCocoaAutoPool
-{
-  public:
-    CCocoaAutoPool();
-    ~CCocoaAutoPool();
-  private:
-    void *m_opaque_pool;
-};
+#import "osx/AutoPool.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
-  // Pools.
-  //
-  void*   Create_AutoReleasePool(void);
-  void    Destroy_AutoReleasePool(void* pool);
-  
   CFURLRef CreateCFURLRefFromFilePath(const char *filepath);
 
   int     GetIOSFrameworkPath(char* path, uint32_t *pathsize);
   int     GetIOSExecutablePath(char* path, uint32_t *pathsize);
+  bool    iOS_HasVideoToolboxDecoder(void);
 #ifdef __cplusplus
 }
 #endif

@@ -26,24 +26,13 @@
 #if !defined(__arm__)
   #include <Carbon/Carbon.h>
 #endif
-class CCocoaAutoPool
-{
-  public:
-    CCocoaAutoPool();
-    ~CCocoaAutoPool();
-  private:
-    void *m_opaque_pool;
-};
+
+#include "AutoPool.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
-  // Pools.
-  //
-  void* Cocoa_Create_AutoReleasePool(void);
-  void Cocoa_Destroy_AutoReleasePool(void* pool);
-  
   // Power and Screen
   //
   void Cocoa_UpdateSystemActivity(void);

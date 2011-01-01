@@ -74,9 +74,9 @@
 #endif
 #if defined(__APPLE__)
   #if defined(__arm__)
-    #include "iOS_Utils.h"
+    #include "osx/iOSUtils.h"
   #else
-    #include "CocoaInterface.h"
+    #include "osx/CocoaInterface.h"
   #endif
 #endif
 #include "GUIDialogYesNo.h"
