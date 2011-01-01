@@ -18,34 +18,22 @@
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
+
+#define BOOL XBMC_BOOL 
+#include "system.h"
+#include "utils/log.h"
+#undef BOOL
+
 #if defined(__APPLE__)
-#if defined(__arm__)
-  #import <Foundation/Foundation.h>
-#else
-  #import <Cocoa/Cocoa.h>
-#endif
-#import <ImageIO/ImageIO.h>
-#import "iOS_Utils.h"
+  #if defined(__arm__)
+    #import <Foundation/Foundation.h>
+  #else
+    #import <Cocoa/Cocoa.h>
+  #endif
+#import <mach/mach_host.h>
+#import <sys/sysctl.h>
 
-CCocoaAutoPool::CCocoaAutoPool()
-{
-  m_opaque_pool = [[NSAutoreleasePool alloc] init];
-}
-CCocoaAutoPool::~CCocoaAutoPool()
-{
-  [(NSAutoreleasePool*)m_opaque_pool release];
-}
-
-void* Create_AutoReleasePool(void)
-{
-	// Create an autorelease pool (necessary to call Obj-C code from non-Obj-C code)
-  return [[NSAutoreleasePool alloc] init];
-}
-
-void  Destroy_AutoReleasePool(void *aPool)
-{
-  [(NSAutoreleasePool*)aPool release];
-}
+#import "iOSUtils.h"
 
 CFURLRef CreateCFURLRefFromFilePath(const char *filepath)
 {
@@ -117,4 +105,28 @@ int  GetIOSExecutablePath(char* path, uint32_t *pathsize)
 
   return 0;
 }
+
+bool iOS_HasVideoToolboxDecoder(void)
+{
+  bool bDecoderAvailable = false;
+  uint64_t vnode_enforce = 0; 
+  uint64_t proc_enforce = 0;
+  size_t size = sizeof(vnode_enforce);
+  
+  sysctlbyname("security.mac.vnode_enforce", &vnode_enforce, &size, NULL, 0);
+
+  sysctlbyname("security.mac.proc_enforce", &proc_enforce, &size, NULL, 0);  
+  
+  if(vnode_enforce && proc_enforce) {
+    CLog::Log(LOGINFO, "VideoToolBox decoder not available. Use : sysctl -w security.mac.proc_enforce=0; sysctl -w security.mac.vnode_enforce=0\n");
+    NSLog(@"%s VideoToolBox decoder not available. Use : sysctl -w security.mac.proc_enforce=0; sysctl -w security.mac.vnode_enforce=0", __PRETTY_FUNCTION__);
+  } else {
+    bDecoderAvailable = true;
+    CLog::Log(LOGINFO, "VideoToolBox decoder available\n");
+    NSLog(@"%s VideoToolBox decoder available", __PRETTY_FUNCTION__);
+  }
+  
+  return bDecoderAvailable;
+}
+
 #endif

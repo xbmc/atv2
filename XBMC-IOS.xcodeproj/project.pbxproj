@@ -10,11 +10,12 @@
 		18A0B34F129FC3A5007BB966 /* XBMC.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A0B34E129FC3A5007BB966 /* XBMC.png */; };
 		321B5FAD12B0075F00429E0F /* xbmcViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 321B5FAC12B0075F00429E0F /* xbmcViewController.xib */; };
 		321B63B012B2091400429E0F /* WinEventsIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 321B63AF12B2091400429E0F /* WinEventsIOS.mm */; };
+		3226912612CDDC9300BC84D8 /* libfaad.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3226912512CDDC9300BC84D8 /* libfaad.dylib */; };
+		3226912812CDDCD500BC84D8 /* libvorbisfile.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3226912712CDDCD500BC84D8 /* libvorbisfile.dylib */; };
 		3255316612B2D02400837CD2 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3255316512B2D02400837CD2 /* CoreAudio.framework */; };
+		3270F20112CDEB560043E5FA /* AutoPool.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3270F20012CDEB560043E5FA /* AutoPool.mm */; };
 		32D8145F12B0039C002F3874 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 32D8145E12B0039C002F3874 /* MainWindow.xib */; };
 		F54D9E8112B713F8006870F9 /* libc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9E8012B713F8006870F9 /* libc.dylib */; };
-		F54D9E8312B7141F006870F9 /* libfaad.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9E8212B7141F006870F9 /* libfaad.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
-		F54D9E8512B71434006870F9 /* libvorbisfile.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9E8412B71434006870F9 /* libvorbisfile.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
 		F56B13AF12CAE812009B4C96 /* libpython2.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F56B13AE12CAE812009B4C96 /* libpython2.6.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
 		F56B141112CAF053009B4C96 /* IOSCoreAudio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F56B140F12CAF053009B4C96 /* IOSCoreAudio.cpp */; };
 		F56B141412CAF0A3009B4C96 /* IOSAudioRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F56B141212CAF0A3009B4C96 /* IOSAudioRenderer.cpp */; };
@@ -926,7 +927,7 @@
 		F589AF57128A131900D8079E /* RenderSystemGLES.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589AF55128A131900D8079E /* RenderSystemGLES.cpp */; };
 		F589AFC5128A21E900D8079E /* GUIShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589AFC3128A21E900D8079E /* GUIShader.cpp */; };
 		F589AFDB128A2E6000D8079E /* WinSystemIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = F589AFD9128A2E6000D8079E /* WinSystemIOS.mm */; };
-		F589B0BF128A5FE200D8079E /* iOS_Utils.mm in Sources */ = {isa = PBXBuildFile; fileRef = F589B0BE128A5FE200D8079E /* iOS_Utils.mm */; };
+		F589B0BF128A5FE200D8079E /* iOSUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = F589B0BE128A5FE200D8079E /* iOSUtils.mm */; };
 		F59E2BF1129A0C5B00F6AB7A /* fstrcmp.c in Sources */ = {isa = PBXBuildFile; fileRef = F59E2BF0129A0C5B00F6AB7A /* fstrcmp.c */; };
 		F5A29BDF12A044E7003A610C /* fastmemcpy-arm.S in Sources */ = {isa = PBXBuildFile; fileRef = F5A29BDE12A044E7003A610C /* fastmemcpy-arm.S */; };
 		F5A29DCF12A70EA3003A610C /* DVDVideoCodecVideoToolBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F5A29DCD12A70EA3003A610C /* DVDVideoCodecVideoToolBox.cpp */; };
@@ -940,12 +941,14 @@
 		321B5FAC12B0075F00429E0F /* xbmcViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = xbmcViewController.xib; path = xbmc/osx/ios/xbmcViewController.xib; sourceTree = "<group>"; };
 		321B63AE12B208FF00429E0F /* WinEventsIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WinEventsIOS.h; sourceTree = "<group>"; };
 		321B63AF12B2091400429E0F /* WinEventsIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = WinEventsIOS.mm; sourceTree = "<group>"; };
+		3226912512CDDC9300BC84D8 /* libfaad.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfaad.dylib; path = "tools/osx/ios-depends/build/lib/libfaad.dylib"; sourceTree = "<group>"; };
+		3226912712CDDCD500BC84D8 /* libvorbisfile.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libvorbisfile.dylib; path = "tools/osx/ios-depends/build/lib/libvorbisfile.dylib"; sourceTree = "<group>"; };
 		3255316512B2D02400837CD2 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		3270F1FF12CDEB560043E5FA /* AutoPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoPool.h; sourceTree = "<group>"; };
+		3270F20012CDEB560043E5FA /* AutoPool.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AutoPool.mm; sourceTree = "<group>"; };
 		32D8145E12B0039C002F3874 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MainWindow.xib; path = xbmc/osx/ios/MainWindow.xib; sourceTree = "<group>"; };
 		8D576316048677EA00EA77CD /* XBMC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XBMC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F54D9E8012B713F8006870F9 /* libc.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libc.dylib; path = usr/lib/libc.dylib; sourceTree = SDKROOT; };
-		F54D9E8212B7141F006870F9 /* libfaad.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfaad.dylib; path = "../../../../../../Users/davilla/xbmc-atv2/tools/osx/ios-depends/build/lib/libfaad.dylib"; sourceTree = SDKROOT; };
-		F54D9E8412B71434006870F9 /* libvorbisfile.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libvorbisfile.dylib; path = "../../../../../../Users/davilla/xbmc-atv2/tools/osx/ios-depends/build/lib/libvorbisfile.dylib"; sourceTree = SDKROOT; };
 		F5653BB4128B9441009C7ABB /* libcurl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.dylib; path = "tools/osx/ios-depends/build/lib/libcurl.dylib"; sourceTree = "<group>"; };
 		F56B13AE12CAE812009B4C96 /* libpython2.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpython2.6.dylib; path = "tools/osx/ios-depends/build/lib/libpython2.6.dylib"; sourceTree = "<group>"; };
 		F56B140F12CAF053009B4C96 /* IOSCoreAudio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IOSCoreAudio.cpp; sourceTree = "<group>"; };
@@ -2887,8 +2890,8 @@
 		F589AFC4128A21E900D8079E /* GUIShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GUIShader.h; sourceTree = "<group>"; };
 		F589AFD9128A2E6000D8079E /* WinSystemIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = WinSystemIOS.mm; sourceTree = "<group>"; };
 		F589AFDA128A2E6000D8079E /* WinSystemIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WinSystemIOS.h; sourceTree = "<group>"; };
-		F589B0BD128A5FE200D8079E /* iOS_Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iOS_Utils.h; path = xbmc/osx/ios/iOS_Utils.h; sourceTree = "<group>"; };
-		F589B0BE128A5FE200D8079E /* iOS_Utils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = iOS_Utils.mm; path = xbmc/osx/ios/iOS_Utils.mm; sourceTree = "<group>"; };
+		F589B0BD128A5FE200D8079E /* iOSUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iOSUtils.h; sourceTree = "<group>"; };
+		F589B0BE128A5FE200D8079E /* iOSUtils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = iOSUtils.mm; sourceTree = "<group>"; };
 		F59E2BF0129A0C5B00F6AB7A /* fstrcmp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fstrcmp.c; sourceTree = "<group>"; };
 		F5A29BDE12A044E7003A610C /* fastmemcpy-arm.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = "fastmemcpy-arm.S"; sourceTree = "<group>"; };
 		F5A29DCD12A70EA3003A610C /* DVDVideoCodecVideoToolBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DVDVideoCodecVideoToolBox.cpp; sourceTree = "<group>"; };
@@ -2951,13 +2954,13 @@
 				F5A29F2712A72246003A610C /* VideoToolbox.framework in Frameworks */,
 				3255316612B2D02400837CD2 /* CoreAudio.framework in Frameworks */,
 				F54D9E8112B713F8006870F9 /* libc.dylib in Frameworks */,
-				F54D9E8312B7141F006870F9 /* libfaad.dylib in Frameworks */,
-				F54D9E8512B71434006870F9 /* libvorbisfile.dylib in Frameworks */,
 				F56B13AF12CAE812009B4C96 /* libpython2.6.dylib in Frameworks */,
 				F56B143412CAF279009B4C96 /* CoreVideo.framework in Frameworks */,
 				F56B14A512CAF523009B4C96 /* AudioToolbox.framework in Frameworks */,
 				F56B15D512CD67A9009B4C96 /* CoreGraphics.framework in Frameworks */,
 				F56B160812CD6999009B4C96 /* ImageIO.framework in Frameworks */,
+				3226912612CDDC9300BC84D8 /* libfaad.dylib in Frameworks */,
+				3226912812CDDCD500BC84D8 /* libvorbisfile.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5491,11 +5494,15 @@
 		F589A7C912879A9C00D8079E /* osx */ = {
 			isa = PBXGroup;
 			children = (
+				3270F1FF12CDEB560043E5FA /* AutoPool.h */,
+				3270F20012CDEB560043E5FA /* AutoPool.mm */,
 				321B63AF12B2091400429E0F /* WinEventsIOS.mm */,
 				321B63AE12B208FF00429E0F /* WinEventsIOS.h */,
 				F589ACC21287A78300D8079E /* ios */,
 				F56B140F12CAF053009B4C96 /* IOSCoreAudio.cpp */,
 				F56B141012CAF053009B4C96 /* IOSCoreAudio.h */,
+				F589B0BE128A5FE200D8079E /* iOSUtils.mm */,
+				F589B0BD128A5FE200D8079E /* iOSUtils.h */,
 				F589A7CE12879A9C00D8079E /* CocoaInterface.mm */,
 				F589A7CF12879A9C00D8079E /* CocoaInterface.h */,
 				F589A7D012879A9C00D8079E /* CocoaPowerSyscall.cpp */,
@@ -5743,8 +5750,6 @@
 		F589ACC21287A78300D8079E /* ios */ = {
 			isa = PBXGroup;
 			children = (
-				F589B0BD128A5FE200D8079E /* iOS_Utils.h */,
-				F589B0BE128A5FE200D8079E /* iOS_Utils.mm */,
 				F589ACBC1287A76A00D8079E /* XBMCApplication.h */,
 				F589ACBD1287A76A00D8079E /* XBMCApplication.m */,
 				F589ACBF1287A77400D8079E /* XBMCController.h */,
@@ -5770,12 +5775,12 @@
 				F589AE321288DEE900D8079E /* libpcrecpp.dylib */,
 				F589AE2E1288DEC900D8079E /* libcrypto.dylib */,
 				F589AE2A1288DEA400D8079E /* libmad.dylib */,
-				F54D9E8212B7141F006870F9 /* libfaad.dylib */,
+				3226912512CDDC9300BC84D8 /* libfaad.dylib */,
 				F589AE281288DE9600D8079E /* libmpeg2.dylib */,
 				F589AE261288DE8A00D8079E /* libwavpack.dylib */,
 				F589AE2C1288DEB000D8079E /* libogg.dylib */,
 				F589AE221288DE7200D8079E /* libvorbis.dylib */,
-				F54D9E8412B71434006870F9 /* libvorbisfile.dylib */,
+				3226912712CDDCD500BC84D8 /* libvorbisfile.dylib */,
 				F589AE3A1288DF2A00D8079E /* libvorbisenc.dylib */,
 				F589AE201288DE6400D8079E /* libfribidi.dylib */,
 				F589AE1C1288DE1B00D8079E /* libcdio.dylib */,
@@ -6808,7 +6813,7 @@
 				F589AF57128A131900D8079E /* RenderSystemGLES.cpp in Sources */,
 				F589AFC5128A21E900D8079E /* GUIShader.cpp in Sources */,
 				F589AFDB128A2E6000D8079E /* WinSystemIOS.mm in Sources */,
-				F589B0BF128A5FE200D8079E /* iOS_Utils.mm in Sources */,
+				F589B0BF128A5FE200D8079E /* iOSUtils.mm in Sources */,
 				F59E2BF1129A0C5B00F6AB7A /* fstrcmp.c in Sources */,
 				F5A29BDF12A044E7003A610C /* fastmemcpy-arm.S in Sources */,
 				F5A29DCF12A70EA3003A610C /* DVDVideoCodecVideoToolBox.cpp in Sources */,
@@ -6816,6 +6821,7 @@
 				321B63B012B2091400429E0F /* WinEventsIOS.mm in Sources */,
 				F56B141112CAF053009B4C96 /* IOSCoreAudio.cpp in Sources */,
 				F56B141412CAF0A3009B4C96 /* IOSAudioRenderer.cpp in Sources */,
+				3270F20112CDEB560043E5FA /* AutoPool.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7030,7 +7036,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				PREBINDING = NO;
 				SDKROOT = iphoneos4.2;
-				TARGETED_DEVICE_FAMILY = 2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = armv7;
 				WRAPPER_EXTENSION = "";
 			};
@@ -7048,7 +7054,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				PREBINDING = NO;
 				SDKROOT = iphoneos4.2;
-				TARGETED_DEVICE_FAMILY = 2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = armv7;
 				WRAPPER_EXTENSION = "";
 			};

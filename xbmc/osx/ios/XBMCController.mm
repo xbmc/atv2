@@ -46,7 +46,7 @@
 #import "XBMCApplication.h"
 #import "xbmcclientwrapper.h"
 #import "XBMCDebugHelpers.h"
-#import "iOS_Utils.h"
+#import "iOSUtils.h"
 
 typedef enum {
   // for originator kBREventOriginatorRemote
@@ -172,7 +172,7 @@ extern NSString* kBRScreenSaverDismissed;
   firstTouch = [touch locationInView:self.view];
   lastTouch = [touch locationInView:self.view];
 
-  NSLog(@"%s touchesBegan x=%d, y=%d count=%d", __PRETTY_FUNCTION__, lastTouch.x, lastTouch.y, touch.tapCount);
+  //NSLog(@"%s touchesBegan x=%d, y=%d count=%d", __PRETTY_FUNCTION__, lastTouch.x, lastTouch.y, touch.tapCount);
 
   XBMC_Event newEvent;
   memset(&newEvent, 0, sizeof(newEvent));
@@ -197,7 +197,7 @@ extern NSString* kBRScreenSaverDismissed;
   UITouch *touch = [touches anyObject];
   lastTouch = [touch locationInView:self.view];
 
-  NSLog(@"%s touchesMoved x=%d, y=%d count=%d", __PRETTY_FUNCTION__, lastTouch.x, lastTouch.y, touch.tapCount);
+  //NSLog(@"%s touchesMoved x=%d, y=%d count=%d", __PRETTY_FUNCTION__, lastTouch.x, lastTouch.y, touch.tapCount);
 
   XBMC_Event newEvent;
   memcpy(&newEvent, &lastEvent, sizeof(XBMC_Event));
@@ -213,7 +213,7 @@ extern NSString* kBRScreenSaverDismissed;
   UITouch *touch = [touches anyObject];
   lastTouch = [touch locationInView:self.view];
 
-  NSLog(@"%s touchesEnded x=%d, y=%d ", __PRETTY_FUNCTION__, lastTouch.x, lastTouch.y);
+  //NSLog(@"%s touchesEnded x=%d, y=%d ", __PRETTY_FUNCTION__, lastTouch.x, lastTouch.y);
 
   //[self handleSwipe];
 

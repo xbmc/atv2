@@ -243,7 +243,7 @@
     #include "CocoaInterface.h"
     #include "XBMCHelper.h"
   #else
-    #include "iOS_Utils.h"
+    #include "iOSUtils.h"
   #endif
 #endif
 
