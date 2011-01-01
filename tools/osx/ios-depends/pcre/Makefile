@@ -11,7 +11,7 @@ LIBNAME=pcre
 VERSION=7.9
 SOURCE=$(LIBNAME)-$(VERSION)
 # download location and format
-BASE_URL=ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre
+BASE_URL=http://ftp.exim.llorien.org/pcre/
 ARCHIVE=$(SOURCE).tar.gz
 
 RETRIEVE_TOOL=/usr/bin/curl
