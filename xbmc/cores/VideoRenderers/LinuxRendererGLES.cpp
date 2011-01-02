@@ -310,7 +310,6 @@ int CLinuxRendererGLES::GetImage(YV12Image *image, int source, bool readonly)
     im.flags |= IMAGE_FLAG_READING;
   else
   {
-    CLog::Log(LOGDEBUG, "CLinuxRenderer::GetImage - Wait for Texture 1");
     if( WaitForSingleObject(m_eventTexturesDone[source], 500) == WAIT_TIMEOUT )
       CLog::Log(LOGWARNING, "%s - Timeout waiting for texture %d", __FUNCTION__, source);
 
@@ -422,7 +421,7 @@ void CLinuxRendererGLES::LoadPlane( YUVPLANE& plane, int type, unsigned flipinde
   if(plane.flipindex == flipindex)
     return;
 
-  /** OpenGL ES does not support strided texture input. Make a copy without stride **/
+  // OpenGL ES does not support strided texture input. Make a copy without stride
   if(stride != width)
   {
     std::vector<char> pixelVector( width * height * width ); // reserve temporary memory for unstrided image
@@ -438,8 +437,8 @@ void CLinuxRendererGLES::LoadPlane( YUVPLANE& plane, int type, unsigned flipinde
     stride = width;
   }
 
-  glBindTexture(GL_TEXTURE_2D, plane.id);
-  glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, type, GL_UNSIGNED_BYTE, data);
+  glBindTexture(m_textureTarget, plane.id);
+  glTexSubImage2D(m_textureTarget, 0, 0, 0, width, height, type, GL_UNSIGNED_BYTE, data);
 
   /* check if we need to load any border pixels */
   if(height < plane.texheight)
@@ -636,12 +635,15 @@ unsigned int CLinuxRendererGLES::PreInit()
   if (!m_dllAvUtil->Load() || !m_dllAvCodec->Load() || !m_dllSwScale->Load())
     CLog::Log(LOGERROR,"CLinuxRendererGL::PreInit - failed to load rescale libraries!");
 
-  #if (! defined USE_EXTERNAL_FFMPEG)
-    m_dllSwScale->sws_rgb2rgb_init(SWS_CPU_CAPS_MMX2);
-  #elif (defined HAVE_LIBSWSCALE_RGB2RGB_H) || (defined HAVE_FFMPEG_RGB2RGB_H)
-    m_dllSwScale->sws_rgb2rgb_init(SWS_CPU_CAPS_MMX2);
+  #if !defined(__arm__)
+    #if (! defined USE_EXTERNAL_FFMPEG)
+      m_dllSwScale->sws_rgb2rgb_init(SWS_CPU_CAPS_MMX2);
+    #elif (defined HAVE_LIBSWSCALE_RGB2RGB_H) || (defined HAVE_FFMPEG_RGB2RGB_H)
+      m_dllSwScale->sws_rgb2rgb_init(SWS_CPU_CAPS_MMX2);
+    #endif
+  #else
+    m_dllSwScale->sws_rgb2rgb_init(0);
   #endif
-
   return true;
 }
 
@@ -721,21 +723,6 @@ void CLinuxRendererGLES::LoadShaders(int field)
   int requestedMethod = g_guiSettings.GetInt("videoplayer.rendermethod");
   CLog::Log(LOGDEBUG, "GL: Requested render method: %d", requestedMethod);
 
-  if (CONF_FLAGS_FORMAT_MASK(m_iFlags) == CONF_FLAGS_FORMAT_OMXEGL)
-  {
-    CLog::Log(LOGNOTICE, "GL: Using OMXEGL render method");
-    m_renderMethod = RENDER_OMXEGL;
-  }
-  else if (CONF_FLAGS_FORMAT_MASK(m_iFlags) == CONF_FLAGS_FORMAT_CVBREF)
-  {
-    CLog::Log(LOGNOTICE, "GL: Using CoreVideoRef render method");
-    m_renderMethod = RENDER_CVREF;
-  }
-  else
-  {
-    m_renderMethod = RENDER_GLSL;
-  }
-
   if (m_pYUVShader)
   {
     m_pYUVShader->Free();
@@ -747,6 +734,18 @@ void CLinuxRendererGLES::LoadShaders(int field)
   {
     case RENDER_METHOD_AUTO:
     case RENDER_METHOD_GLSL:
+      if (CONF_FLAGS_FORMAT_MASK(m_iFlags) == CONF_FLAGS_FORMAT_OMXEGL)
+      {
+        CLog::Log(LOGNOTICE, "GL: Using OMXEGL BRGA render method");
+        m_renderMethod = RENDER_OMXEGL;
+        break;
+      }
+      else if (CONF_FLAGS_FORMAT_MASK(m_iFlags) == CONF_FLAGS_FORMAT_CVBREF)
+      {
+        CLog::Log(LOGNOTICE, "GL: Using CoreVideoRef BRGA render method");
+        m_renderMethod = RENDER_CVREF;
+        break;
+      }
       // Try GLSL shaders if supported and user requested auto or GLSL.
       if (glCreateProgram)
       {
@@ -756,6 +755,7 @@ void CLinuxRendererGLES::LoadShaders(int field)
 
         if (m_pYUVShader && m_pYUVShader->CompileAndLink())
         {
+          m_renderMethod = RENDER_GLSL;
           UpdateVideoFilter();
           break;
         }
@@ -1212,7 +1212,7 @@ void CLinuxRendererGLES::RenderSoftware(int index, int field)
   glDisable(GL_DEPTH_TEST);
 
   // Y
-  glEnable(GL_TEXTURE_2D);
+  glEnable(m_textureTarget);
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(m_textureTarget, planes[0].id);
 
@@ -1271,7 +1271,7 @@ void CLinuxRendererGLES::RenderOpenMax(int index, int field)
   glDisable(GL_DEPTH_TEST);
 
   // Y
-  glEnable(GL_TEXTURE_2D);
+  glEnable(m_textureTarget);
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(m_textureTarget, textureId);
 
@@ -1317,6 +1317,7 @@ void CLinuxRendererGLES::RenderOpenMax(int index, int field)
 
   glDisableVertexAttribArray(posLoc);
   glDisableVertexAttribArray(texLoc);
+  glDisableVertexAttribArray(colLoc);
 
   g_Windowing.DisableGUIShader();
 
@@ -1338,7 +1339,7 @@ void CLinuxRendererGLES::RenderCoreVideoRef(int index, int field)
 
   glDisable(GL_DEPTH_TEST);
 
-  glEnable(GL_TEXTURE_2D);
+  glEnable(m_textureTarget);
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(m_textureTarget, plane.id);
 
@@ -1472,7 +1473,7 @@ void CLinuxRendererGLES::UploadYV12Texture(int source)
     int dstStride[] = { m_sourceWidth*4, 0, 0, 0 };
     m_dllSwScale->sws_scale(context, src, srcStride, 0, im->height, dst, dstStride);
     m_dllSwScale->sws_freeContext(context);
-    SetEvent(m_eventTexturesDone[source]);
+    //SetEvent(m_eventTexturesDone[source]);
   }
   else if (IsSoftwareUpscaling()) // FIXME: s/w upscaling + RENDER_SW => broken
   {
@@ -1727,7 +1728,9 @@ bool CLinuxRendererGLES::CreateYV12Texture(int index)
         else
           CLog::Log(LOGDEBUG,  "GL: Creating RGB NPOT texture of size %d x %d", plane.texwidth, plane.texheight);
 
-        glTexImage2D(m_textureTarget, 0, GL_RGBA, plane.texwidth, plane.texheight, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, NULL);
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+        //glTexImage2D(m_textureTarget, 0, GL_RGBA, plane.texwidth, plane.texheight, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, NULL);
+        glTexImage2D(m_textureTarget, 0, GL_RGBA, plane.texwidth, plane.texheight, 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL);
       } 
       else
       {
