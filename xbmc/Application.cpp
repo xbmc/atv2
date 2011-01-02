@@ -1844,7 +1844,9 @@ void CApplication::RenderNoPresent()
   // reset image scaling and effect states
   g_graphicsContext.SetRenderingResolution(g_graphicsContext.GetVideoResolution(), false);
 
+#if !defined(__arm__)
   RenderMemoryStatus();
+#endif
   RenderScreenSaver();
 
   g_TextureManager.FreeUnusedTextures();
