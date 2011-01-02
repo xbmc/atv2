@@ -337,7 +337,7 @@ bool CIOSCoreAudioDevice::SetOutputFormat(AudioStreamBasicDescription* pDesc)
                                       kAudioUnitScope_Output, 0, pDesc, sizeof(AudioStreamBasicDescription));
   if (ret)
   {
-    CLog::Log(LOGERROR, "CIOSCoreAudioUnit::SetInputFormat: Unable to set AudioUnit output format. Error = 0x%08x (%4.4s)", (uint32_t)ret, CONVERT_OSSTATUS(ret));
+    CLog::Log(LOGERROR, "CIOSCoreAudioUnit::SetOutputFormat: Unable to set AudioUnit output format. Error = 0x%08x (%4.4s)", (uint32_t)ret, CONVERT_OSSTATUS(ret));
     return false;
   }
   return true;  
