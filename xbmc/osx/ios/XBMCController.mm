@@ -199,20 +199,32 @@ extern NSString* kBRScreenSaverDismissed;
 
   //NSLog(@"%s touchesMoved x=%d, y=%d count=%d", __PRETTY_FUNCTION__, lastTouch.x, lastTouch.y, touch.tapCount);
 
-  XBMC_Event newEvent;
-  memcpy(&newEvent, &lastEvent, sizeof(XBMC_Event));
+  static int nCount = 0;
+  
+  if(nCount == 4) {
+  
+    XBMC_Event newEvent;
+    memcpy(&newEvent, &lastEvent, sizeof(XBMC_Event));
 
-  newEvent.motion.x = lastTouch.x;
-  newEvent.motion.y = lastTouch.y;
-  //newEvent.motion.state = 0;
+    newEvent.motion.x = lastTouch.x;
+    newEvent.motion.y = lastTouch.y;
+    //newEvent.motion.state = 0;
 
-  CWinEventsIOS::MessagePush(&newEvent);
+    CWinEventsIOS::MessagePush(&newEvent);
+    
+    nCount = 0;
+    
+  } else {
+    
+    nCount++;
+  
+  }
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
   UITouch *touch = [touches anyObject];
   lastTouch = [touch locationInView:self.view];
-
+  
   //NSLog(@"%s touchesEnded x=%d, y=%d ", __PRETTY_FUNCTION__, lastTouch.x, lastTouch.y);
 
   //[self handleSwipe];
