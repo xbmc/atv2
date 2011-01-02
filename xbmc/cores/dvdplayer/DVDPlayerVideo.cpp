@@ -1001,9 +1001,11 @@ int CDVDPlayerVideo::OutputPicture(DVDVideoPicture* pPicture, double pts)
         break;
       case DVDVideoPicture::FMT_OMXEGL:
         flags |= CONF_FLAGS_FORMAT_OMXEGL;
+        formatstr = "BGRA";
         break;
       case DVDVideoPicture::FMT_CVBREF:
         flags |= CONF_FLAGS_FORMAT_CVBREF;
+        formatstr = "BGRA";
         break;
     }
 
