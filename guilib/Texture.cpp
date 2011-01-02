@@ -29,7 +29,7 @@
 #include "SpecialProtocol.h"
 #if defined(__APPLE__)
   #include <ImageIO/ImageIO.h>
-  #include "iOS_Utils.h"
+  #include "iOSUtils.h"
 #endif
 
 /************************************************************************/
@@ -175,6 +175,11 @@ bool CBaseTexture::LoadFromFile(const CStdString& texturePath, unsigned int maxW
 
   CGImageSourceRef imageSource = CGImageSourceCreateWithURL(textureURL, NULL);
   CFRelease(textureURL);
+
+  if(imageSource == nil) {
+    CLog::Log(LOGERROR, "Texture manager unable to load file: %s", CSpecialProtocol::TranslatePath(texturePath).c_str());
+    return false;
+  }
 
   CGImageRef image = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
   CFRelease(imageSource);
