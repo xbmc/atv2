@@ -429,8 +429,13 @@ void CGUISettings::Initialize()
   AddInt(ao, "audiooutput.channellayout", 34100, PCM_LAYOUT_2_0, channelLayout, SPIN_CONTROL_TEXT);
   AddBool(ao, "audiooutput.dontnormalizelevels", 346, true);
 
+#if !(defined(__APPLE__) && defined(__arm__))
   AddBool(ao, "audiooutput.ac3passthrough", 364, true);
   AddBool(ao, "audiooutput.dtspassthrough", 254, true);
+#else
+  AddBool(NULL, "audiooutput.ac3passthrough", 364, false);
+  AddBool(NULL, "audiooutput.dtspassthrough", 254, false);
+#endif
   AddBool(NULL, "audiooutput.passthroughaac", 299, false);
   AddBool(NULL, "audiooutput.passthroughmp1", 300, false);
   AddBool(NULL, "audiooutput.passthroughmp2", 301, false);
@@ -451,7 +456,7 @@ void CGUISettings::Initialize()
 #endif
 
   CSettingsCategory* in = AddCategory(4, "input", 14094);
-#ifdef __APPLE__
+#if defined(__APPLE__)
   map<int,int> remotemode;
   remotemode.insert(make_pair(13610,APPLE_REMOTE_DISABLED));
   remotemode.insert(make_pair(13611,APPLE_REMOTE_STANDARD));
@@ -545,6 +550,9 @@ void CGUISettings::Initialize()
   renderers.insert(make_pair(13417, RENDER_METHOD_ARB));
   renderers.insert(make_pair(13418, RENDER_METHOD_GLSL));
   renderers.insert(make_pair(13419, RENDER_METHOD_SOFTWARE));
+#elifdef HAS_GLES
+  renderers.insert(make_pair(13418, RENDER_METHOD_GLSL));
+  renderers.insert(make_pair(13419, RENDER_METHOD_SOFTWARE));
 #endif
   AddInt(vp, "videoplayer.rendermethod", 13415, RENDER_METHOD_AUTO, renderers, SPIN_CONTROL_TEXT);
 
@@ -577,7 +585,11 @@ void CGUISettings::Initialize()
   // FIXME: hide this setting until it is properly respected. In the meanwhile, default to AUTO.
   //AddInt(5, "videoplayer.displayresolution", 169, (int)RES_AUTORES, (int)RES_AUTORES, 1, (int)CUSTOM+MAX_RESOLUTIONS, SPIN_CONTROL_TEXT);
   AddInt(NULL, "videoplayer.displayresolution", 169, (int)RES_AUTORES, (int)RES_AUTORES, 1, (int)RES_AUTORES, SPIN_CONTROL_TEXT);
+#if !(defined(__APPLE__) && defined(__arm__))
   AddBool(vp, "videoplayer.adjustrefreshrate", 170, false);
+#else
+  AddBool(NULL, "videoplayer.adjustrefreshrate", 170, false);
+#endif
   AddInt(vp, "videoplayer.pauseafterrefreshchange", 13550, 0, 0, 1, MAXREFRESHCHANGEDELAY, SPIN_CONTROL_TEXT);
   //sync settings not available on windows gl build
 #if defined(_WIN32) && defined(HAS_GL)
