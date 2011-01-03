@@ -510,8 +510,10 @@ bool CSettings::LoadCalibration(const TiXmlElement* pRoot, const CStdString& str
     // find this resolution in our resolution vector
     for (unsigned int res = 0; res < m_ResInfo.size(); res++)
     {
+#if !(defined(__APPLE__) &&  defined(__arm__))
       if (res == RES_WINDOW)
         continue;
+#endif
 
       if (m_ResInfo[res].strMode == mode)
       { // found, read in the rest of the information for this item

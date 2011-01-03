@@ -117,8 +117,11 @@ bool CWinSystemIOS::SetFullScreen(bool fullScreen, RESOLUTION_INFO& res, bool bl
 
 void CWinSystemIOS::UpdateResolutions()
 {
+  CWinSystemBase::UpdateResolutions();
+  
   CGSize screensize = [g_xbmcController getScreenSize];
-  double fps = [g_xbmcController getDisplayLinkFPS];
+  //double fps = [g_xbmcController getDisplayLinkFPS];
+  double fps = 0;
 
   //NSLog(@"%s UpdateResolutions width=%f, height=%f, fps=%f", 
 	//	__PRETTY_FUNCTION__, screensize.width, screensize.height, fps);
