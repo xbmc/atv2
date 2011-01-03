@@ -550,9 +550,6 @@ void CGUISettings::Initialize()
   renderers.insert(make_pair(13417, RENDER_METHOD_ARB));
   renderers.insert(make_pair(13418, RENDER_METHOD_GLSL));
   renderers.insert(make_pair(13419, RENDER_METHOD_SOFTWARE));
-#elifdef HAS_GLES
-  renderers.insert(make_pair(13418, RENDER_METHOD_GLSL));
-  renderers.insert(make_pair(13419, RENDER_METHOD_SOFTWARE));
 #endif
   AddInt(vp, "videoplayer.rendermethod", 13415, RENDER_METHOD_AUTO, renderers, SPIN_CONTROL_TEXT);
 
@@ -587,10 +584,11 @@ void CGUISettings::Initialize()
   AddInt(NULL, "videoplayer.displayresolution", 169, (int)RES_AUTORES, (int)RES_AUTORES, 1, (int)RES_AUTORES, SPIN_CONTROL_TEXT);
 #if !(defined(__APPLE__) && defined(__arm__))
   AddBool(vp, "videoplayer.adjustrefreshrate", 170, false);
+  AddInt(vp, "videoplayer.pauseafterrefreshchange", 13550, 0, 0, 1, MAXREFRESHCHANGEDELAY, SPIN_CONTROL_TEXT);
 #else
   AddBool(NULL, "videoplayer.adjustrefreshrate", 170, false);
+  AddInt(NULL, "videoplayer.pauseafterrefreshchange", 13550, 0, 0, 1, MAXREFRESHCHANGEDELAY, SPIN_CONTROL_TEXT);
 #endif
-  AddInt(vp, "videoplayer.pauseafterrefreshchange", 13550, 0, 0, 1, MAXREFRESHCHANGEDELAY, SPIN_CONTROL_TEXT);
   //sync settings not available on windows gl build
 #if defined(_WIN32) && defined(HAS_GL)
   #define SYNCSETTINGS 0
