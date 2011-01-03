@@ -204,7 +204,6 @@ CDVDVideoCodec* CDVDFactoryCodec::CreateVideoCodec( CDVDStreamInfo &hint )
       switch(hint.codec)
       {
         case CODEC_ID_H264:
-        case CODEC_ID_MPEG4:
           if (hint.codec == CODEC_ID_H264 && hint.ptsinvalid)
             break;
           CLog::Log(LOGINFO, "Apple VideoToolBox Decoder...");

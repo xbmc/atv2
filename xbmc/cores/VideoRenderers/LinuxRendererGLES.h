@@ -117,6 +117,7 @@ extern YUVCOEF yuv_coef_smtp240m;
 class DllAvUtil;
 class DllAvCodec;
 class DllSwScale;
+struct SwsContext;
 
 class CLinuxRendererGLES : public CBaseRenderer
 {
@@ -276,6 +277,7 @@ protected:
   DllAvUtil   *m_dllAvUtil;
   DllAvCodec  *m_dllAvCodec;
   DllSwScale  *m_dllSwScale;
+  struct SwsContext *m_sw_context;
   BYTE	      *m_rgbBuffer;  // if software scale is used, this will hold the result image
   unsigned int m_rgbBufferSize;
 

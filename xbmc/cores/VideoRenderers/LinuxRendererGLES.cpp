@@ -104,6 +104,7 @@ CLinuxRendererGLES::CLinuxRendererGLES()
   m_dllAvUtil = new DllAvUtil;
   m_dllAvCodec = new DllAvCodec;
   m_dllSwScale = new DllSwScale;
+  m_sw_context = NULL;
 }
 
 CLinuxRendererGLES::~CLinuxRendererGLES()
@@ -112,7 +113,8 @@ CLinuxRendererGLES::~CLinuxRendererGLES()
   for (int i = 0; i < NUM_BUFFERS; i++)
     CloseHandle(m_eventTexturesDone[i]);
 
-  if (m_rgbBuffer != NULL) {
+  if (m_rgbBuffer != NULL)
+  {
     delete [] m_rgbBuffer;
     m_rgbBuffer = NULL;
   }
@@ -132,6 +134,11 @@ CLinuxRendererGLES::~CLinuxRendererGLES()
     m_pYUVShader = NULL;
   }
 
+  if (m_sw_context)
+  {
+    m_dllSwScale->sws_freeContext(m_sw_context);
+    m_sw_context = NULL;
+  }
   delete m_dllSwScale;
   delete m_dllAvCodec;
   delete m_dllAvUtil;
@@ -736,16 +743,24 @@ void CLinuxRendererGLES::LoadShaders(int field)
     case RENDER_METHOD_GLSL:
       if (CONF_FLAGS_FORMAT_MASK(m_iFlags) == CONF_FLAGS_FORMAT_OMXEGL)
       {
-        CLog::Log(LOGNOTICE, "GL: Using OMXEGL BRGA render method");
+        CLog::Log(LOGNOTICE, "GL: Using OMXEGL RGBA render method");
         m_renderMethod = RENDER_OMXEGL;
         break;
       }
       else if (CONF_FLAGS_FORMAT_MASK(m_iFlags) == CONF_FLAGS_FORMAT_CVBREF)
       {
-        CLog::Log(LOGNOTICE, "GL: Using CoreVideoRef BRGA render method");
+        CLog::Log(LOGNOTICE, "GL: Using CoreVideoRef RGBA render method");
         m_renderMethod = RENDER_CVREF;
         break;
       }
+      #if defined(__APPLE__) && defined(__arm__)
+      else if (CONF_FLAGS_FORMAT_MASK(m_iFlags) == CONF_FLAGS_FORMAT_YV12)
+      {
+        CLog::Log(LOGNOTICE, "GL: Using software color conversion/RGBA render method");
+        m_renderMethod = RENDER_SW;
+        break;
+      }
+      #endif
       // Try GLSL shaders if supported and user requested auto or GLSL.
       if (glCreateProgram)
       {
@@ -773,7 +788,7 @@ void CLinuxRendererGLES::LoadShaders(int field)
       {
         // Use software YUV 2 RGB conversion if user requested it or GLSL failed
         m_renderMethod = RENDER_SW ;
-        CLog::Log(LOGNOTICE, "GL: Shaders support not present, falling back to SW mode");
+        CLog::Log(LOGNOTICE, "GL: Using software color conversion/RGBA rendering");
       }
   }
 
@@ -1216,19 +1231,29 @@ void CLinuxRendererGLES::RenderSoftware(int index, int field)
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(m_textureTarget, planes[0].id);
 
-  g_Windowing.EnableGUIShader(SM_TEXTURE);
+  g_Windowing.EnableGUIShader(SM_TEXTURE_RGBA);
 
   GLubyte idx[4] = {0, 1, 3, 2};        //determines order of triangle strip
   GLfloat ver[4][4];
   GLfloat tex[4][2];
+  float col[4][3];
+
+  for (int index = 0;index < 4;++index)
+  {
+    col[index][0] = col[index][1] = col[index][2] = 1.0;
+  }
+
   GLint   posLoc = g_Windowing.GUIShaderGetPos();
   GLint   texLoc = g_Windowing.GUIShaderGetCoord0();
+  GLint   colLoc = g_Windowing.GUIShaderGetCol();
 
   glVertexAttribPointer(posLoc, 4, GL_FLOAT, 0, 0, ver);
   glVertexAttribPointer(texLoc, 2, GL_FLOAT, 0, 0, tex);
+  glVertexAttribPointer(colLoc, 3, GL_FLOAT, 0, 0, col);
 
   glEnableVertexAttribArray(posLoc);
   glEnableVertexAttribArray(texLoc);
+  glEnableVertexAttribArray(colLoc);
 
   // Set vertex coordinates
   ver[0][0] = ver[3][0] = m_destRect.x1;
@@ -1248,6 +1273,7 @@ void CLinuxRendererGLES::RenderSoftware(int index, int field)
 
   glDisableVertexAttribArray(posLoc);
   glDisableVertexAttribArray(texLoc);
+  glDisableVertexAttribArray(colLoc);
 
   g_Windowing.DisableGUIShader();
 
@@ -1464,16 +1490,16 @@ void CLinuxRendererGLES::UploadYV12Texture(int source)
       m_rgbBuffer = new BYTE[m_rgbBufferSize];
     }
 
-    struct SwsContext *context = m_dllSwScale->sws_getContext(im->width, im->height, PIX_FMT_YUV420P,
-                                                             im->width, im->height, PIX_FMT_BGRA,
-                                                             SWS_FAST_BILINEAR, NULL, NULL, NULL);
+    m_sw_context = m_dllSwScale->sws_getCachedContext(m_sw_context,
+      im->width, im->height, PIX_FMT_YUV420P,
+      im->width, im->height, PIX_FMT_RGBA,
+      SWS_FAST_BILINEAR, NULL, NULL, NULL);
+
     uint8_t *src[]  = { im->plane[0], im->plane[1], im->plane[2], 0 };
     int srcStride[] = { im->stride[0], im->stride[1], im->stride[2], 0 };
     uint8_t *dst[]  = { m_rgbBuffer, 0, 0, 0 };
     int dstStride[] = { m_sourceWidth*4, 0, 0, 0 };
-    m_dllSwScale->sws_scale(context, src, srcStride, 0, im->height, dst, dstStride);
-    m_dllSwScale->sws_freeContext(context);
-    //SetEvent(m_eventTexturesDone[source]);
+    m_dllSwScale->sws_scale(m_sw_context, src, srcStride, 0, im->height, dst, dstStride);
   }
   else if (IsSoftwareUpscaling()) // FIXME: s/w upscaling + RENDER_SW => broken
   {
@@ -1486,17 +1512,18 @@ void CLinuxRendererGLES::UploadYV12Texture(int source)
 
     switch (m_scalingMethod)
     {
-    case VS_SCALINGMETHOD_BICUBIC_SOFTWARE: algorithm = SWS_BICUBIC; break;
-    case VS_SCALINGMETHOD_LANCZOS_SOFTWARE: algorithm = SWS_LANCZOS; break;
-    case VS_SCALINGMETHOD_SINC_SOFTWARE:    algorithm = SWS_SINC;    break;
-    default: break;
+      case VS_SCALINGMETHOD_BICUBIC_SOFTWARE: algorithm = SWS_BICUBIC; break;
+      case VS_SCALINGMETHOD_LANCZOS_SOFTWARE: algorithm = SWS_LANCZOS; break;
+      case VS_SCALINGMETHOD_SINC_SOFTWARE:    algorithm = SWS_SINC;    break;
+      default: break;
     }
 
-    struct SwsContext *ctx = m_dllSwScale->sws_getContext(im->width, im->height, PIX_FMT_YUV420P,
-                                                         m_upscalingWidth, m_upscalingHeight, PIX_FMT_YUV420P,
-                                                         algorithm, NULL, NULL, NULL);
-    m_dllSwScale->sws_scale(ctx, src, srcStride, 0, im->height, dst, dstStride);
-    m_dllSwScale->sws_freeContext(ctx);
+    m_sw_context = m_dllSwScale->sws_getCachedContext(m_sw_context,
+      im->width, im->height, PIX_FMT_YUV420P,
+      m_upscalingWidth, m_upscalingHeight, PIX_FMT_YUV420P,
+      algorithm, NULL, NULL, NULL);
+
+    m_dllSwScale->sws_scale(m_sw_context, src, srcStride, 0, im->height, dst, dstStride);
 
     im = &m_imScaled;
     im->flags = IMAGE_FLAG_READY;
@@ -1728,8 +1755,7 @@ bool CLinuxRendererGLES::CreateYV12Texture(int index)
         else
           CLog::Log(LOGDEBUG,  "GL: Creating RGB NPOT texture of size %d x %d", plane.texwidth, plane.texheight);
 
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
-        //glTexImage2D(m_textureTarget, 0, GL_RGBA, plane.texwidth, plane.texheight, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, NULL);
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 4);  
         glTexImage2D(m_textureTarget, 0, GL_RGBA, plane.texwidth, plane.texheight, 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL);
       } 
       else
