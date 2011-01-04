@@ -26,6 +26,9 @@
 #include <Log.h>
 #include <math.h>
 
+#define kOutputBus 0
+#define kInputBus 1
+
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 char* IOSUInt32ToFourCC(UInt32* pVal) // NOT NULL TERMINATED! Modifies input value.
@@ -78,49 +81,10 @@ AudioComponentInstance CIOSCoreAudioHardware::FindAudioDevice(CStdString searchN
   if (!searchName.length())
     return 0;
   
-  //UInt32 size = 0;
-  //AudioComponentInstance deviceId = 0;
-  //OSStatus ret;
- 
-  // For now we alway return the default audio device
-  //if (searchName.Equals("Default Output Device"))
-  //{
-    AudioComponentInstance defaultDevice = GetDefaultOutputDevice();
-    CLog::Log(LOGDEBUG, "CIOSCoreAudioHardware::FindAudioDevice: Returning default device [0x%04x].", (uint32_t)defaultDevice);
-    return defaultDevice;  
-  //}
-  /*
-  CLog::Log(LOGDEBUG, "CIOSCoreAudioHardware::FindAudioDevice: Searching for device - %s.", searchName.c_str());
-  
-  // Obtain a list of all available audio devices
-  AudioHardwareGetPropertyInfo(kAudioHardwarePropertyDevices, &size, NULL);
-  UInt32 deviceCount = size / sizeof(AudioComponentInstance);
-  AudioComponentInstance* pDevices = new AudioDeviceID[deviceCount];
-  ret = AudioHardwareGetProperty(kAudioHardwarePropertyDevices, &size, pDevices);
-  if (ret)
-  { 
-    CLog::Log(LOGERROR, "CIOSCoreAudioHardware::FindAudioDevice: Unable to retrieve the list of available devices. Error = 0x%08x (%4.4s)", (uint32_t)ret, CONVERT_OSSTATUS(ret));
-    delete[] pDevices;
-    return 0; 
-  }
-  
-  // Attempt to locate the requested device
-  CStdString deviceName;
-  for (UInt32 dev = 0; dev < deviceCount; dev++)
-  {
-    CIOSCoreAudioDevice device;
-    device.Open((pDevices[dev]));
-    device.GetName(deviceName);
-    CLog::Log(LOGDEBUG, "CIOSCoreAudioHardware::FindAudioDevice:   Device[0x%08x] - Name: '%s' ", (unsigned int)pDevices[dev], deviceName.c_str());
-    if (searchName.Equals(deviceName))
-      deviceId = pDevices[dev];
-    if (deviceId)
-      break;
-  }
-  delete[] pDevices;  
-  
-  return deviceId;
-  */
+  AudioComponentInstance defaultDevice = GetDefaultOutputDevice();
+  CLog::Log(LOGDEBUG, "CIOSCoreAudioHardware::FindAudioDevice: Returning default device [0x%04x].", (uint32_t)defaultDevice);
+
+  return defaultDevice;  
 }
 
 AudioComponentInstance CIOSCoreAudioHardware::GetDefaultOutputDevice()
@@ -155,30 +119,6 @@ UInt32 CIOSCoreAudioHardware::GetOutputDevices(IOSCoreAudioDeviceList* pList)
   if (!pList)
     return 0;
   
-  // Obtain a list of all available audio devices
-  /*
-  OSStatus ret;
-  
-  AudioHardwareGetPropertyInfo(kAudioHardwarePropertyDevices, &size, NULL);
-  UInt32 deviceCount = size / sizeof(AudioComponentInstance);
-  AudioComponentInstance* pDevices = new AudioDeviceID[deviceCount];
-  ret = AudioHardwareGetProperty(kAudioHardwarePropertyDevices, &size, pDevices);
-  if (ret)
-    CLog::Log(LOGERROR, "CIOSCoreAudioHardware::GetOutputDevices: Unable to retrieve the list of available devices. Error = 0x%08x (%4.4s)", (uint32_t)ret, CONVERT_OSSTATUS(ret));
-  else
-  {
-    for (UInt32 dev = 0; dev < deviceCount; dev++)
-    {
-      CIOSCoreAudioDevice device(pDevices[dev]);
-      if (device.GetTotalOutputChannels() == 0)
-        continue;
-      found++;
-      pList->push_back(pDevices[dev]);
-    }
-  }
-  delete[] pDevices;
-  return found;
-  */
   return 0;
 }
 
@@ -214,11 +154,11 @@ bool CIOSCoreAudioDevice::Open()
 {
   if(!m_AudioUnit)
     return false;
-  
+    
   OSStatus ret = AudioUnitInitialize(m_AudioUnit);
   if (ret)
   { 
-    CLog::Log(LOGERROR, "CIOSCoreAudioUnit::Initialize: Unable to Initialize AudioUnit. Error = 0x%08x (%4.4s)", (uint32_t)ret, CONVERT_OSSTATUS(ret));
+    CLog::Log(LOGERROR, "CIOSCoreAudioUnit::Open: Unable to Open AudioUnit. Error = 0x%08x (%4.4s)", (uint32_t)ret, CONVERT_OSSTATUS(ret));
     return false; 
   } 
 
@@ -281,6 +221,38 @@ const char* CIOSCoreAudioDevice::GetName(CStdString& name)
   return name.c_str();
 }
 
+bool CIOSCoreAudioDevice::EnableInput()
+{
+  if (!m_AudioUnit)
+    return false;
+  
+  UInt32 flag = 1;
+  OSStatus ret = AudioUnitSetProperty(m_AudioUnit, kAudioOutputUnitProperty_EnableIO, 
+                                kAudioUnitScope_Input,  kInputBus, &flag, sizeof(flag));
+  if (ret)
+  {
+    CLog::Log(LOGERROR, "CIOSCoreAudioUnit::EnableInput: Failed to enable input. Error = 0x%08x (%4.4s)", (uint32_t)ret, CONVERT_OSSTATUS(ret));
+    return false;
+  }
+  return true;
+}
+
+bool CIOSCoreAudioDevice::EnableOutput()
+{
+  if (!m_AudioUnit)
+    return false;
+  
+  UInt32 flag = 1;
+  OSStatus ret = AudioUnitSetProperty(m_AudioUnit, kAudioOutputUnitProperty_EnableIO, 
+                                      kAudioUnitScope_Output,  kOutputBus, &flag, sizeof(flag));
+  if (ret)
+  {
+    CLog::Log(LOGERROR, "CIOSCoreAudioUnit::EnableInput: Failed to enable output. Error = 0x%08x (%4.4s)", (uint32_t)ret, CONVERT_OSSTATUS(ret));
+    return false;
+  }
+  return true;
+}
+
 bool CIOSCoreAudioDevice::GetInputFormat(AudioStreamBasicDescription* pDesc)
 {
   if (!m_AudioUnit || !pDesc)
@@ -288,7 +260,7 @@ bool CIOSCoreAudioDevice::GetInputFormat(AudioStreamBasicDescription* pDesc)
   
   UInt32 size = sizeof(AudioStreamBasicDescription);
   OSStatus ret = AudioUnitGetProperty(m_AudioUnit, kAudioUnitProperty_StreamFormat, 
-                                      kAudioUnitScope_Input, 0, pDesc, &size);
+                                      kAudioUnitScope_Input, kOutputBus, pDesc, &size);
   if (ret)
   {
     CLog::Log(LOGERROR, "CIOSCoreAudioUnit::GetInputFormat: Unable to get AudioUnit input format. Error = 0x%08x (%4.4s)", (uint32_t)ret, CONVERT_OSSTATUS(ret));
@@ -304,7 +276,7 @@ bool CIOSCoreAudioDevice::GetOutputFormat(AudioStreamBasicDescription* pDesc)
   
   UInt32 size = sizeof(AudioStreamBasicDescription);
   OSStatus ret = AudioUnitGetProperty(m_AudioUnit, kAudioUnitProperty_StreamFormat, 
-                                      kAudioUnitScope_Output, 0, pDesc, &size);
+                                      kAudioUnitScope_Output, kInputBus, pDesc, &size);
   if (ret)
   {
     CLog::Log(LOGERROR, "CIOSCoreAudioUnit::GetInputFormat: Unable to get AudioUnit output format. Error = 0x%08x (%4.4s)", (uint32_t)ret, CONVERT_OSSTATUS(ret));
@@ -318,8 +290,9 @@ bool CIOSCoreAudioDevice::SetInputFormat(AudioStreamBasicDescription* pDesc)
   if (!m_AudioUnit || !pDesc)
     return false;
   
+  UInt32 size = sizeof(AudioStreamBasicDescription);
   OSStatus ret = AudioUnitSetProperty(m_AudioUnit, kAudioUnitProperty_StreamFormat, 
-                                      kAudioUnitScope_Input, 0, pDesc, sizeof(AudioStreamBasicDescription));
+                                      kAudioUnitScope_Input, kOutputBus, pDesc, size);
   if (ret)
   {
     CLog::Log(LOGERROR, "CIOSCoreAudioUnit::SetInputFormat: Unable to set AudioUnit input format. Error = 0x%08x (%4.4s)", (uint32_t)ret, CONVERT_OSSTATUS(ret));
@@ -333,8 +306,9 @@ bool CIOSCoreAudioDevice::SetOutputFormat(AudioStreamBasicDescription* pDesc)
   if (!m_AudioUnit || !pDesc)
     return false;
   
+  UInt32 size = sizeof(AudioStreamBasicDescription);
   OSStatus ret = AudioUnitSetProperty(m_AudioUnit, kAudioUnitProperty_StreamFormat, 
-                                      kAudioUnitScope_Output, 0, pDesc, sizeof(AudioStreamBasicDescription));
+                                      kAudioUnitScope_Output, kInputBus, pDesc, size);
   if (ret)
   {
     CLog::Log(LOGERROR, "CIOSCoreAudioUnit::SetOutputFormat: Unable to set AudioUnit output format. Error = 0x%08x (%4.4s)", (uint32_t)ret, CONVERT_OSSTATUS(ret));
@@ -343,6 +317,39 @@ bool CIOSCoreAudioDevice::SetOutputFormat(AudioStreamBasicDescription* pDesc)
   return true;  
 }
 
+bool CIOSCoreAudioDevice::SetOutputSampleRate(Float64 sampleRate)
+{
+  if (!m_AudioUnit)
+    return false;
+  
+  OSStatus ret = AudioUnitSetProperty(m_AudioUnit, kAudioUnitProperty_SampleRate, 
+                                      kAudioUnitScope_Output, kOutputBus, &sampleRate, sizeof(sampleRate));
+  if (ret)
+  {
+    CLog::Log(LOGERROR, "CIOSCoreAudioUnit::SetOutputSampleRate: Unable to set AudioUnit sample rate. Error = 0x%08x (%4.4s)", (uint32_t)ret, CONVERT_OSSTATUS(ret));
+    return false;
+  }
+  return true;  
+}                      
+
+int CIOSCoreAudioDevice::FramesPerSlice()
+{
+  if (!m_AudioUnit)
+    return false;
+  
+  UInt32 maximumFramesPerSlice = 256;
+  OSStatus ret = AudioUnitSetProperty(m_AudioUnit, kAudioUnitProperty_MaximumFramesPerSlice, 
+                                      kAudioUnitScope_Global, kOutputBus, &maximumFramesPerSlice, sizeof (maximumFramesPerSlice));
+  if (ret)
+  {
+    CLog::Log(LOGERROR, "CIOSCoreAudioUnit::FramesPerSlice: Unable to setFramesPerSlice. Error = 0x%08x (%4.4s)", (uint32_t)ret, CONVERT_OSSTATUS(ret));
+    return false;
+  }
+  return maximumFramesPerSlice;  
+
+
+}
+                      
 bool CIOSCoreAudioDevice::SetRenderProc(AURenderCallback callback, void* pClientData)
 {
   if (!m_AudioUnit)
@@ -352,7 +359,9 @@ bool CIOSCoreAudioDevice::SetRenderProc(AURenderCallback callback, void* pClient
 	callbackInfo.inputProc = callback; // Function to be called each time the AudioUnit needs data
 	callbackInfo.inputProcRefCon = pClientData; // Pointer to be returned in the callback proc
 	OSStatus ret = AudioUnitSetProperty(m_AudioUnit, kAudioUnitProperty_SetRenderCallback, 
-                                      kAudioUnitScope_Global, 0, &callbackInfo, sizeof(AURenderCallbackStruct));
+                                      kAudioUnitScope_Global, kOutputBus, &callbackInfo, 
+                                      sizeof(AURenderCallbackStruct));
+  
   if (ret)
   {
     CLog::Log(LOGERROR, "CIOSCoreAudioUnit::SetRenderProc: Unable to set AudioUnit render callback. Error = 0x%08x (%4.4s)", (uint32_t)ret, CONVERT_OSSTATUS(ret));

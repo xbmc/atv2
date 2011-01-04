@@ -75,11 +75,15 @@ public:
   void Start();
   void Stop();
 
+  bool EnableInput();
+  bool EnableOutput();
   bool SetRenderProc(AURenderCallback callback, void* pClientData);
   bool GetInputFormat(AudioStreamBasicDescription* pDesc);
   bool GetOutputFormat(AudioStreamBasicDescription* pDesc);    
   bool SetInputFormat(AudioStreamBasicDescription* pDesc);
   bool SetOutputFormat(AudioStreamBasicDescription* pDesc);
+  bool SetOutputSampleRate(Float64 sampleRate);
+  int  FramesPerSlice();
 protected:
   AudioComponentInstance m_AudioUnit;
 };
