@@ -1653,7 +1653,7 @@ XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/ffmpeg], [
       --disable-amd3dnow \
       --disable-armv5te \
       --disable-armv6t2 \
-      --enable-neon \
+      --disable-neon \
       --disable-amd3dnow \
       --disable-static \
       --enable-hardcoded-tables \
