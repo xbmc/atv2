@@ -86,71 +86,95 @@ CIOSAudioRenderer::~CIOSAudioRenderer()
 
 bool CIOSAudioRenderer::Initialize(IAudioCallback* pCallback, const CStdString& device, int iChannels, enum PCMChannels *channelMap, unsigned int uiSamplesPerSec, unsigned int uiBitsPerSample, bool bResample, bool bIsMusic /*Useless Legacy Parameter*/, bool bPassthrough)
 {
-  if (m_Initialized) // Have to clean house before we start again. TODO: Should we return failure instead?
+  // Have to clean house before we start again. TODO: Should we return failure instead?
+  if (m_Initialized) 
     Deinitialize();
 
   if (!m_dllAvUtil->Load())
-    CLog::Log(LOGERROR,"CLinuxRendererGL::PreInit - failed to load rescale libraries!");
+    CLog::Log(LOGERROR,"CIOSAudioRenderer::Initialize - failed to load avutil library!");
 
   g_audioContext.SetActiveDevice(CAudioContext::DIRECTSOUND_DEVICE);
 
-  // TODO: If debugging, output information about all devices/streams
-
   AudioComponentInstance outputDevice = CIOSCoreAudioHardware::GetDefaultOutputDevice();
-  if (!outputDevice) // Not a lot to be done with no device. TODO: Should we just grab the first existing device?
+  if (!outputDevice)
+  {
+    // Not a lot to be done with no device
+    CLog::Log(LOGDEBUG, "CIOSAudioRenderer::GetDefaultOutputDevice failed");
     return false;
+  }
 
   // Attach our output object to the device
   m_AudioDevice.SetDevice(outputDevice);
 
-  CLog::Log(LOGDEBUG, "CIOSAudioRenderer::InitializePCM:    using supplied channel map for audio source");
-
-  // Set the input stream format for the AudioUnit (this is what is being sent to us)
-  AudioStreamBasicDescription inputFormat;
-  inputFormat.mFormatID = kAudioFormatLinearPCM;			      //	Data encoding format
-  inputFormat.mFormatFlags = kAudioFormatFlagsNativeEndian
-                           | kLinearPCMFormatFlagIsPacked   // Samples occupy all bits (not left or right aligned)
-                           | kAudioFormatFlagIsSignedInteger;
-  inputFormat.mChannelsPerFrame = iChannels;                 // Number of interleaved audiochannels
-  inputFormat.mSampleRate = (Float64)uiSamplesPerSec;      //	the sample rate of the audio stream
-  inputFormat.mBitsPerChannel = uiBitsPerSample;              // Number of bits per sample, per channel
-  inputFormat.mBytesPerFrame = (uiBitsPerSample>>3) * iChannels; // Size of a frame == 1 sample per channel		
-  inputFormat.mFramesPerPacket = 1;                         // The smallest amount of indivisible data. Always 1 for uncompressed audio 	
-  inputFormat.mBytesPerPacket = inputFormat.mBytesPerFrame * inputFormat.mFramesPerPacket;
-  inputFormat.mReserved = 0;
-  if (!m_AudioDevice.SetInputFormat(&inputFormat))
-    return false;
-  
-  AudioStreamBasicDescription outputFormat;
-  m_AudioDevice.GetOutputFormat(&outputFormat);
-  outputFormat.mSampleRate = (Float64)uiSamplesPerSec;
-  if (!m_AudioDevice.SetOutputFormat(&outputFormat))
+  /* get error 22 back on open on atv2 but seems ok on ios
+  if (!m_AudioDevice.EnableInput())
   {
-    CLog::Log(LOGDEBUG, "CIOSAudioRenderer::SetOutputFormat failed");
-    //return false;
+    CLog::Log(LOGDEBUG, "CIOSAudioRenderer::EnableInput failed");
+    return false;
+  }
+  */
+  if (!m_AudioDevice.EnableOutput())
+  {
+    CLog::Log(LOGDEBUG, "CIOSAudioRenderer::EnableOutput failed");
+    return false;
   }
 
-  m_BitsPerChannel = inputFormat.mBitsPerChannel;
-  m_ChannelsPerFrame = inputFormat.mChannelsPerFrame;
+  // Set the input stream format for the AudioUnit
+  // We use the default DefaultOuput AudioUnit, so we only can set the input stream format.
+  // The autput format is automaticaly set to the input format.
+  AudioStreamBasicDescription audioFormat;
+  audioFormat.mFormatID = kAudioFormatLinearPCM;              //	Data encoding format
+  audioFormat.mFormatFlags = kAudioFormatFlagsNativeEndian
+                           | kLinearPCMFormatFlagIsPacked     // Samples occupy all bits (not left or right aligned)
+                           | kAudioFormatFlagIsSignedInteger;
+  audioFormat.mChannelsPerFrame = iChannels;                  // Number of interleaved audiochannels
+  audioFormat.mSampleRate = (Float64)uiSamplesPerSec;         //	the sample rate of the audio stream
+  audioFormat.mBitsPerChannel = uiBitsPerSample;              // Number of bits per sample, per channel
+  audioFormat.mBytesPerFrame = (uiBitsPerSample>>3) * iChannels; // Size of a frame == 1 sample per channel		
+  audioFormat.mFramesPerPacket = 1;                           // The smallest amount of indivisible data. Always 1 for uncompressed audio 	
+  audioFormat.mBytesPerPacket = audioFormat.mBytesPerFrame * audioFormat.mFramesPerPacket;
+  audioFormat.mReserved = 0;
+  if (!m_AudioDevice.SetInputFormat(&audioFormat))
+  {
+    CLog::Log(LOGDEBUG, "CIOSAudioRenderer::SetInputFormat failed");
+    return false;
+  }
+  //CLog::Log(LOGDEBUG, "CIOSAudioRenderer::Initialize: using supplied channel map for audio source");
 
-  m_AvgBytesPerSec = inputFormat.mSampleRate * inputFormat.mBytesPerFrame;      // 1 sample per channel per frame
+  /*
+  if(!m_AudioDevice.SetOutputSampleRate((Float64)uiSamplesPerSec))
+  {
+    CLog::Log(LOGDEBUG, "CIOSAudioRenderer::SetOutputSampleRate failed");
+    return false;
+  }
+  */
+
+  if (!m_AudioDevice.SetOutputFormat(&audioFormat))
+  {
+    CLog::Log(LOGDEBUG, "CIOSAudioRenderer::SetOutputFormat failed");
+    return false;
+  }
+
+  m_BitsPerChannel = audioFormat.mBitsPerChannel;
+  m_ChannelsPerFrame = audioFormat.mChannelsPerFrame;
+
+  m_AvgBytesPerSec = audioFormat.mSampleRate * audioFormat.mBytesPerFrame;      // 1 sample per channel per frame
   m_EnableVolumeControl = true;
 
-  // Configure the maximum number of frames that the AudioUnit will ask to process at one time.
-  // If this is not called, there is no guarantee that the callback will ever be called.
-  //UInt32 bufferFrames = m_AUOutput.GetBufferFrameSize(); // Size of the output buffer, in Frames
-    
-  //if (!m_AUOutput.SetMaxFramesPerSlice(bufferFrames))
-  //  return false;
-    
-  UInt32 bufferFrames = 4096;
+  UInt32 bufferFrames = m_AudioDevice.FramesPerSlice();
+
+  if(!bufferFrames) 
+  {
+    CLog::Log(LOGDEBUG, "CIOSAudioRenderer::FramesPerSlice bufferFrames == 0\n");
+    return false;
+  }
 
   m_ChunkSize = bufferFrames;
   m_NumChunks = (m_AvgBytesPerSec + m_ChunkSize - 1) / m_ChunkSize;
   m_BufferLen = m_NumChunks * m_ChunkSize;
   m_Buffer = m_dllAvUtil->av_fifo_alloc(m_BufferLen);
-  m_packetSize = inputFormat.mFramesPerPacket*inputFormat.mChannelsPerFrame*(inputFormat.mBitsPerChannel/8); 
-    
+  m_packetSize = audioFormat.mFramesPerPacket * audioFormat.mChannelsPerFrame * (audioFormat.mBitsPerChannel/8); 
+
   // Setup the callback function that the AudioUnit will use to request data	
   if (!m_AudioDevice.SetRenderProc(RenderCallback, this))
     return false;
@@ -167,16 +191,12 @@ bool CIOSAudioRenderer::Initialize(IAudioCallback* pCallback, const CStdString& 
   CLog::Log(LOGDEBUG, "CIOSAudioRenderer::Initialize: Input Stream Format %s", (char*)IOSStreamDescriptionToString(inputDesc_end, formatString));
   CLog::Log(LOGDEBUG, "CIOSAudioRenderer::Initialize: Output Stream Format %s", (char*)IOSStreamDescriptionToString(outputDesc_end, formatString));
 
-  m_Pause = true;                       // Suspend rendering. We will start once we have some data.
+  // Suspend rendering. We will start once we have some data.
+  m_Pause = true;
   m_Initialized = true;
 
   CLog::Log(LOGDEBUG, "CIOSAudioRenderer::Initialize: Renderer Configuration - Chunk Len: %u, Max Cache: %u (%0.0fms).", m_ChunkSize, m_BufferLen, 1000.0 *(float)m_BufferLen/(float)m_AvgBytesPerSec);
   CLog::Log(LOGINFO, "CIOSAudioRenderer::Initialize: Successfully configured audio output.");
-
-  // Make space for remap processing
-  // AddPackets will not accept more data than m_MaxCacheLen, so a fixed size buffer should be okay.
-  // Do we need to catch memory allocation errors?
-  CLog::Log(LOGDEBUG, "CIOSAudioRenderer::Initialize: Allocated %u bytes for channel remapping",m_BufferLen);
 
   return true;
 }
@@ -341,7 +361,7 @@ OSStatus CIOSAudioRenderer::OnRender(AudioUnitRenderActionFlags *ioActionFlags, 
   int req=(inNumberFrames)*m_packetSize;
 
   //fprintf(stderr, "CIOSAudioRenderer::OnRender req %d amt %d m_packetSize %d\n", req, amt, m_packetSize); 
-  
+
   if(amt>req)
     amt=req;
 
@@ -369,6 +389,7 @@ OSStatus CIOSAudioRenderer::OnRender(AudioUnitRenderActionFlags *ioActionFlags, 
         break;
       }
     }
+
   } else {
     //fprintf(stderr, "CIOSAudioRenderer::OnRender Pause\n"); 
     //Pause();
