@@ -22,6 +22,7 @@
 #import <AudioToolbox/AudioToolbox.h>
 
 #import "XBMC_events.h"
+#include "XBMC_keysym.h"
 
 @class XBMCClientWrapper;
 
@@ -55,9 +56,7 @@
 // message from which our instance is obtained
 - (void)startAnimation;
 - (void)stopAnimation;
-
-- (void) sendKey: (uint16_t) key;
-- (bool) handleSwipe;
+- (void) sendKey: (XBMCKey) key;
 - (void) observeDefaultCenterStuff: (NSNotification *) notification;
 - (void) disableScreenSaver;
 - (void) enableScreenSaver;
@@ -70,6 +69,7 @@
 - (void) presentFramebuffer;
 - (CGSize) getScreenSize;
 - (UIInterfaceOrientation) getOrientation;
+- (void)createGestureRecognizers;
 @end
 
 extern XBMCController *g_xbmcController;

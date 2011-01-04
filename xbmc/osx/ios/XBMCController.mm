@@ -114,12 +114,13 @@ extern NSString* kBRScreenSaverDismissed;
 	return orientation;
 }
 
--(void)sendKey:(uint16_t) key
+-(void)sendKey:(XBMCKey) key
 {
   XBMC_Event newEvent;
   memset(&newEvent, 0, sizeof(newEvent));
 
-  newEvent.key.keysym.unicode = key;
+  //newEvent.key.keysym.unicode = key;
+  newEvent.key.keysym.sym = key;
 
   newEvent.type = XBMC_KEYDOWN;
   CWinEventsIOS::MessagePush(&newEvent);
@@ -128,51 +129,72 @@ extern NSString* kBRScreenSaverDismissed;
   CWinEventsIOS::MessagePush(&newEvent);
 }
 
-#define kMinimumGestureLength  100
-#define kMaximumVariance   10
+- (void)createGestureRecognizers {
+  
+  UITapGestureRecognizer *singleFingerDTap = [[UITapGestureRecognizer alloc]
+                                              initWithTarget:self action:@selector(handleSingleDoubleTap:)];  
+  singleFingerDTap.delaysTouchesBegan = YES;
+  singleFingerDTap.numberOfTapsRequired = 2;
+  [self.view addGestureRecognizer:singleFingerDTap];
+  [singleFingerDTap release];
 
--(bool)handleSwipe {
+  UISwipeGestureRecognizer *swipeLeft = [[UISwipeGestureRecognizer alloc]
+                                              initWithTarget:self action:@selector(handleSwipeLeft:)];
+  swipeLeft.direction = UISwipeGestureRecognizerDirectionLeft;
+  swipeLeft.delaysTouchesBegan = YES;
+  [self.view addGestureRecognizer:swipeLeft];
+  [swipeLeft release];
+  
+  UISwipeGestureRecognizer *swipeRight = [[UISwipeGestureRecognizer alloc]
+                                         initWithTarget:self action:@selector(handleSwipeRight:)];
+  swipeRight.direction = UISwipeGestureRecognizerDirectionRight;
+  swipeRight.delaysTouchesBegan = YES;
+  [self.view addGestureRecognizer:swipeRight];
+  [swipeRight release];
 
-  //CGFloat deltaX = fabsf(firstTouch.x - lastTouch.x);
-  //CGFloat deltaY = fabsf(firstTouch.y - lastTouch.y);
+}
 
-  CGFloat deltaX = firstTouch.x - lastTouch.x;
-  CGFloat deltaY = firstTouch.y - lastTouch.y;
+- (IBAction)handleSwipeLeft:(UISwipeGestureRecognizer *)sender {
+  NSLog(@"%s swipeLeft", __PRETTY_FUNCTION__);
+  [self sendKey:XBMCK_BACKSPACE];
+}
 
-  if ( (deltaX > kMinimumGestureLength) && ( deltaY < kMaximumVariance) ) 
-  {
-    //[self handleSwipeLeft];
-    [self sendKey:8];
-    NSLog(@"%s Swipe left", __PRETTY_FUNCTION__);
-  }
-  else if ( (deltaX*(-1) > kMinimumGestureLength) && ( deltaY < kMaximumVariance) ) 
-  {
-    [self sendKey:9];
-    //[self handleSwipeRight];
-    NSLog(@"%s Swipe right", __PRETTY_FUNCTION__);
-  }
-  else if ( (deltaY > kMinimumGestureLength) && ( deltaX < kMaximumVariance) ) 
-  {
-    [self sendKey:'c'];
-    NSLog(@"%s Swipe up", __PRETTY_FUNCTION__);
-  }
-  else if( (deltaY*(-1) > kMinimumGestureLength) && ( deltaX < kMaximumVariance) ) 
-  {
-    [self sendKey:'o' ];
-    NSLog(@"%s Swipe down", __PRETTY_FUNCTION__);
-  }
+- (IBAction)handleSwipeRight:(UISwipeGestureRecognizer *)sender {
+  NSLog(@"%s swipeRight", __PRETTY_FUNCTION__);
+  [self sendKey:XBMCK_TAB];
+}
 
-  NSLog(@"%s handleSwipe x=%f, y=%f", __PRETTY_FUNCTION__, deltaX, deltaY);
+- (IBAction)handleSingleDoubleTap:(UIGestureRecognizer *)sender {
+  firstTouch = [sender locationOfTouch:0 inView:self.view];
+  lastTouch = [sender locationOfTouch:0 inView:self.view];
+  
+  NSLog(@"%s toubleTap", __PRETTY_FUNCTION__);
+  
+  XBMC_Event newEvent;
+  memset(&newEvent, 0, sizeof(newEvent));
+  
+  newEvent.type = XBMC_MOUSEBUTTONDOWN;
+  newEvent.button.type = XBMC_MOUSEBUTTONDOWN;
+  newEvent.button.button = XBMC_BUTTON_RIGHT;
+  newEvent.button.x = lastTouch.x;
+  newEvent.button.y = lastTouch.y;
+  
+  CWinEventsIOS::MessagePush(&newEvent);    
 
-  return false;
+  newEvent.type = XBMC_MOUSEBUTTONUP;
+  newEvent.button.type = XBMC_MOUSEBUTTONUP;
+  CWinEventsIOS::MessagePush(&newEvent);    
+  
+  memset(&lastEvent, 0x0, sizeof(XBMC_Event));         
+  
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
   UITouch* touch = [[event touchesForView:self.view] anyObject];
   firstTouch = [touch locationInView:self.view];
   lastTouch = [touch locationInView:self.view];
-
-  //NSLog(@"%s touchesBegan x=%d, y=%d count=%d", __PRETTY_FUNCTION__, lastTouch.x, lastTouch.y, touch.tapCount);
+  
+  //NSLog(@"%s touchesBegan x=%d, y=%d count=%d", __PRETTY_FUNCTION__, lastTouch.x, lastTouch.y, [touch tapCount]);
 
   XBMC_Event newEvent;
   memset(&newEvent, 0, sizeof(newEvent));
@@ -180,15 +202,10 @@ extern NSString* kBRScreenSaverDismissed;
   newEvent.type = XBMC_MOUSEBUTTONDOWN;
   newEvent.button.type = XBMC_MOUSEBUTTONDOWN;
   newEvent.button.x = lastTouch.x;
-  newEvent.button.y = lastTouch.y;
-
-  if ([touch tapCount] == 2) {
-    newEvent.button.button = XBMC_BUTTON_RIGHT;
-  } else {
-    newEvent.button.button = XBMC_BUTTON_LEFT;
-  }
-  
+  newEvent.button.y = lastTouch.y;  
+  newEvent.button.button = XBMC_BUTTON_LEFT;
   CWinEventsIOS::MessagePush(&newEvent);
+  
   /* Store the tap action for later */
   memcpy(&lastEvent, &newEvent, sizeof(XBMC_Event));
 }
@@ -201,15 +218,15 @@ extern NSString* kBRScreenSaverDismissed;
 
   static int nCount = 0;
   
+  /* Only process move when we are not in right click state */
   if(nCount == 4) {
-  
+    
     XBMC_Event newEvent;
     memcpy(&newEvent, &lastEvent, sizeof(XBMC_Event));
-
+    
     newEvent.motion.x = lastTouch.x;
     newEvent.motion.y = lastTouch.y;
-    //newEvent.motion.state = 0;
-
+    
     CWinEventsIOS::MessagePush(&newEvent);
     
     nCount = 0;
@@ -217,7 +234,7 @@ extern NSString* kBRScreenSaverDismissed;
   } else {
     
     nCount++;
-  
+    
   }
 }
 
@@ -225,9 +242,7 @@ extern NSString* kBRScreenSaverDismissed;
   UITouch *touch = [touches anyObject];
   lastTouch = [touch locationInView:self.view];
   
-  //NSLog(@"%s touchesEnded x=%d, y=%d ", __PRETTY_FUNCTION__, lastTouch.x, lastTouch.y);
-
-  //[self handleSwipe];
+  //NSLog(@"%s touchesEnded x=%d, y=%d count=%d", __PRETTY_FUNCTION__, lastTouch.x, lastTouch.y, [touch tapCount]);
 
   XBMC_Event newEvent;
   memcpy(&newEvent, &lastEvent, sizeof(XBMC_Event));
@@ -236,9 +251,10 @@ extern NSString* kBRScreenSaverDismissed;
   newEvent.button.type = XBMC_MOUSEBUTTONUP;
   newEvent.button.x = lastTouch.x;
   newEvent.button.y = lastTouch.y;
-  CWinEventsIOS::MessagePush(&newEvent);
-
+  CWinEventsIOS::MessagePush(&newEvent);    
+  
   memset(&lastEvent, 0x0, sizeof(XBMC_Event));         
+  
 }
 
 - (void)awakeFromNib
@@ -270,6 +286,8 @@ extern NSString* kBRScreenSaverDismissed;
   [(XBMCEAGLView *)self.view createFramebuffer];
   [(XBMCEAGLView *)self.view setFramebuffer];
 
+  [self createGestureRecognizers];
+  
   animating = FALSE;
   self.displayLink = nil;
 	
