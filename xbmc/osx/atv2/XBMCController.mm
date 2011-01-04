@@ -83,6 +83,7 @@ extern NSString* kBRScreenSaverDismissed;
 @interface XBMCController (PrivateMethods)
 UIWindow      *m_window;
 XBMCEAGLView  *m_glView;
+int           m_screensaverTimeout;
 
 - (void) observeDefaultCenterStuff: (NSNotification *) notification;
 - (void) disableScreenSaver;
@@ -193,6 +194,7 @@ XBMCEAGLView  *m_glView;
   
   [super controlWasActivated];
 
+  [self disableScreenSaver];
   [m_window makeKeyAndVisible];
   [[[[BRWindow windowList] objectAtIndex:0] content] addControl: m_window];
 
@@ -208,6 +210,7 @@ XBMCEAGLView  *m_glView;
 
   [[[[BRWindow windowList] objectAtIndex:0] content] _removeControl: m_window];
   [m_window resignKeyWindow];
+  [self enableScreenSaver];
 
   [super controlWasDeactivated];
 }
@@ -334,24 +337,20 @@ XBMCEAGLView  *m_glView;
 
 - (void) disableScreenSaver
 {
-  /*
   NSLog(@"%s", __PRETTY_FUNCTION__);
   //store screen saver state and disable it
-  //!!BRSettingsFacade setScreenSaverEnabled does change the plist, but does _not_ seem to work
+  //!!ATVSettingsFacade setScreenSaverEnabled does change the plist, but does _not_ seem to work
   m_screensaverTimeout = [[BRSettingsFacade singleton] screenSaverTimeout];
-  [[BRSettingsFacade singleton] setScreenSaverTimeout:-1];
-  [[BRSettingsFacade singleton] flushDiskChanges];
-  */
+  [[ATVSettingsFacade singleton] setScreenSaverTimeout:-1];
+  [[ATVSettingsFacade singleton] flushDiskChanges];
 }
 
 - (void) enableScreenSaver
 {
-  /*
   NSLog(@"%s", __PRETTY_FUNCTION__);
   //reset screen saver to user settings
-  [[BRSettingsFacade singleton] setScreenSaverTimeout: m_screensaverTimeout];
-  [[BRSettingsFacade singleton] flushDiskChanges];
-  */
+  [[ATVSettingsFacade singleton] setScreenSaverTimeout: m_screensaverTimeout];
+  [[ATVSettingsFacade singleton] flushDiskChanges];
 }
 
 @end
