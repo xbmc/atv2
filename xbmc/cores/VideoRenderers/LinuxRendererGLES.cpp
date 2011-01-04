@@ -134,11 +134,6 @@ CLinuxRendererGLES::~CLinuxRendererGLES()
     m_pYUVShader = NULL;
   }
 
-  if (m_sw_context)
-  {
-    m_dllSwScale->sws_freeContext(m_sw_context);
-    m_sw_context = NULL;
-  }
   delete m_dllSwScale;
   delete m_dllAvCodec;
   delete m_dllAvUtil;
@@ -840,6 +835,11 @@ void CLinuxRendererGLES::UnInit()
   for (int i = 0; i < NUM_BUFFERS; ++i)
     (this->*m_textureDelete)(i);
 
+  if (m_dllSwScale && m_sw_context)
+  {
+    m_dllSwScale->sws_freeContext(m_sw_context);
+    m_sw_context = NULL;
+  }
   // cleanup framebuffer object if it was in use
   m_fbo.Cleanup();
   m_bValidated = false;
