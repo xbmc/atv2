@@ -43,7 +43,11 @@ void CGUIWindowPointer::SetPointer(int pointer)
   CGUIControl *pControl = (CGUIControl *)GetControl(pointer);
   if (pControl)
   {
+#if defined(__APPLE__) && defined(__arm__)
+    pControl->SetVisible(false);
+#else
     pControl->SetVisible(true);
+#endif
     // disable the old pointer
     pControl = (CGUIControl *)GetControl(m_pointer);
     if (pControl) pControl->SetVisible(false);
