@@ -7,7 +7,7 @@ TOC
 4. How to compile and run
 	4.1 Using XCode
 	4.2 Using Command line
-5. Packaging
+5. Gesture Handling on iPad/iPhone/iPod touch
 
 -----------------------------------------------------------------------------
 1. Introduction
@@ -79,4 +79,12 @@ end not simulator.
 or
 
  $ xcodebuild -project XBMC-ATV2.xcodeproj -target XBMC -configuration Release build ONLY_ACTIVE_ARCH=YES ARCHS=armv7 VALID_ARCHS=armv7 IPHONEOS_DEPLOYMENT_TARGET=4.1 SDKROOT=iphoneos4.2
+
+
+5. Gesture Handling on iPad/iPhone/iPod touch
+
+  Double Tap : Right Mouse Click
+  Swipe Left : Backspace
+  Swipe Right : Tab
+
 
