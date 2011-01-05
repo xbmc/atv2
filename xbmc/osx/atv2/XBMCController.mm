@@ -74,6 +74,12 @@ XBMCController *g_xbmcController;
 -(void)controlWasDeactivated {}
 @end
 
+// so we don't have to include AppleTV.frameworks/PrivateHeaders/ATVSettingsFacade.h
+@interface ATVSettingsFacade : BRSettingsFacade {}
+-(int)screenSaverTimeout;
+-(void)setScreenSaverTimeout:(int) f_timeout;
+@end
+
 // notification messages
 extern NSString* kBRScreenSaverActivated;
 extern NSString* kBRScreenSaverDismissed;
@@ -339,29 +345,19 @@ int           m_screensaverTimeout;
 {
   NSLog(@"%s", __PRETTY_FUNCTION__);
   //store screen saver state and disable it
-  /*
-  Class atvsettingfacase = NSClassFromString(@"ATVSettingsFacade");
-  if (atvsettingfacase)
-  {
-    m_screensaverTimeout = (int)[[atvsettingfacase singleton] screenSaverTimeout];
-    [[atvsettingfacase singleton] setScreenSaverTimeout:-1];
-    [[atvsettingfacase singleton] flushDiskChanges];
-  }
-  */
+
+  m_screensaverTimeout = [[ATVSettingsFacade singleton] screenSaverTimeout];
+  [[ATVSettingsFacade singleton] setScreenSaverTimeout: -1];
+  [[ATVSettingsFacade singleton] flushDiskChanges];
 }
 
 - (void) enableScreenSaver
 {
   NSLog(@"%s", __PRETTY_FUNCTION__);
   //reset screen saver to user settings
-  /*
-  Class atvsettingfacase = NSClassFromString(@"ATVSettingsFacade");
-  if (atvsettingfacase)
-  {
-    [[atvsettingfacase singleton] setScreenSaverTimeout: m_screensaverTimeout];
-    [[atvsettingfacase singleton] flushDiskChanges];
-  }
-  */
+
+  [[ATVSettingsFacade singleton] setScreenSaverTimeout: m_screensaverTimeout];
+  [[ATVSettingsFacade singleton] flushDiskChanges];
 }
 
 @end
