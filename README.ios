@@ -16,6 +16,7 @@ TOC
 This is a platform port of XBMC for the Apple iOS operating system. 
 The current build system is Xcode 3.2.5 and iOS SDK 4.2 
 There are two ways to build XBMC for Mac.
+
 1) command-line or
 2) Xcode.
 
