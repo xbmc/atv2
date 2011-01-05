@@ -40,7 +40,7 @@
 #import <OpenGLES/ES2/glext.h>
 #import "XBMCEAGLView.h"
 #import "XBMCAppliance.h"
-#import "iOS_Utils.h"
+#import "iOSUtils.h"
 
 // uniform index
 enum {
