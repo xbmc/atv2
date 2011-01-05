@@ -339,18 +339,29 @@ int           m_screensaverTimeout;
 {
   NSLog(@"%s", __PRETTY_FUNCTION__);
   //store screen saver state and disable it
-  //!!ATVSettingsFacade setScreenSaverEnabled does change the plist, but does _not_ seem to work
-  m_screensaverTimeout = [[BRSettingsFacade singleton] screenSaverTimeout];
-  [[ATVSettingsFacade singleton] setScreenSaverTimeout:-1];
-  [[ATVSettingsFacade singleton] flushDiskChanges];
+  /*
+  Class atvsettingfacase = NSClassFromString(@"ATVSettingsFacade");
+  if (atvsettingfacase)
+  {
+    m_screensaverTimeout = (int)[[atvsettingfacase singleton] screenSaverTimeout];
+    [[atvsettingfacase singleton] setScreenSaverTimeout:-1];
+    [[atvsettingfacase singleton] flushDiskChanges];
+  }
+  */
 }
 
 - (void) enableScreenSaver
 {
   NSLog(@"%s", __PRETTY_FUNCTION__);
   //reset screen saver to user settings
-  [[ATVSettingsFacade singleton] setScreenSaverTimeout: m_screensaverTimeout];
-  [[ATVSettingsFacade singleton] flushDiskChanges];
+  /*
+  Class atvsettingfacase = NSClassFromString(@"ATVSettingsFacade");
+  if (atvsettingfacase)
+  {
+    [[atvsettingfacase singleton] setScreenSaverTimeout: m_screensaverTimeout];
+    [[atvsettingfacase singleton] flushDiskChanges];
+  }
+  */
 }
 
 @end
