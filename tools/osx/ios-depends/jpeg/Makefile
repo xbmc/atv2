@@ -11,7 +11,7 @@ LIBNAME=jpeg
 VERSION=8b
 SOURCE=$(LIBNAME)-$(VERSION)
 # download location and format
-BASE_URL=http://www.ijg.org/files
+BASE_URL=http://www.imagemagick.org/download/delegates
 ARCHIVE=$(LIBNAME)src.v$(VERSION).tar.gz
 
 RETRIEVE_TOOL=/usr/bin/curl
