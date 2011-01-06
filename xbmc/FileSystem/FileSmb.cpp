@@ -60,6 +60,9 @@ SMBCSRV* xb_smbc_cache(SMBCCTX* c, const char* server, const char* share, const 
 
 CSMB::CSMB()
 {
+#ifndef _LINUX
+  m_IdleTimeout = 0;
+#endif
   m_context = NULL;
   smbc_init(xb_smbc_auth, 0);
 }
@@ -86,6 +89,7 @@ void CSMB::Deinit()
     {
       e.writelog(__FUNCTION__);
     }
+    m_IdleTimeout = 180;
 #else
     catch(...)
     {
@@ -199,7 +203,8 @@ void CSMB::Init()
     }
   }
 #ifdef _LINUX
-  m_LastActive = CTimeUtils::GetTimeMS();
+  //m_LastActive = CTimeUtils::GetTimeMS();
+  m_IdleTimeout = 180;
 #endif
 }
 
@@ -301,17 +306,24 @@ void CSMB::CheckIfIdle()
   if (m_OpenConnections == 0)
   { /* I've set the the maxiumum IDLE time to be 1 min and 30 sec. */
     CSingleLock lock(*this);
-    if (m_OpenConnections == 0 /* check again - when locked */ && m_context != NULL && (CTimeUtils::GetTimeMS() - m_LastActive) > 90000)
+    if (m_OpenConnections == 0 /* check again - when locked */ && m_context != NULL /*&& (CTimeUtils::GetTimeMS() - m_LastActive) > 90000*/)
     {
-      CLog::Log(LOGNOTICE, "Samba is idle. Closing the remaining connections");
-      smb.Deinit();
+      if(m_IdleTimeout > 0) {
+        m_IdleTimeout--;
+      } else {
+        CLog::Log(LOGNOTICE, "Samba is idle. Closing the remaining connections");
+        smb.Deinit();
+      }
     }
   }
 }
 
 void CSMB::SetActivityTime()
 {
-  m_LastActive = CTimeUtils::GetTimeMS();
+  /* Since we get called every 500ms from ProcessSlow we limit the tick count to 180 */
+  /* That means we have 2 ticks per second which equals 180/2 == 90 seconds */
+  m_IdleTimeout = 180;
+  //m_LastActive = CTimeUtils::GetTimeMS();
 }
 
 /* The following two function is used to keep track on how many Opened files/directories there are.
@@ -327,7 +339,8 @@ void CSMB::AddIdleConnection()
   m_OpenConnections--;
   /* If we close a file we reset the idle timer so that we don't have any wierd behaviours if a user
      leaves the movie paused for a long while and then press stop */
-  m_LastActive = CTimeUtils::GetTimeMS();
+  //m_LastActive = CTimeUtils::GetTimeMS();
+  m_IdleTimeout = 180;
 }
 #endif
 
