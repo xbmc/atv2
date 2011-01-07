@@ -24,13 +24,10 @@
 #import "XBMC_events.h"
 #include "XBMC_keysym.h"
 
-@class XBMCClientWrapper;
-
 @interface XBMCController : UIViewController
 {
   int m_screensaverTimeout;
   UIViewController *m_controller;
-  XBMCClientWrapper* mp_xbmclient; // our own event-client implementation
 	
   EAGLContext *context;
   CADisplayLink *displayLink;

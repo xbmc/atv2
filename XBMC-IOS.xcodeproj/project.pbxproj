@@ -933,7 +933,6 @@
 		F5A29DCF12A70EA3003A610C /* DVDVideoCodecVideoToolBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F5A29DCD12A70EA3003A610C /* DVDVideoCodecVideoToolBox.cpp */; };
 		F5A29EC312A7221B003A610C /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5A29EC212A7221B003A610C /* CoreMedia.framework */; };
 		F5A29F2712A72246003A610C /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5A29F2612A72246003A610C /* VideoToolbox.framework */; };
-		F5A2AD0212AAE4DF003A610C /* xbmcclientwrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = F5A2AD0112AAE4DF003A610C /* xbmcclientwrapper.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -2898,9 +2897,6 @@
 		F5A29DCE12A70EA3003A610C /* DVDVideoCodecVideoToolBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVDVideoCodecVideoToolBox.h; sourceTree = "<group>"; };
 		F5A29EC212A7221B003A610C /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		F5A29F2612A72246003A610C /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/PrivateFrameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
-		F5A2ACFF12AAE4DF003A610C /* xbmcclient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = xbmcclient.h; path = xbmc/osx/ios/xbmcclient.h; sourceTree = "<group>"; };
-		F5A2AD0012AAE4DF003A610C /* xbmcclientwrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = xbmcclientwrapper.h; path = xbmc/osx/ios/xbmcclientwrapper.h; sourceTree = "<group>"; };
-		F5A2AD0112AAE4DF003A610C /* xbmcclientwrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = xbmcclientwrapper.mm; path = xbmc/osx/ios/xbmcclientwrapper.mm; sourceTree = "<group>"; };
 		F5A2AD7A12ABFC95003A610C /* XBMCDebugHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XBMCDebugHelpers.h; path = xbmc/osx/ios/XBMCDebugHelpers.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -5756,9 +5752,6 @@
 				F589ACC01287A77400D8079E /* XBMCController.mm */,
 				F589ADB81288CC6100D8079E /* XBMCEAGLView.h */,
 				F589ADB91288CC6100D8079E /* XBMCEAGLView.mm */,
-				F5A2ACFF12AAE4DF003A610C /* xbmcclient.h */,
-				F5A2AD0012AAE4DF003A610C /* xbmcclientwrapper.h */,
-				F5A2AD0112AAE4DF003A610C /* xbmcclientwrapper.mm */,
 				F5A2AD7A12ABFC95003A610C /* XBMCDebugHelpers.h */,
 				F5899E0E128724AC00D8079E /* Resources */,
 			);
@@ -6817,7 +6810,6 @@
 				F59E2BF1129A0C5B00F6AB7A /* fstrcmp.c in Sources */,
 				F5A29BDF12A044E7003A610C /* fastmemcpy-arm.S in Sources */,
 				F5A29DCF12A70EA3003A610C /* DVDVideoCodecVideoToolBox.cpp in Sources */,
-				F5A2AD0212AAE4DF003A610C /* xbmcclientwrapper.mm in Sources */,
 				321B63B012B2091400429E0F /* WinEventsIOS.mm in Sources */,
 				F56B141112CAF053009B4C96 /* IOSCoreAudio.cpp in Sources */,
 				F56B141412CAF0A3009B4C96 /* IOSAudioRenderer.cpp in Sources */,
