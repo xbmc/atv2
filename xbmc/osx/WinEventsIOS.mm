@@ -68,7 +68,19 @@ bool CWinEventsIOS::MessagePump()
   XBMC_mutexV(m_inputMutex);
 
   if (gotEvent)
-    ret |= g_application.OnEvent(pumpEvent);
+  {
+    if (pumpEvent.type == XBMC_USEREVENT)
+    {
+      std::string joystickName = "AppleRemote";
+      bool isAxis = false;
+      float fAmount = 0.0;
+      unsigned short wKeyID = pumpEvent.user.code;
+
+      ret |= g_application.ProcessJoystickEvent(joystickName, wKeyID, isAxis, fAmount);
+    }
+    else
+      ret |= g_application.OnEvent(pumpEvent);
+  }
 
   return ret;
 }

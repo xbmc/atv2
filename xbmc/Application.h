@@ -301,6 +301,9 @@ protected:
   void LoadSkin(const boost::shared_ptr<ADDON::CSkinInfo>& skin);
 
   friend class CApplicationMessenger;
+#if defined(__APPLE__) && defined(__arm__)
+  friend class CWinEventsIOS;
+#endif
   // screensaver
   bool m_bScreenSave;
   ADDON::AddonPtr m_screenSaver;
