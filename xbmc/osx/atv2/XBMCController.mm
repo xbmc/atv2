@@ -18,6 +18,12 @@
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
+//hack around problem with xbmc's typedef int BOOL
+// and obj-c's typedef unsigned char BOOL
+#define BOOL XBMC_BOOL 
+#import "WinEventsIOS.h"
+#import "XBMC_events.h"
+#undef BOOL
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
@@ -25,8 +31,51 @@
 
 #import "XBMCController.h"
 #import "XBMCEAGLView.h"
-#import "xbmcclientwrapper.h"
 #import "XBMCDebugHelpers.h"
+
+typedef enum {
+  ATV_BUTTON_PLAY           = 5,
+  ATV_BUTTON_MENU           = 6,
+  ATV_BUTTON_MENU_H         = 8,
+  ATV_BUTTON_UP             = 1,
+  ATV_BUTTON_UP_RELEASE     = 1,
+  ATV_BUTTON_DOWN           = 2,
+  ATV_BUTTON_DOWN_RELEASE   = 2,
+  ATV_BUTTON_RIGHT          = 4,
+  ATV_BUTTON_RIGHT_RELEASE  = 4,
+  ATV_BUTTON_LEFT           = 3,
+  ATV_BUTTON_LEFT_RELEASE   = 3,   
+  ATV_BUTTON_PLAY_H         = 7,
+  
+  ATV_BUTTON_RIGHT_H        = 10,
+  ATV_BUTTON_RIGHT_H_RELEASE= 10,
+  ATV_BUTTON_LEFT_H         = 11,
+  ATV_BUTTON_LEFT_H_RELEASE = 11,
+
+  //new aluminium remote buttons
+  ATV_ALUMINIUM_PLAY        = 12,
+  ATV_ALUMINIUM_PLAY_H      = 13,
+  
+  //learned remote buttons
+  ATV_LEARNED_PLAY          = 70,
+  ATV_LEARNED_PAUSE         = 71,
+  ATV_LEARNED_STOP          = 72,
+  ATV_LEARNED_PREVIOUS      = 73,
+  ATV_LEARNED_NEXT          = 74,
+  ATV_LEARNED_REWIND        = 75,
+  ATV_LEARNED_REWIND_RELEASE= 75,
+  ATV_LEARNED_FORWARD       = 76,
+  ATV_LEARNED_FORWARD_RELEASE=76,
+  ATV_LEARNED_RETURN        = 77,
+  ATV_LEARNED_ENTER         = 78,
+
+  //gestures
+  ATV_GESTURE_SWIPE_LEFT    = 80,
+  ATV_GESTURE_SWIPE_RIGHT   = 81,
+  ATV_GESTURE_SWIPE_UP      = 82,
+  ATV_GESTURE_SWIPE_DOWN    = 83,
+  ATV_INVALID_BUTTON
+} eATVClientEvent;
 
 typedef enum {
   // for originator kBREventOriginatorRemote
@@ -39,6 +88,7 @@ typedef enum {
   kBREventRemoteActionRight,
 
   kBREventRemoteActionPlayHold = 20,
+  kBREventRemoteActionCenterHold,
 
   // Gestures, for originator kBREventOriginatorGesture
   kBREventRemoteActionTap = 30,
@@ -170,18 +220,12 @@ int           m_screensaverTimeout;
 
   g_xbmcController = self;
 
-  bool use_universal = NO;
-  NSString *client_address= @"localhost";
-  mp_xbmclient = [[XBMCClientWrapper alloc] initWithUniversalMode:use_universal serverAddress:client_address];
   return self;
 }
 
 - (void)dealloc
 {
   //NSLog(@"%s", __PRETTY_FUNCTION__);
-
-	[mp_xbmclient release];
-
   [m_glView stopAnimation];
   [m_glView release];
   [m_window release];
@@ -211,7 +255,6 @@ int           m_screensaverTimeout;
 {
   //NSLog(@"%s", __PRETTY_FUNCTION__);
 
-
   [m_glView stopAnimation];
 
   [[[[BRWindow windowList] objectAtIndex:0] content] _removeControl: m_window];
@@ -232,7 +275,7 @@ int           m_screensaverTimeout;
   int remoteAction = [f_event remoteAction];
   //BOOL downEvent = [f_event value];
   //DLOG(@"got action %i %@", remoteAction, (downEvent)? @"pressed":@"released");
-  
+
   switch (remoteAction)
   {
     case kBREventRemoteActionUp:
@@ -240,39 +283,46 @@ int           m_screensaverTimeout;
       if([f_event value] == 1)
         return ATV_BUTTON_UP;
       else
-        return ATV_BUTTON_UP_RELEASE;
+        return ATV_INVALID_BUTTON;
+        //return ATV_BUTTON_UP_RELEASE;
     case kBREventRemoteActionDown:
     case 65677:  // tap down
       if([f_event value] == 1)
         return ATV_BUTTON_DOWN;
       else
-        return ATV_BUTTON_DOWN_RELEASE;
+        return ATV_INVALID_BUTTON;
+        //return ATV_BUTTON_DOWN_RELEASE;
     case kBREventRemoteActionLeft:
     case 65675:  // tap left
       if([f_event value] == 1)
         return ATV_BUTTON_LEFT;
       else
-        return ATV_BUTTON_LEFT_RELEASE;
+        return ATV_INVALID_BUTTON;
+        //return ATV_BUTTON_LEFT_RELEASE;
     case 786612: // hold left
       if([f_event value] == 1)
         return ATV_LEARNED_REWIND;
       else
-        return ATV_LEARNED_REWIND_RELEASE;
+        return ATV_INVALID_BUTTON;
+        //return ATV_LEARNED_REWIND_RELEASE;
     case kBREventRemoteActionRight:
     case 65674:  // tap right
       if ([f_event value] == 1)
         return ATV_BUTTON_RIGHT;
       else
-        return ATV_BUTTON_RIGHT_RELEASE;
+        return ATV_INVALID_BUTTON;
+        //return ATV_BUTTON_RIGHT_RELEASE;
     case 786611: // hold right
       if ([f_event value] == 1)
         return ATV_LEARNED_FORWARD;
       else
-        return ATV_LEARNED_FORWARD_RELEASE;
+        return ATV_INVALID_BUTTON;
+        //return ATV_LEARNED_FORWARD_RELEASE;
     case kBREventRemoteActionPlay:
     case 65673:  // tap play
       return ATV_BUTTON_PLAY;
     case kBREventRemoteActionPlayHold:
+    case kBREventRemoteActionCenterHold:
     case 65668:  // hold play
       return ATV_BUTTON_PLAY_H;
     case kBREventRemoteActionMenu:
@@ -309,15 +359,20 @@ int           m_screensaverTimeout;
 
 	if ([m_glView isAnimating])
   {
-    eATVClientEvent xbmcclient_event = [self ATVClientEventFromBREvent:event];
+    eATVClientEvent xbmc_ir_key = [self ATVClientEventFromBREvent:event];
     
-    if ( xbmcclient_event == ATV_INVALID_BUTTON )
+    if ( xbmc_ir_key == ATV_INVALID_BUTTON )
     {
       return NO;
     } 
     else
     {
-      [mp_xbmclient handleEvent:xbmcclient_event];
+      XBMC_Event newEvent;
+      memset(&newEvent, 0, sizeof(newEvent));
+
+      newEvent.type = XBMC_USEREVENT;
+      newEvent.user.code = xbmc_ir_key;
+      CWinEventsIOS::MessagePush(&newEvent);
       return TRUE;
     }
 	}
