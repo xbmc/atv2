@@ -34,7 +34,9 @@ static std::vector<XBMC_Event> events;
 
 void CWinEventsIOS::DeInit()
 {
-  XBMC_DestroyMutex(m_inputMutex);
+  if (m_inputMutex)
+    XBMC_DestroyMutex(m_inputMutex);
+  m_inputMutex = NULL;
 }
 
 void CWinEventsIOS::Init()
@@ -71,6 +73,8 @@ bool CWinEventsIOS::MessagePump()
   {
     if (pumpEvent.type == XBMC_USEREVENT)
     {
+      // On ATV2, we push in events as a XBMC_USEREVENT,
+      // the user.code will be the keyID to translate using JoyStick.AppleRemote.xml
       std::string joystickName = "AppleRemote";
       bool isAxis = false;
       float fAmount = 0.0;
