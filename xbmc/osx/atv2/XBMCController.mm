@@ -163,6 +163,16 @@ int           m_screensaverTimeout;
 }
 */
 
+- (void) applicationDidExit
+{
+  [m_glView stopAnimation];
+
+  [[[[BRWindow windowList] objectAtIndex:0] content] _removeControl: m_window];
+  [m_window resignKeyWindow];
+  [self enableScreenSaver];
+
+  [[self stack] popController];
+}
 - (void) initDisplayLink
 {
   [m_glView initDisplayLink];

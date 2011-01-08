@@ -40,6 +40,7 @@
 #import <OpenGLES/ES2/glext.h>
 #import "XBMCEAGLView.h"
 #import "XBMCAppliance.h"
+#import "XBMCController.h"
 #import "iOSUtils.h"
 
 // uniform index
@@ -243,12 +244,13 @@ enum {
 	{
     [self deinitDisplayLink];
 		animating = FALSE;
-    g_application.Stop();
+    if (!g_application.m_bStop)
+      g_application.Stop();
     // wait for animation thread to die
     if ([animationThread isFinished] == NO)
       [animationThreadLock lockWhenCondition:TRUE];
+    CWinEventsIOS::DeInit();
 	}
-  CWinEventsIOS::DeInit();
 }
 //--------------------------------------------------------------
 - (void) runAnimation:(id) arg
@@ -305,12 +307,8 @@ enum {
   {
     try
     {
-      while (animating)
-      {
-        CCocoaAutoPool innerpool;
-        g_application.Run();
-      }
-      g_Windowing.DestroyWindow();
+      CCocoaAutoPool innerpool;
+      g_application.Run();
     }
     catch(...)
     {
@@ -324,6 +322,12 @@ enum {
 
   // signal we are dead
   [myLock unlockWithCondition:TRUE];
+
+  // grrr, xbmc does not shutdown properly and leaves
+  // several classes in an indeterminant state, we must exit and
+  // reload Lowtide/AppleTV, boo.
+  exit(0);
+  //[g_xbmcController applicationDidExit];
 }
 
 //--------------------------------------------------------------
