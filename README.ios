@@ -48,7 +48,7 @@ Prefered verion Xcode 3.2.5 and iOS SDK 4.2.
 -----------------------------------------------------------------------------
 3.1 Install Cross libs and runtime environment
 -----------------------------------------------------------------------------
-
+ $ sudo cp tools/osx/ios-depends/gas-preprocessor/gas-preprocessor.pl /usr/local/bin
  $ make -C tools/osx/ios-depends
  $ make -C tools/osx/ios-depends/xbmc
  $ make xcode_depends
