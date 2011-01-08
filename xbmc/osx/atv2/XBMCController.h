@@ -30,6 +30,7 @@
 // message from which our instance is obtained
 //+ (XBMCController*) sharedInstance;
 
+- (void) applicationDidExit;
 - (void) initDisplayLink;
 - (void) deinitDisplayLink;
 - (double) getDisplayLinkFPS;
