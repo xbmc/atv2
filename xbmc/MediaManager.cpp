@@ -63,15 +63,8 @@ class CMediaManager g_mediaManager;
 
 CMediaManager::CMediaManager()
 {
-#ifdef __APPLE__
-  m_platformStorage = new CDarwinStorageProvider();
-#elif defined(_LINUX)
-  m_platformStorage = new CLinuxStorageProvider();
-#elif _WIN32
-  m_platformStorage = new CWin32StorageProvider();
-#endif
-
   m_bhasoptical = false;
+  m_platformStorage = NULL;
 }
 
 void CMediaManager::Stop()
@@ -84,6 +77,16 @@ void CMediaManager::Stop()
 
 void CMediaManager::Initialize()
 {
+  if (!m_platformStorage)
+  {
+    #ifdef __APPLE__
+      m_platformStorage = new CDarwinStorageProvider();
+    #elif defined(_LINUX)
+      m_platformStorage = new CLinuxStorageProvider();
+    #elif _WIN32
+      m_platformStorage = new CWin32StorageProvider();
+    #endif
+  }
   m_platformStorage->Initialize();
 }
 
