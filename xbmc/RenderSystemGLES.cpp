@@ -143,6 +143,7 @@ bool CRenderSystemGLES::DestroyRenderSystem()
       }
     }
     delete[] m_pGUIshader;
+    m_pGUIshader = NULL;
   }
 
   m_bRenderCreated = false;
