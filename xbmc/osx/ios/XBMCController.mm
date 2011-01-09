@@ -61,6 +61,10 @@ extern NSString* kBRScreenSaverDismissed;
 @property (nonatomic, assign) CADisplayLink *displayLink;
 @end
 
+@interface UIApplication (extended)
+-(void) terminateWithSuccess;
+@end
+
 @implementation XBMCController
 @synthesize animating, context, displayLink;
 @synthesize firstTouch;
@@ -369,13 +373,14 @@ extern NSString* kBRScreenSaverDismissed;
 	{
 		[self deinitDisplayLink];
 		animating = FALSE;
-		g_application.Stop();
+		if(!g_application.m_bStop)
+      g_application.Stop();
 		// wait for animation thread to die
 		if ([animationThread isFinished] == NO)
 			[animationThreadLock lockWhenCondition:TRUE];
     [self.displayLink invalidate];
     self.displayLink = nil;
-    animating = FALSE;		
+    animating = FALSE;
 	}
 }
 
@@ -435,11 +440,8 @@ extern NSString* kBRScreenSaverDismissed;
 	{
 		try
 		{
-			while (animating)
-			{
-        CCocoaAutoPool innerpool;
-				g_application.Run();
-			}
+      CCocoaAutoPool innerpool;
+      g_application.Run();
 			g_Windowing.DestroyWindow();
 		}
 		catch(...)
@@ -454,10 +456,12 @@ extern NSString* kBRScreenSaverDismissed;
 	
 	// signal we are dead
 	[myLock unlockWithCondition:TRUE];
+
+  CWinEventsIOS::DeInit();
+  [[UIApplication sharedApplication] terminateWithSuccess];
 	
 	NSLog(@"%s:exit", __PRETTY_FUNCTION__);
 }
-
 //--------------------------------------------------------------
 - (void) runDisplayLink;
 {
