@@ -17,7 +17,7 @@
 		<string>XBMC.png</string>
 	</array>
 	<key>CFBundleIdentifier</key>
-	<string>com.ios_xbmc.xbmc</string>
+	<string>com.xbmc.xbmc</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
