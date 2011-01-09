@@ -1148,7 +1148,7 @@ vtdec_create_session(AppContext *ctx)
   
   width = ctx->sourceWidth;
   height= ctx->sourceHeight;
-  #if 0
+  #if 1
     // scale output pictures down to 720p size for display
     if (width > 1280)
     {
@@ -1168,6 +1168,7 @@ vtdec_create_session(AppContext *ctx)
   //  kCVPixelFormatType_32BGRA or kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange
   CFDictionarySetSInt32(destinationPixelBufferAttributes,
     kCVPixelBufferPixelFormatTypeKey, kCVPixelFormatType_32BGRA);
+    //kCVPixelBufferPixelFormatTypeKey, kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange);
   CFDictionarySetSInt32(destinationPixelBufferAttributes,
     kCVPixelBufferWidthKey, width);
   CFDictionarySetSInt32(destinationPixelBufferAttributes,
