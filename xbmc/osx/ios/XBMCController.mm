@@ -292,6 +292,8 @@ extern NSString* kBRScreenSaverDismissed;
 {
   NSLog(@"%s", __PRETTY_FUNCTION__);
 
+  // move this later into CocoaPowerSyscall
+  [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
   [self startAnimation];
 	
   [super viewWillAppear:animated];
@@ -302,6 +304,8 @@ extern NSString* kBRScreenSaverDismissed;
   NSLog(@"%s", __PRETTY_FUNCTION__);
   
   [self stopAnimation];
+  // move this later into CocoaPowerSyscall
+  [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
 	
   [super viewWillDisappear:animated];
 }
@@ -344,6 +348,7 @@ extern NSString* kBRScreenSaverDismissed;
 	if (!animating)
 	{
 		animating = TRUE;
+    
 		// kick off an animation thread
 		animationThreadLock = [[NSConditionLock alloc] initWithCondition: FALSE];
 		animationThread = [[NSThread alloc] initWithTarget:self 
@@ -368,9 +373,9 @@ extern NSString* kBRScreenSaverDismissed;
 		// wait for animation thread to die
 		if ([animationThread isFinished] == NO)
 			[animationThreadLock lockWhenCondition:TRUE];
-        [self.displayLink invalidate];
-        self.displayLink = nil;
-        animating = FALSE;		
+    [self.displayLink invalidate];
+    self.displayLink = nil;
+    animating = FALSE;		
 	}
 }
 
