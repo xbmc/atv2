@@ -1,0 +1,6 @@
+1.) copy XBMC.app to XBMC/Applications
+2.) copy makedeb.sh XBMC onto the iOS device in /var/stash
+3.) connect to the iOS device using ssh
+4.) cd /var/stash
+5.) ./makedeb.sh
+6.) be happy about XBMC.deb :D
