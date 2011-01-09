@@ -47,10 +47,10 @@ typedef enum {
   ATV_BUTTON_LEFT_RELEASE   = 3,   
   ATV_BUTTON_PLAY_H         = 7,
   
+  ATV_BUTTON_LEFT_H         = 9,
+  ATV_BUTTON_LEFT_H_RELEASE = 9,
   ATV_BUTTON_RIGHT_H        = 10,
   ATV_BUTTON_RIGHT_H_RELEASE= 10,
-  ATV_BUTTON_LEFT_H         = 11,
-  ATV_BUTTON_LEFT_H_RELEASE = 11,
 
   //new aluminium remote buttons
   ATV_ALUMINIUM_PLAY        = 12,
