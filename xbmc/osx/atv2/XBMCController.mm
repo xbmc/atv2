@@ -414,6 +414,8 @@ int           m_screensaverTimeout;
   m_screensaverTimeout = [[ATVSettingsFacade singleton] screenSaverTimeout];
   [[ATVSettingsFacade singleton] setScreenSaverTimeout: -1];
   [[ATVSettingsFacade singleton] flushDiskChanges];
+
+  [[BRBackgroundTaskManager singleton] holdOffBackgroundTasks];
 }
 
 - (void) enableScreenSaver
@@ -423,6 +425,8 @@ int           m_screensaverTimeout;
 
   [[ATVSettingsFacade singleton] setScreenSaverTimeout: m_screensaverTimeout];
   [[ATVSettingsFacade singleton] flushDiskChanges];
+
+  [[BRBackgroundTaskManager singleton] okToDoBackgroundProcessing];
 }
 
 @end
