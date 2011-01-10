@@ -113,6 +113,8 @@ To automate this, create these two files:
 </dict>
 </plist>
 
+  $mkdir /usr/libexec/xbmc
+
 /usr/libexec/xbmc/LoadXBMCSeatBeltRelease
 #!/bin/bash
 
