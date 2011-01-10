@@ -1,5 +1,5 @@
 #!/bin/sh
 
-find XBMC -name '.svn' -exec rm -rf {} \;
-chown -R root:wheel XBMC/Applications/XBMC.app
-dpkg-deb -b XBMC XBMC.deb
+find XBMC_iOS -name '.svn' -exec rm -rf {} \;
+chown -R root:wheel XBMC_iOS/Applications/XBMC.app
+dpkg-deb -b XBMC_iOS com.xbmx.xbmc_ios.deb
