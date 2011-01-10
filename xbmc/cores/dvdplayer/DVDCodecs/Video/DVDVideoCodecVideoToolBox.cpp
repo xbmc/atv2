@@ -125,6 +125,17 @@ extern void FigBlockBufferRelease(CMBlockBufferRef buf);
 }
 #endif
 
+int CheckNP2( unsigned x )
+{
+    --x;
+    x |= x >> 1;
+    x |= x >> 2;
+    x |= x >> 4;
+    x |= x >> 8;
+    x |= x >> 16;
+    return ++x;
+}
+
 //-----------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------
 // helper functions for debuging VTDecompression
@@ -1130,6 +1141,17 @@ CDVDVideoCodecVideoToolBox::CreateVTSession(int width, int height, CMFormatDescr
   OSStatus status;
 
   #if defined(__arm__)
+    int new_width = CheckNP2(width);
+    if (width != new_width)
+    {
+      // force picture width to power of two and scale up height
+      // we do this because no GL_UNPACK_ROW_LENGTH in OpenGLES
+      // and the CVPixelBufferPixel gets created using some
+      // strange alignment when width is non-standard.
+      double w_scaler = (double)new_width / width;
+      width = new_width;
+      height = height * w_scaler;
+    }
     // scale output pictures down to 720p size for display
     if (width > 1280)
     {
@@ -1153,8 +1175,8 @@ CDVDVideoCodecVideoToolBox::CreateVTSession(int width, int height, CMFormatDescr
     kCVPixelBufferWidthKey, width);
   CFDictionarySetSInt32(destinationPixelBufferAttributes,
     kCVPixelBufferHeightKey, height);
-  //CFDictionarySetSInt32(destinationPixelBufferAttributes,
-  //  kCVPixelBufferBytesPerRowAlignmentKey, 16);
+  CFDictionarySetValue(destinationPixelBufferAttributes,
+    kCVPixelBufferOpenGLCompatibilityKey, kCFBooleanTrue);
 
   outputCallback.callback = VTDecoderCallback;
   outputCallback.refcon = this;
@@ -1238,7 +1260,7 @@ CDVDVideoCodecVideoToolBox::VTDecoderCallback(
   } else {
     newFrame->width  = CVPixelBufferGetWidth(imageBuffer);
     newFrame->height = CVPixelBufferGetHeight(imageBuffer);
-  }
+  }  
   newFrame->pixel_buffer_format = format_type;
   newFrame->pixel_buffer_ref = CVBufferRetain(imageBuffer);
   GetFrameDisplayTimeFromDictionary(frameInfo, newFrame);
