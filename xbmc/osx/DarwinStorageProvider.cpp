@@ -48,6 +48,7 @@ void CDarwinStorageProvider::GetLocalDrives(VECSOURCES &localDrives)
   share.m_ignore = true;
   localDrives.push_back(share);
 
+#if !defined(__arm__)
   // User desktop folder
   share.strPath = getenv("HOME");
   share.strPath += "/Desktop";
@@ -55,13 +56,12 @@ void CDarwinStorageProvider::GetLocalDrives(VECSOURCES &localDrives)
   share.m_ignore = true;
   localDrives.push_back(share);
 
+  
   // Volumes (all mounts are present here)
   share.strPath = "/Volumes";
   share.strName = "Volumes";
   share.m_ignore = true;
   localDrives.push_back(share);
-
-#if !defined(__arm__)
 
   // This will pick up all local non-removable disks including the Root Disk.
   DASessionRef session = DASessionCreate(kCFAllocatorDefault);
