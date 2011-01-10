@@ -36,7 +36,7 @@
 - (BRImageControl *)productImage;
 
 @end
-//
+
 @implementation BRTopShelfView (specialAdditions)
 - (BRImageControl *)productImage
 {
@@ -56,6 +56,7 @@
 // added in 4.1+
 - (void) refresh;
 @end
+
 @implementation XBMCTopShelfController
 //
 - (void) selectCategoryWithIdentifier:(id)identifier 
@@ -82,8 +83,9 @@
 
 -(id) init
 {
-  NSLog(@"%s", __PRETTY_FUNCTION__);
-  if((self = [super init]) != nil) 
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
+
+  if ((self = [super init]) != nil) 
   {
     _topShelfController = [[XBMCTopShelfController alloc] init];
     _applianceCategories = [[NSArray alloc] initWithObjects:XBMCAppliance_CAT ,nil];
@@ -94,7 +96,7 @@
 
 - (void) dealloc
 {
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
 
   [_applianceCategories release];
   [_topShelfController release];
@@ -114,12 +116,14 @@
 
 - (id) selectCategoryWithIdentifier:(id)ident
 {
-	NSLog(@"eglv2:selecteCategoryWithIdentifier: %@", ident);
+	//NSLog(@"eglv2:selecteCategoryWithIdentifier: %@", ident);
+
 	return nil;
 }
 - (BOOL) handleObjectSelection:(id)fp8 userInfo:(id)fp12
 {
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
+
 	return YES;
 }
 
@@ -129,13 +133,14 @@
 }
 - (BOOL) handlePlay:(id)play userInfo:(id)info
 {
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
+
   return YES;
 }
 
 - (id) controllerForIdentifier:(id)identifier args:(id)args
 {
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
   
   XBMCController *controller = [[[XBMCController alloc] init] autorelease];
   //XBMCController *controller = [XBMCController sharedInstance];
