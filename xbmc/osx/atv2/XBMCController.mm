@@ -87,6 +87,8 @@ typedef enum {
   kBREventRemoteActionLeft,
   kBREventRemoteActionRight,
 
+  kBREventRemoteActionALPlay = 10,
+
   kBREventRemoteActionPlayHold = 20,
   kBREventRemoteActionCenterHold,
 
@@ -355,6 +357,7 @@ int           m_screensaverTimeout;
       return ATV_LEARNED_ENTER;
     case 786631: //learned return, like go back
       return ATV_LEARNED_RETURN;
+    case kBREventRemoteActionALPlay:
     case 786637:
       return ATV_ALUMINIUM_PLAY;
     default:
