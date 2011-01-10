@@ -8,6 +8,7 @@ TOC
 	4.1 Using XCode
 	4.2 Using Command line
 5. Gesture Handling on iPad/iPhone/iPod touch
+6. Break Seatbelt at boot
 
 -----------------------------------------------------------------------------
 1. Introduction
@@ -87,5 +88,45 @@ or
   Double Tap : Right Mouse Click
   Swipe Left : Backspace
   Swipe Right : Tab
+
+6. Break Seatbelt at boot
+iOS devices run under a kernel imposed sandbox/seatbelt which limits what can
+run or files that can be accessed. To enable XBMC for ATV/iOS to work, you
+must break the sandbox/seatbelt. Manually this entails the following:
+
+  $sysctl -w security.mac.proc_enforce=0
+  $sysctl -w security.mac.vnode_enforce=0
+
+To automate this, create these two files:
+
+/System/Library/LaunchDaemons/com.xbmc.xbmc.startup.plist 
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.xbmc.xbmc.startup</string>
+	<key>Program</key>
+	<string>/usr/libexec/xbmc/LoadXBMCSeatBeltRelease</string>
+	<key>RunAtLoad</key>
+	<true/>
+</dict>
+</plist>
+
+/usr/libexec/xbmc/LoadXBMCSeatBeltRelease
+#!/bin/bash
+
+sysctl -w security.mac.proc_enforce=0
+sysctl -w security.mac.vnode_enforce=0
+
+exit 0
+
+And change their permissions:
+
+  $chmod 644 /System/Library/LaunchDaemons/com.xbmc.xbmc.startup.plist
+  $chmod 755 /usr/libexec/xbmc/LoadXBMCSeatBeltRelease
+
+
+
 
 
