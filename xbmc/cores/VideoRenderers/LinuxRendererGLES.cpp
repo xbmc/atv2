@@ -1751,7 +1751,7 @@ bool CLinuxRendererGLES::CreateYV12Texture(int index)
       if (m_renderMethod & RENDER_SW)
       {
         if(m_renderMethod & RENDER_POT)
-          CLog::Log(LOGNOTICE, "GL: Creating RGB POT texture of size %d x %d",  plane.texwidth, plane.texheight);
+          CLog::Log(LOGDEBUG, "GL: Creating RGB POT texture of size %d x %d",  plane.texwidth, plane.texheight);
         else
           CLog::Log(LOGDEBUG,  "GL: Creating RGB NPOT texture of size %d x %d", plane.texwidth, plane.texheight);
 
@@ -1761,7 +1761,7 @@ bool CLinuxRendererGLES::CreateYV12Texture(int index)
       else
       {
         if(m_renderMethod & RENDER_POT)
-          CLog::Log(LOGNOTICE, "GL: Creating YUV POT texture of size %d x %d",  plane.texwidth, plane.texheight);
+          CLog::Log(LOGDEBUG, "GL: Creating YUV POT texture of size %d x %d",  plane.texwidth, plane.texheight);
         else
           CLog::Log(LOGDEBUG,  "GL: Creating YUV NPOT texture of size %d x %d", plane.texwidth, plane.texheight);
 
@@ -1876,6 +1876,8 @@ void CLinuxRendererGLES::UploadCVRefTexture(int index)
     CVPixelBufferUnlockBaseAddress(cvBufferRef, kCVPixelBufferLock_ReadOnly);
     CVBufferRelease(m_buffers[index].cvBufferRef);
     m_buffers[index].cvBufferRef = NULL;
+
+    plane.flipindex = m_buffers[index].flipindex;
   }
 
   SetEvent(m_eventTexturesDone[index]);
