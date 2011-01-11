@@ -91,6 +91,7 @@ typedef enum {
 
   kBREventRemoteActionPlayHold = 20,
   kBREventRemoteActionCenterHold,
+  kBREventRemoteActionCenterHold42,
 
   // Gestures, for originator kBREventOriginatorGesture
   kBREventRemoteActionTap = 30,
@@ -335,6 +336,7 @@ int           m_screensaverTimeout;
       return ATV_BUTTON_PLAY;
     case kBREventRemoteActionPlayHold:
     case kBREventRemoteActionCenterHold:
+    case kBREventRemoteActionCenterHold42:
     case 65668:  // hold play
       return ATV_BUTTON_PLAY_H;
     case kBREventRemoteActionMenu:
