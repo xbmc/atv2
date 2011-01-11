@@ -132,12 +132,12 @@ extern NSString* kBRScreenSaverDismissed;
 }
 
 - (IBAction)handleSwipeLeft:(UISwipeGestureRecognizer *)sender {
-  NSLog(@"%s swipeLeft", __PRETTY_FUNCTION__);
+  //NSLog(@"%s swipeLeft", __PRETTY_FUNCTION__);
   [self sendKey:XBMCK_BACKSPACE];
 }
 
 - (IBAction)handleSwipeRight:(UISwipeGestureRecognizer *)sender {
-  NSLog(@"%s swipeRight", __PRETTY_FUNCTION__);
+  //NSLog(@"%s swipeRight", __PRETTY_FUNCTION__);
   [self sendKey:XBMCK_TAB];
 }
 
@@ -145,7 +145,7 @@ extern NSString* kBRScreenSaverDismissed;
   firstTouch = [sender locationOfTouch:0 inView:self.view];
   lastTouch = [sender locationOfTouch:0 inView:self.view];
   
-  NSLog(@"%s toubleTap", __PRETTY_FUNCTION__);
+  //NSLog(@"%s toubleTap", __PRETTY_FUNCTION__);
   
   XBMC_Event newEvent;
   memset(&newEvent, 0, sizeof(newEvent));
@@ -254,7 +254,7 @@ extern NSString* kBRScreenSaverDismissed;
   if (!aContext)
     NSLog(@"Failed to create ES context");
   else if (![EAGLContext setCurrentContext:aContext])
-	NSLog(@"Failed to set ES context current");
+    NSLog(@"Failed to set ES context current");
 	
   self.context = aContext;
   [aContext release];
@@ -294,7 +294,7 @@ extern NSString* kBRScreenSaverDismissed;
 
 - (void)viewWillAppear:(BOOL)animated
 {
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
 
   // move this later into CocoaPowerSyscall
   [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
@@ -305,7 +305,7 @@ extern NSString* kBRScreenSaverDismissed;
 
 - (void)viewWillDisappear:(BOOL)animated
 {  
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
   
   [self stopAnimation];
   // move this later into CocoaPowerSyscall
@@ -316,7 +316,7 @@ extern NSString* kBRScreenSaverDismissed;
 
 - (void)viewDidUnload
 {
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
   
 	[super viewDidUnload];
 	
@@ -347,7 +347,7 @@ extern NSString* kBRScreenSaverDismissed;
 
 - (void)startAnimation
 {
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
   
 	if (!animating)
 	{
@@ -367,7 +367,7 @@ extern NSString* kBRScreenSaverDismissed;
 
 - (void)stopAnimation
 {
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
 
 	if (animating)
 	{
@@ -387,7 +387,7 @@ extern NSString* kBRScreenSaverDismissed;
 //--------------------------------------------------------------
 - (void) runAnimation:(id) arg
 {
-	NSLog(@"%s", __PRETTY_FUNCTION__);
+	//NSLog(@"%s", __PRETTY_FUNCTION__);
   CCocoaAutoPool outerpool;
 	
 	//[NSThread setThreadPriority:1]
@@ -460,7 +460,7 @@ extern NSString* kBRScreenSaverDismissed;
   CWinEventsIOS::DeInit();
   [[UIApplication sharedApplication] terminateWithSuccess];
 	
-	NSLog(@"%s:exit", __PRETTY_FUNCTION__);
+	//NSLog(@"%s:exit", __PRETTY_FUNCTION__);
 }
 //--------------------------------------------------------------
 - (void) runDisplayLink;
@@ -478,7 +478,7 @@ extern NSString* kBRScreenSaverDismissed;
 //--------------------------------------------------------------
 - (void) initDisplayLink
 {
-	NSLog(@"%s", __PRETTY_FUNCTION__);
+	//NSLog(@"%s", __PRETTY_FUNCTION__);
 	CADisplayLink *aDisplayLink = [NSClassFromString(@"CADisplayLink") 
 				   displayLinkWithTarget:self
 				   selector:@selector(runDisplayLink)];
@@ -490,14 +490,14 @@ extern NSString* kBRScreenSaverDismissed;
 //--------------------------------------------------------------
 - (void) deinitDisplayLink
 {
-	NSLog(@"%s", __PRETTY_FUNCTION__);
+	//NSLog(@"%s", __PRETTY_FUNCTION__);
 	[displayLink invalidate];
 	displayLink = nil;
 }
 //--------------------------------------------------------------
 - (double) getDisplayLinkFPS;
 {
-	NSLog(@"%s:displayFPS(%f)", __PRETTY_FUNCTION__, displayFPS);
+	//NSLog(@"%s:displayFPS(%f)", __PRETTY_FUNCTION__, displayFPS);
 	return displayFPS;
 }
 - (CGSize) getScreenSize
@@ -519,16 +519,16 @@ extern NSString* kBRScreenSaverDismissed;
 
 - (BOOL) recreateOnReselect
 { 
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
   return YES;
 }
 
 - (void)didReceiveMemoryWarning
 {
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-	
-    // Release any cached data, images, etc. that aren't in use.
+  // Releases the view if it doesn't have a superview.
+  [super didReceiveMemoryWarning];
+
+  // Release any cached data, images, etc. that aren't in use.
 }
 
 #pragma mark -
@@ -537,34 +537,6 @@ extern NSString* kBRScreenSaverDismissed;
 - (void)observeDefaultCenterStuff: (NSNotification *) notification
 {
   //NSLog(@"default: %@", [notification name]);
-
-  //if ([notification name] == kBRScreenSaverActivated)
-  //  [m_glView stopAnimation];
-  
-  //if ([notification name] == kBRScreenSaverDismissed)
-  //  [m_glView startAnimation];
-}
-
-- (void) disableScreenSaver
-{
-  /*
-  NSLog(@"%s", __PRETTY_FUNCTION__);
-  //store screen saver state and disable it
-  //!!BRSettingsFacade setScreenSaverEnabled does change the plist, but does _not_ seem to work
-  m_screensaverTimeout = [[BRSettingsFacade singleton] screenSaverTimeout];
-  [[BRSettingsFacade singleton] setScreenSaverTimeout:-1];
-  [[BRSettingsFacade singleton] flushDiskChanges];
-  */
-}
-
-- (void) enableScreenSaver
-{
-  /*
-  NSLog(@"%s", __PRETTY_FUNCTION__);
-  //reset screen saver to user settings
-  [[BRSettingsFacade singleton] setScreenSaverTimeout: m_screensaverTimeout];
-  [[BRSettingsFacade singleton] flushDiskChanges];
-  */
 }
 
 @end

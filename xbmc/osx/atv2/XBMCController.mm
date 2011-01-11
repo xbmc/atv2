@@ -411,7 +411,7 @@ int           m_screensaverTimeout;
 
 - (void) disableScreenSaver
 {
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
   //store screen saver state and disable it
 
   m_screensaverTimeout = [[ATVSettingsFacade singleton] screenSaverTimeout];
@@ -423,7 +423,7 @@ int           m_screensaverTimeout;
 
 - (void) enableScreenSaver
 {
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
   //reset screen saver to user settings
 
   [[ATVSettingsFacade singleton] setScreenSaverTimeout: m_screensaverTimeout];
