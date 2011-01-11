@@ -230,8 +230,8 @@ enum {
 
     // kick off an animation thread
     animationThreadLock = [[NSConditionLock alloc] initWithCondition: FALSE];
-    animationThread = [[NSThread alloc] initWithTarget:self 
-      selector:@selector(runAnimation:) 
+    animationThread = [[NSThread alloc] initWithTarget:self
+      selector:@selector(runAnimation:)
       object:animationThreadLock];
     [animationThread start];
     [self initDisplayLink];

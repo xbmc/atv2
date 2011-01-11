@@ -29,7 +29,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
   [self.window addSubview:self.xbmcController.view];
   return YES;
 }
@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
     sigprocmask(SIG_BLOCK, &set, NULL);
   }
   
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
 
   @try
   {

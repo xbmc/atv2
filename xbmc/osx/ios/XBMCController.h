@@ -55,8 +55,6 @@
 - (void)stopAnimation;
 - (void) sendKey: (XBMCKey) key;
 - (void) observeDefaultCenterStuff: (NSNotification *) notification;
-- (void) disableScreenSaver;
-- (void) enableScreenSaver;
 - (void) initDisplayLink;
 - (void) deinitDisplayLink;
 - (double) getDisplayLinkFPS;

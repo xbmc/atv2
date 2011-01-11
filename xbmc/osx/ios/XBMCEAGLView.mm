@@ -130,7 +130,7 @@
 
 - (id)initWithCoder:(NSCoder*)coder
 {
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
 	
   self = [super initWithCoder:coder];
   if (self)
@@ -157,7 +157,7 @@
 //--------------------------------------------------------------
 - (void) dealloc
 {
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
   [self deleteFramebuffer];    
   [context release];
   
@@ -172,7 +172,7 @@
 //--------------------------------------------------------------
 - (void)setContext:(EAGLContext *)newContext
 {
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
   if (context != newContext)
   {
     [self deleteFramebuffer];
@@ -189,7 +189,7 @@
 {
   if (context && !defaultFramebuffer)
   {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
+    //NSLog(@"%s", __PRETTY_FUNCTION__);
     [EAGLContext setCurrentContext:context];
     
     // Create default framebuffer object.
@@ -214,7 +214,7 @@
 {
   if (context)
   {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
+    //NSLog(@"%s", __PRETTY_FUNCTION__);
     [EAGLContext setCurrentContext:context];
     
     if (defaultFramebuffer)
