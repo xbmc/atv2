@@ -25,7 +25,7 @@ echo "Description: XBMC Multimedia center for your  AppleTV 2" >> $PACKAGE/DEBIA
 echo "Homepage: http://xbmc.org/"                 >> $PACKAGE/DEBIAN/control
 echo "Depiction: http://xbmc.org/"                >> $PACKAGE/DEBIAN/control
 echo "Maintainer: Scott Davilla, Edgar Hucek"     >> $PACKAGE/DEBIAN/control
-echo "Author: http://xbmc.org/"                   >> $PACKAGE/DEBIAN/control
+echo "Author: TeamXBMC"                           >> $PACKAGE/DEBIAN/control
 echo "Section: Multimedia"                        >> $PACKAGE/DEBIAN/control
 
 # prerm: called on remove and upgrade - get rid of existing bits.
