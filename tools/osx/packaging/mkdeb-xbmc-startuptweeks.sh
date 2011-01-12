@@ -1,10 +1,10 @@
-#!/bin/bash
+#!/bin/sh
 
-PACKAGE=XBMCStartupTweeks
+PACKAGE=com.xbmc.xbmc-startuptweeks
 
 VERSION=1.0
 REVISION=0
-ARCHIVE=$PACKAGE-$VERSION-$REVISION.deb
+ARCHIVE=${PACKAGE}_${VERSION}-${REVISION}_iphoneos-arm.deb
 
 echo Creating $PACKAGE package version $VERSION revision $REVISION
 sudo rm -rf $PACKAGE
@@ -12,11 +12,11 @@ sudo rm -rf $ARCHIVE
 
 # create debian control file
 mkdir -p $PACKAGE/DEBIAN
-echo "Package: $PACKAGE-$VERSION-$REVISION"       >  $PACKAGE/DEBIAN/control
-echo "Name: $PACKAGE"                             >> $PACKAGE/DEBIAN/control
+echo "Package: $PACKAGE"                          >  $PACKAGE/DEBIAN/control
+echo "Name: XBMC startup tweeks (seatbelt)"       >> $PACKAGE/DEBIAN/control
 echo "Version: $VERSION-$REVISION"                >> $PACKAGE/DEBIAN/control
 echo "Architecture: iphoneos-arm"                 >> $PACKAGE/DEBIAN/control
-echo "Description: XBMC startup tweeks"           >> $PACKAGE/DEBIAN/control
+echo "Description: XBMC startup tweeks, removes seatbelt" >> $PACKAGE/DEBIAN/control
 echo "Homepage: http://xbmc.org/"                 >> $PACKAGE/DEBIAN/control
 echo "Depiction: http://xbmc.org/"                >> $PACKAGE/DEBIAN/control
 echo "Maintainer: Scott Davilla"                  >> $PACKAGE/DEBIAN/control
@@ -24,13 +24,13 @@ echo "Author: Scott Davilla"                      >> $PACKAGE/DEBIAN/control
 echo "Section: Multimedia"                        >> $PACKAGE/DEBIAN/control
 
 # prerm: called on remove and upgrade - get rid of existing bits 
-echo "#!/bin/bash"                                >  $PACKAGE/DEBIAN/prerm
+echo "#!/bin/sh"                                  >  $PACKAGE/DEBIAN/prerm
 echo "rm -f /usr/libexec/xbmc/startup"            >> $PACKAGE/DEBIAN/prerm
 echo "rm -f /System/Library/LaunchDaemons/com.xbmc.xbmc.startup.plist" >> $PACKAGE/DEBIAN/prerm
 chmod +x $PACKAGE/DEBIAN/prerm
 
 # postinst: startup our daemon plist
-echo "#!/bin/bash"                                >  $PACKAGE/DEBIAN/postinst
+echo "#!/bin/sh"                                  >  $PACKAGE/DEBIAN/postinst
 echo "/bin/launchctl load /System/Library/LaunchDaemons/com.xbmc.xbmc.startup.plist 2&> /dev/null" >> $PACKAGE/DEBIAN/postinst
 chmod +x $PACKAGE/DEBIAN/postinst
 
@@ -54,7 +54,7 @@ sudo chmod 644 $PACKAGE/$DEST/com.xbmc.xbmc.startup.plist
 # create startup file that is run by our launch daemon
 DEST=usr/libexec/xbmc
 mkdir -p $PACKAGE/$DEST
-echo "#!/bin/bash"                                >  $PACKAGE/$DEST/startup
+echo "#!/bin/sh"                                  >  $PACKAGE/$DEST/startup
 echo "#remove sandbox/seatbelt restrictions"      >> $PACKAGE/$DEST/startup
 echo "sysctl -w security.mac.proc_enforce=0"      >> $PACKAGE/$DEST/startup
 echo "sysctl -w security.mac.vnode_enforce=0"     >> $PACKAGE/$DEST/startup
@@ -70,3 +70,6 @@ export COPY_EXTENDED_ATTRIBUTES_DISABLE
 dpkg-deb -b $PACKAGE $ARCHIVE
 dpkg-deb --info $ARCHIVE
 dpkg-deb --contents $ARCHIVE
+
+# clean up by removing package dir
+sudo rm -rf $PACKAGE

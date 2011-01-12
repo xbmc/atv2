@@ -19,9 +19,10 @@ ARCHIVE_TOOL=tar
 ARCHIVE_TOOL_FLAGS=xf
 
 export LIBTOOL=builds/unix/libtool
+PREFIX:=$(shell cd $(CURDIR)/../build; pwd;)
 CONFIGURE=./configure --prefix=$(PREFIX) --enable-static --disable-shared
 
-CLEAN_FILES=$(ARCHIVE) $(SOURCE)
+CLEAN_FILES=$(ARCHIVE) $(SOURCE_DEBIAN)
 
 all: $(APPNAME) .installed
 
@@ -42,23 +43,13 @@ $(APPNAME): $(SOURCE_DEBIAN)
 	make -C $(SOURCE_DEBIAN)/dpkg-deb CFLAGS="" LDFLAGS=""
 
 .installed:
-	#make -C $(SOURCE) install
+	#make -C $(SOURCE_DEBIAN) install
 	touch $@
 
 clean:
-	make -C $(SOURCE) clean
+	make -C $(SOURCE_DEBIAN) clean
 	rm  .installed
 
 distclean::
-	rm -rf $(SOURCE) .installed
-
-export COPYFILE_DISABLE
-export COPY_EXTENDED_ATTRIBUTES_DISABLE
-
-package:
-	sudo chmod -R 0755 ${PWD}/XBMC/DEBIAN
-	sudo chown -R root:wheel ${PWD}/XBMC/DEBIAN
-	sudo chmod -R 775 ${PWD}/XBMC/Applications/XBMC.app
-	sudo chown -R root:wheel ${PWD}/XBMC/Applications/XBMC.app
-	sudo ./$(SOURCE_DEBIAN)/dpkg-deb/dpkg-deb -Zgzip -b XBMC
+	rm -rf $(SOURCE_DEBIAN) .installed
 
