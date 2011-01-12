@@ -23,7 +23,6 @@ echo "Version: $VERSION-$REVISION"                >> $PACKAGE/DEBIAN/control
 echo "Architecture: iphoneos-arm"                 >> $PACKAGE/DEBIAN/control
 echo "Description: XBMC Multimedia center for your  AppleTV 2" >> $PACKAGE/DEBIAN/control
 echo "Homepage: http://xbmc.org/"                 >> $PACKAGE/DEBIAN/control
-echo "Depiction: http://xbmc.org/"                >> $PACKAGE/DEBIAN/control
 echo "Maintainer: Scott Davilla, Edgar Hucek"     >> $PACKAGE/DEBIAN/control
 echo "Author: TeamXBMC"                           >> $PACKAGE/DEBIAN/control
 echo "Section: Multimedia"                        >> $PACKAGE/DEBIAN/control
@@ -33,8 +32,7 @@ echo "#!/bin/sh"                                  >  $PACKAGE/DEBIAN/prerm
 echo "rm -rf /Applications/XBMC.frappliance"      >> $PACKAGE/DEBIAN/prerm
 echo "if [ -d /Applications/Lowtide.app ]; then"  >> $PACKAGE/DEBIAN/prerm
 echo "  rm -rf /Applications/Lowtide.app/Appliances/XBMC.frappliance" >> $PACKAGE/DEBIAN/prerm
-echo "fi"                                         >> $PACKAGE/DEBIAN/prerm
-echo "if [ -d /Applications/AppleTV.app ]; then"  >> $PACKAGE/DEBIAN/prerm
+echo "elif [ -d /Applications/AppleTV.app ]; then" >> $PACKAGE/DEBIAN/prerm
 echo "  rm -rf /Applications/AppleTV.app/Appliances/XBMC.frappliance" >> $PACKAGE/DEBIAN/prerm
 echo "fi"                                         >> $PACKAGE/DEBIAN/prerm
 chmod +x $PACKAGE/DEBIAN/prerm
