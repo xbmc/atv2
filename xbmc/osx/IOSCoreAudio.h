@@ -26,7 +26,6 @@
 #include <AudioUnit/AudioUnit.h>
 #include <AudioToolbox/AudioToolbox.h>
 #include <AudioToolbox/AudioServices.h>
-#include "AudioHardware.h">
 #include <StdString.h>
 #include <list>
 #include <vector>
