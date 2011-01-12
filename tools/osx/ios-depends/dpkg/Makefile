@@ -43,7 +43,7 @@ $(APPNAME): $(SOURCE_DEBIAN)
 	make -C $(SOURCE_DEBIAN)/dpkg-deb CFLAGS="" LDFLAGS=""
 
 .installed:
-	#make -C $(SOURCE_DEBIAN) install
+	make -C $(SOURCE_DEBIAN)/dpkg-deb install
 	touch $@
 
 clean:

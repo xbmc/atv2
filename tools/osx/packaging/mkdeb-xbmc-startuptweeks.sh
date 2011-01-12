@@ -67,9 +67,9 @@ sudo chown -R 0:0 $PACKAGE
 echo Packaging $PACKAGE
 export COPYFILE_DISABLE
 export COPY_EXTENDED_ATTRIBUTES_DISABLE
-dpkg-deb -b $PACKAGE $ARCHIVE
-dpkg-deb --info $ARCHIVE
-dpkg-deb --contents $ARCHIVE
+../ios-depends/build/bin/dpkg-deb -b $PACKAGE $ARCHIVE
+../ios-depends/build/bin/dpkg-deb --info $ARCHIVE
+../ios-depends/build/bin/dpkg-deb --contents $ARCHIVE
 
 # clean up by removing package dir
 sudo rm -rf $PACKAGE
