@@ -25,7 +25,7 @@ echo "Description: XBMC Multimedia center for 4.x iOS" >> $PACKAGE/DEBIAN/contro
 echo "Homepage: http://xbmc.org/"                 >> $PACKAGE/DEBIAN/control
 echo "Depiction: http://xbmc.org/"                >> $PACKAGE/DEBIAN/control
 echo "Maintainer: Scott Davilla, Edgar Hucek"     >> $PACKAGE/DEBIAN/control
-echo "Author: http://xbmc.org/"                   >> $PACKAGE/DEBIAN/control
+echo "Author: TeamXBMC"                           >> $PACKAGE/DEBIAN/control
 echo "Section: Multimedia"                        >> $PACKAGE/DEBIAN/control
 echo "Icon: file:///Applications/XBMC/XBMC.png"   >> $PACKAGE/DEBIAN/control
 
