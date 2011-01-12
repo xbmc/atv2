@@ -15,7 +15,7 @@ LIBNAME=Python
 VERSION=2.6.5
 SOURCE=$(LIBNAME)-$(VERSION)
 # download location and format
-BASE_URL=http://www.python.org/ftp/python/2.6.5
+BASE_URL=http://mirrors.xbmc.org/build-deps/darwin-libs
 ARCHIVE=$(SOURCE).tar.bz2
 
 RETRIEVE_TOOL=/usr/bin/curl

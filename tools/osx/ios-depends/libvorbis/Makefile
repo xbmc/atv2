@@ -11,7 +11,7 @@ LIBNAME=libvorbis
 VERSION=1.2.0
 SOURCE=$(LIBNAME)-$(VERSION)
 # download location and format
-BASE_URL=http://downloads.xiph.org/releases/vorbis
+BASE_URL=http://mirrors.xbmc.org/build-deps/darwin-libs
 ARCHIVE=$(SOURCE).tar.gz
 
 RETRIEVE_TOOL=/usr/bin/curl

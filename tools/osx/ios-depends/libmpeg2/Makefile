@@ -11,7 +11,7 @@ LIBNAME=libmpeg2
 VERSION=0.5.1
 SOURCE=$(LIBNAME)-$(VERSION)
 # download location and format
-BASE_URL=http://libmpeg2.sourceforge.net/files
+BASE_URL=http://mirrors.xbmc.org/build-deps/darwin-libs
 ARCHIVE=$(SOURCE).tar.gz
 
 RETRIEVE_TOOL=/usr/bin/curl

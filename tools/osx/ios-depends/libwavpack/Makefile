@@ -11,7 +11,7 @@ LIBNAME=wavpack
 VERSION=4.60.1
 SOURCE=$(LIBNAME)-$(VERSION)
 # download location and format
-BASE_URL=http://www.wavpack.com
+BASE_URL=http://mirrors.xbmc.org/build-deps/darwin-libs
 ARCHIVE=$(SOURCE).tar.bz2
 
 RETRIEVE_TOOL=/usr/bin/curl

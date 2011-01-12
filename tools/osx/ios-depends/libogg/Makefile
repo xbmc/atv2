@@ -11,7 +11,7 @@ LIBNAME=libogg
 VERSION=1.1.4
 SOURCE=$(LIBNAME)-$(VERSION)
 # download location and format
-BASE_URL=http://downloads.xiph.org/releases/ogg
+BASE_URL=http://mirrors.xbmc.org/build-deps/darwin-libs
 ARCHIVE=$(SOURCE).tar.gz
 
 RETRIEVE_TOOL=/usr/bin/curl

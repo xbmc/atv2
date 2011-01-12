@@ -11,7 +11,7 @@ LIBNAME=expat
 VERSION=2.0.1
 SOURCE=$(LIBNAME)-$(VERSION)
 # download location and format
-BASE_URL=http://surfnet.dl.sourceforge.net/project/expat/expat/2.0.1
+BASE_URL=http://mirrors.xbmc.org/build-deps/darwin-libs
 ARCHIVE=$(SOURCE).tar.gz
 
 RETRIEVE_TOOL=/usr/bin/curl

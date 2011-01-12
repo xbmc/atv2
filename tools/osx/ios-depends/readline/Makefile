@@ -11,7 +11,7 @@ LIBNAME=readline
 VERSION=6.0
 SOURCE=$(LIBNAME)-$(VERSION)
 # download location and format
-BASE_URL=ftp://ftp.cwru.edu/pub/bash
+BASE_URL=http://mirrors.xbmc.org/build-deps/darwin-libs
 ARCHIVE=$(SOURCE).tar.gz
 
 RETRIEVE_TOOL=/usr/bin/curl

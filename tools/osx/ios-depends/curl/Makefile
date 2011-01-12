@@ -11,7 +11,7 @@ LIBNAME=curl
 VERSION=7.19.4
 SOURCE=$(LIBNAME)-$(VERSION)
 # download location and format
-BASE_URL=http://curl.haxx.se/download
+BASE_URL=http://mirrors.xbmc.org/build-deps/darwin-libs
 ARCHIVE=$(SOURCE).tar.bz2
 
 RETRIEVE_TOOL=/usr/bin/curl

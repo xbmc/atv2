@@ -11,7 +11,7 @@ LIBNAME=fribidi
 VERSION=0.10.9
 SOURCE=$(LIBNAME)-$(VERSION)
 # download location and format
-BASE_URL=http://fribidi.org/download
+BASE_URL=http://mirrors.xbmc.org/build-deps/darwin-libs
 ARCHIVE=$(SOURCE).tar.gz
 
 RETRIEVE_TOOL=/usr/bin/curl
