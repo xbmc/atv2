@@ -11,7 +11,7 @@ LIBNAME=freetype
 VERSION=2.3.9
 SOURCE=$(LIBNAME)-$(VERSION)
 # download location and format
-BASE_URL=http://download.savannah.gnu.org/releases/freetype
+BASE_URL=http://mirrors.xbmc.org/build-deps/darwin-libs
 ARCHIVE=$(SOURCE).tar.bz2
 
 RETRIEVE_TOOL=/usr/bin/curl

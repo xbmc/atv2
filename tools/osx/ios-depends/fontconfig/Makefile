@@ -11,7 +11,7 @@ LIBNAME=fontconfig
 VERSION=2.6.0
 SOURCE=$(LIBNAME)-$(VERSION)
 # download location and format
-BASE_URL=http://fontconfig.org/release
+BASE_URL=http://mirrors.xbmc.org/build-deps/darwin-libs
 ARCHIVE=$(SOURCE).tar.gz
 
 RETRIEVE_TOOL=/usr/bin/curl

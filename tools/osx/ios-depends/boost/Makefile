@@ -11,7 +11,7 @@ VERSION=1_44_0
 SOURCE=$(LIBNAME)_$(VERSION)
 # download location and format
 # git clone git://gitorious.org/boostoniphone/boostoniphone.git
-BASE_URL=http://voxel.dl.sourceforge.net/project/boost/boost/1.44.0
+BASE_URL=http://mirrors.xbmc.org/build-deps/darwin-libs
 
 RETRIEVE_TOOL=/usr/bin/curl
 RETRIEVE_TOOL_FLAGS=-Ls --output $(ARCHIVE)

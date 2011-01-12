@@ -10,7 +10,7 @@ VERSION=1.14.30
 SOURCE=$(APPNAME)_$(VERSION)
 SOURCE_DEBIAN=$(APPNAME)-$(VERSION)
 # download location and format
-BASE_URL=http://ftp.de.debian.org/debian/pool/main/d/dpkg/
+BASE_URL=http://mirrors.xbmc.org/build-deps/darwin-libs
 ARCHIVE=$(SOURCE).tar.gz
 
 RETRIEVE_TOOL=/usr/bin/curl
