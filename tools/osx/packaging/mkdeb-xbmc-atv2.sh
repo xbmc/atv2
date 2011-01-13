@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 if [ ! -d XBMC.frappliance ]; then
   echo "XBMC.frappliance not found! copy it from build dir to here -> `pwd`"
@@ -21,7 +21,7 @@ echo "Name: XBMC-ATV2"                            >> $PACKAGE/DEBIAN/control
 echo "Depends: beigelist"                         >> $PACKAGE/DEBIAN/control
 echo "Version: $VERSION-$REVISION"                >> $PACKAGE/DEBIAN/control
 echo "Architecture: iphoneos-arm"                 >> $PACKAGE/DEBIAN/control
-echo "Description: XBMC Multimedia center for your  AppleTV 2" >> $PACKAGE/DEBIAN/control
+echo "Description: XBMC Multimedia center for AppleTV 2" >> $PACKAGE/DEBIAN/control
 echo "Homepage: http://xbmc.org/"                 >> $PACKAGE/DEBIAN/control
 echo "Maintainer: Scott Davilla, Edgar Hucek"     >> $PACKAGE/DEBIAN/control
 echo "Author: TeamXBMC"                           >> $PACKAGE/DEBIAN/control
@@ -30,21 +30,20 @@ echo "Section: Multimedia"                        >> $PACKAGE/DEBIAN/control
 # prerm: called on remove and upgrade - get rid of existing bits.
 echo "#!/bin/sh"                                  >  $PACKAGE/DEBIAN/prerm
 echo "rm -rf /Applications/XBMC.frappliance"      >> $PACKAGE/DEBIAN/prerm
-echo "if [ -d /Applications/Lowtide.app ]; then"  >> $PACKAGE/DEBIAN/prerm
+echo "if [ "`uname -r`" = "10.3.1" ]; then"       >> $PACKAGE/DEBIAN/prerm
 echo "  rm -rf /Applications/Lowtide.app/Appliances/XBMC.frappliance" >> $PACKAGE/DEBIAN/prerm
-echo "elif [ -d /Applications/AppleTV.app ]; then" >> $PACKAGE/DEBIAN/prerm
+echo "else"                                       >> $PACKAGE/DEBIAN/prerm
 echo "  rm -rf /Applications/AppleTV.app/Appliances/XBMC.frappliance" >> $PACKAGE/DEBIAN/prerm
 echo "fi"                                         >> $PACKAGE/DEBIAN/prerm
 chmod +x $PACKAGE/DEBIAN/prerm
 
 # postinst: symlink XBMC.frappliance into correct location and reload Lowtide/AppleTV.
 echo "#!/bin/sh"                                  >  $PACKAGE/DEBIAN/postinst
-echo "if [ -d /Applications/Lowtide.app ]; then"  >> $PACKAGE/DEBIAN/postinst
-echo "  ln -s /Applications/XBMC.frappliance /Applications/Lowtide.app/Appliances/XBMC.frappliance" >> $PACKAGE/DEBIAN/postinst
+echo "if [ "`uname -r`" = "10.3.1" ]; then"       >> $PACKAGE/DEBIAN/postinst
+echo "  ln -sf /Applications/XBMC.frappliance /Applications/Lowtide.app/Appliances/XBMC.frappliance" >> $PACKAGE/DEBIAN/postinst
 echo "  killall Lowtide"                          >> $PACKAGE/DEBIAN/postinst
-echo "fi"                                         >> $PACKAGE/DEBIAN/postinst
-echo "if [ -d /Applications/AppleTV.app ]; then"  >> $PACKAGE/DEBIAN/postinst
-echo "  ln -s /Applications/XBMC.frappliance /Applications/AppleTV.app/Appliances/XBMC.frappliance" >> $PACKAGE/DEBIAN/postinst
+echo "else"                                       >> $PACKAGE/DEBIAN/postinst
+echo "  ln -sf /Applications/XBMC.frappliance /Applications/AppleTV.app/Appliances/XBMC.frappliance" >> $PACKAGE/DEBIAN/postinst
 echo "  killall AppleTV"                          >> $PACKAGE/DEBIAN/postinst
 echo "fi"                                         >> $PACKAGE/DEBIAN/postinst
 chmod +x $PACKAGE/DEBIAN/postinst
