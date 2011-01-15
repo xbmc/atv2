@@ -55,7 +55,9 @@ DEST=usr/libexec/xbmc
 mkdir -p $PACKAGE/$DEST
 echo "#!/bin/sh"                                  >  $PACKAGE/$DEST/startup
 echo "#remove sandbox/seatbelt restrictions"      >> $PACKAGE/$DEST/startup
-echo "sysctl -w security.mac.proc_enforce=0"      >> $PACKAGE/$DEST/startup
+echo "if echo \`sysctl hw.machine\` | grep AppleTV2,1 > /dev/null; then"    >> $PACKAGE/$DEST/startup
+echo "  sysctl -w security.mac.proc_enforce=0"    >> $PACKAGE/$DEST/startup
+echo "fi"                                         >> $PACKAGE/$DEST/startup
 echo "sysctl -w security.mac.vnode_enforce=0"     >> $PACKAGE/$DEST/startup
 echo "exit 0"                                     >> $PACKAGE/$DEST/startup
 sudo chmod 755 $PACKAGE/$DEST/startup
