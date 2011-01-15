@@ -43,6 +43,14 @@
 	<key>UIInterfaceOrientation</key>
 	<string>UIInterfaceOrientationLandscapeLeft</string>
 	<key>UIPrerenderedIcon</key>
-	<true/>
+  <true/>
+  <key>UIRequiredDeviceCapabilities</key>
+  <array>
+    <string>armv7</string>
+    <string>opengles-2</string>
+    <string>wifi</string>
+  </array>
+  <key>UIRequiresPersistentWiFi</key>
+  <string>YES</string>
 </dict>
 </plist>
