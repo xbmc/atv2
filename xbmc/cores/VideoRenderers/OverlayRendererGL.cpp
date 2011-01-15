@@ -56,6 +56,7 @@ static void LoadTexture(GLenum target
 {
   int width2  = NP2(width);
   int height2 = NP2(height);
+  std::vector<char> pixelVector;
 
 #ifdef HAS_GLES
   /** OpenGL ES does not support strided texture input. Make a copy without stride **/
@@ -77,7 +78,7 @@ static void LoadTexture(GLenum target
 
     int bytesPerLine = bytesPerPixel * width;
 
-    std::vector<char> pixelVector( width * height * bytesPerLine ); // reserve temporary memory for unstrided image
+    pixelVector.resize( width * height * bytesPerLine ); // reserve temporary memory for unstrided image
     const char *src = reinterpret_cast<const char *>(pixels);
     char *dst = &pixelVector[0];
     for (int y = 0;y < height;++y)

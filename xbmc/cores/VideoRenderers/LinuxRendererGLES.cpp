@@ -422,11 +422,13 @@ void CLinuxRendererGLES::LoadPlane( YUVPLANE& plane, int type, unsigned flipinde
 {
   if(plane.flipindex == flipindex)
     return;
+  
+  std::vector<char> pixelVector;
 
   // OpenGL ES does not support strided texture input. Make a copy without stride
   if(stride != width)
   {
-    std::vector<char> pixelVector( width * height * width ); // reserve temporary memory for unstrided image
+    pixelVector.resize( width * height * width ); // reserve temporary memory for unstrided image
     const char *src = reinterpret_cast<const char *>(data);
     char *dst = &pixelVector[0];
     for (int y = 0;y < height;++y)
