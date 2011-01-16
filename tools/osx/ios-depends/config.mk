@@ -18,14 +18,13 @@ export CPP=/usr/bin/cpp
 export CXXCPP=${CPP} -I${platform_sdk_path}/usr/include/c++/${platform_gcc_version}/${platform_host}
 export CPPFLAGS=-I${platform_sdk_path}/usr/include  -I${prefix_path}/include
 export CC=${platform_bin_path}/${platform_host}-gcc-${platform_gcc_version}
-export CFLAGS=-std=c99 -no-cpp-precomp -m${platform_min_version} -isysroot ${platform_sdk_path} -I${platform_sdk_path}/usr/include ${platform_os_cflags}
+export CFLAGS=-std=gnu99 -no-cpp-precomp -m${platform_min_version} -isysroot ${platform_sdk_path} -I${platform_sdk_path}/usr/include ${platform_os_cflags}
 export LD=${platform_bin_path}/ld
 export LDFLAGS=-m${platform_min_version} -isysroot ${platform_sdk_path} -L${platform_sdk_path}/usr/lib ${platform_os_ldflags} -L${prefix_path}/lib
 export CXX=${platform_bin_path}/${platform_host}-g++-${platform_gcc_version} -I${platform_sdk_path}/usr/include/c++/${platform_gcc_version}/${platform_host}
 export CXXFLAGS=-m${platform_min_version} -isysroot ${platform_sdk_path} ${platform_os_cflags}
 export AR=${platform_bin_path}/ar
-#export AS=${platform_bin_path}/as
-export AS=${prefix_path)/bin/gas-preprocessor.pl ${CC}
+export AS=${prefix_path}/bin/gas-preprocessor.pl ${CC}
 export CCAS=--tag CC ${prefix_path}/bin/gas-preprocessor.pl ${CC}
 export STRIP=${platform_bin_path}/strip
 export RANLIB=${platform_bin_path}/ranlib
