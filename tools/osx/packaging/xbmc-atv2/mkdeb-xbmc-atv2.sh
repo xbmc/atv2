@@ -4,6 +4,10 @@ if [ ! -d XBMC.frappliance ]; then
   echo "XBMC.frappliance not found! copy it from build dir to here -> `pwd`"
   exit 1
 fi
+if [ -f "/usr/bin/sudo" ]; then
+  SUDO="/usr/bin/sudo"
+fi
+
 PACKAGE=com.xbmc.xbmc-atv2
 
 VERSION=10.0
@@ -11,12 +15,13 @@ REVISION=0
 ARCHIVE=${PACKAGE}_${VERSION}-${REVISION}_iphoneos-arm.deb
 
 echo Creating $PACKAGE package version $VERSION revision $REVISION
-sudo rm -rf $PACKAGE
-sudo rm -rf $ARCHIVE
+${SUDO} rm -rf $PACKAGE
+${SUDO} rm -rf $ARCHIVE
 
 # create debian control file.
 mkdir -p $PACKAGE/DEBIAN
 echo "Package: $PACKAGE"                          >  $PACKAGE/DEBIAN/control
+echo "Priority: Extra"                            >> $PACKAGE/DEBIAN/control
 echo "Name: XBMC-ATV2"                            >> $PACKAGE/DEBIAN/control
 echo "Depends: beigelist"                         >> $PACKAGE/DEBIAN/control
 echo "Version: $VERSION-$REVISION"                >> $PACKAGE/DEBIAN/control
@@ -55,14 +60,18 @@ find $PACKAGE/Applications/ -name '.svn' -exec rm -rf {} \;
 find $PACKAGE/Applications/ -name '.gitignore' -exec rm -rf {} \;
 
 # set ownership to root:root
-sudo chown -R 0:0 $PACKAGE
+${SUDO} chown -R 0:0 $PACKAGE
 
 echo Packaging $PACKAGE
-export COPYFILE_DISABLE
-export COPY_EXTENDED_ATTRIBUTES_DISABLE
+# Tell tar, pax, etc. on Mac OS X 10.4+ not to archive
+# extended attributes (e.g. resource forks) to ._* archive members.
+# Also allows archiving and extracting actual ._* files.
+export COPYFILE_DISABLE=true
+export COPY_EXTENDED_ATTRIBUTES_DISABLE=true
+#
 ../../ios-depends/build/bin/dpkg-deb -b $PACKAGE $ARCHIVE
 ../../ios-depends/build/bin/dpkg-deb --info $ARCHIVE
 ../../ios-depends/build/bin/dpkg-deb --contents $ARCHIVE
 
 # clean up by removing package dir
-sudo rm -rf $PACKAGE
+${SUDO} rm -rf $PACKAGE

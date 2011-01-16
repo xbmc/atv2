@@ -1,5 +1,9 @@
 #!/bin/sh
 
+if [ -f "/usr/bin/sudo" ]; then
+  SUDO="/usr/bin/sudo"
+fi
+
 PACKAGE=com.xbmc.xbmc-startuptweeks
 
 VERSION=1.0
@@ -7,12 +11,13 @@ REVISION=0
 ARCHIVE=${PACKAGE}_${VERSION}-${REVISION}_iphoneos-arm.deb
 
 echo Creating $PACKAGE package version $VERSION revision $REVISION
-sudo rm -rf $PACKAGE
-sudo rm -rf $ARCHIVE
+${SUDO} rm -rf $PACKAGE
+${SUDO} rm -rf $ARCHIVE
 
 # create debian control file
 mkdir -p $PACKAGE/DEBIAN
 echo "Package: $PACKAGE"                          >  $PACKAGE/DEBIAN/control
+echo "Priority: Extra"                            >> $PACKAGE/DEBIAN/control
 echo "Name: XBMC startup tweeks (seatbelt)"       >> $PACKAGE/DEBIAN/control
 echo "Version: $VERSION-$REVISION"                >> $PACKAGE/DEBIAN/control
 echo "Architecture: iphoneos-arm"                 >> $PACKAGE/DEBIAN/control
@@ -48,7 +53,7 @@ echo "  <key>RunAtLoad</key>"                     >> $PACKAGE/$DEST/com.xbmc.xbm
 echo "  <true/>"                                  >> $PACKAGE/$DEST/com.xbmc.xbmc.startup.plist
 echo "</dict>"                                    >> $PACKAGE/$DEST/com.xbmc.xbmc.startup.plist
 echo "</plist>"                                   >> $PACKAGE/$DEST/com.xbmc.xbmc.startup.plist
-sudo chmod 644 $PACKAGE/$DEST/com.xbmc.xbmc.startup.plist
+${SUDO} chmod 644 $PACKAGE/$DEST/com.xbmc.xbmc.startup.plist
 
 # create startup file that is run by our launch daemon
 DEST=usr/libexec/xbmc
@@ -60,17 +65,20 @@ echo "  sysctl -w security.mac.proc_enforce=0"    >> $PACKAGE/$DEST/startup
 echo "fi"                                         >> $PACKAGE/$DEST/startup
 echo "sysctl -w security.mac.vnode_enforce=0"     >> $PACKAGE/$DEST/startup
 echo "exit 0"                                     >> $PACKAGE/$DEST/startup
-sudo chmod 755 $PACKAGE/$DEST/startup
+${SUDO} chmod 755 $PACKAGE/$DEST/startup
 
 # set ownership to root:root
-sudo chown -R 0:0 $PACKAGE
+${SUDO} chown -R 0:0 $PACKAGE
 
 echo Packaging $PACKAGE
-export COPYFILE_DISABLE
-export COPY_EXTENDED_ATTRIBUTES_DISABLE
+# Tell tar, pax, etc. on Mac OS X 10.4+ not to archive
+# extended attributes (e.g. resource forks) to ._* archive members.
+# Also allows archiving and extracting actual ._* files.
+export COPYFILE_DISABLE=true
+export COPY_EXTENDED_ATTRIBUTES_DISABLE=true
 ../../ios-depends/build/bin/dpkg-deb -b $PACKAGE $ARCHIVE
 ../../ios-depends/build/bin/dpkg-deb --info $ARCHIVE
 ../../ios-depends/build/bin/dpkg-deb --contents $ARCHIVE
 
 # clean up by removing package dir
-sudo rm -rf $PACKAGE
+${SUDO} rm -rf $PACKAGE
