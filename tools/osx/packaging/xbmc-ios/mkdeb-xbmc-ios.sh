@@ -34,7 +34,7 @@ echo "Icon: file:///Applications/XBMC.app/cydia.png" >> $PACKAGE/DEBIAN/control
 
 # prerm: called on remove and upgrade - get rid of existing bits.
 echo "#!/bin/sh"                                  >  $PACKAGE/DEBIAN/prerm
-echo "rm -rf /Applications/XBMC.app"               >> $PACKAGE/DEBIAN/prerm
+echo "rm -rf /Applications/XBMC.app"              >> $PACKAGE/DEBIAN/prerm
 chmod +x $PACKAGE/DEBIAN/prerm
 
 # postinst: nothing for now.
