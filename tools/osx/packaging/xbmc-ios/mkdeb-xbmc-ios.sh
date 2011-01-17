@@ -25,7 +25,7 @@ echo "Priority: Extra"                            >> $PACKAGE/DEBIAN/control
 echo "Name: XBMC-iOS"                             >> $PACKAGE/DEBIAN/control
 echo "Version: $VERSION-$REVISION"                >> $PACKAGE/DEBIAN/control
 echo "Architecture: iphoneos-arm"                 >> $PACKAGE/DEBIAN/control
-echo "Description: XBMC Multimedia center for 4.x iOS" >> $PACKAGE/DEBIAN/control
+echo "Description: XBMC Multimedia Center for 4.x iOS" >> $PACKAGE/DEBIAN/control
 echo "Homepage: http://xbmc.org/"                 >> $PACKAGE/DEBIAN/control
 echo "Maintainer: Scott Davilla, Edgar Hucek"     >> $PACKAGE/DEBIAN/control
 echo "Author: TeamXBMC"                           >> $PACKAGE/DEBIAN/control

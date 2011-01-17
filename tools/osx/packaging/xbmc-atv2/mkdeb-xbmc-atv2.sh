@@ -26,7 +26,7 @@ echo "Name: XBMC-ATV2"                            >> $PACKAGE/DEBIAN/control
 echo "Depends: org.awkwardtv.whitelist, org.xbmc.xbmc-seatbeltunlock" >> $PACKAGE/DEBIAN/control
 echo "Version: $VERSION-$REVISION"                >> $PACKAGE/DEBIAN/control
 echo "Architecture: iphoneos-arm"                 >> $PACKAGE/DEBIAN/control
-echo "Description: XBMC Multimedia center for AppleTV 2" >> $PACKAGE/DEBIAN/control
+echo "Description: XBMC Multimedia Center for AppleTV 2" >> $PACKAGE/DEBIAN/control
 echo "Homepage: http://xbmc.org/"                 >> $PACKAGE/DEBIAN/control
 echo "Maintainer: Scott Davilla, Edgar Hucek"     >> $PACKAGE/DEBIAN/control
 echo "Author: TeamXBMC"                           >> $PACKAGE/DEBIAN/control
