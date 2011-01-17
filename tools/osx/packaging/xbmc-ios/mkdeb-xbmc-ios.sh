@@ -30,7 +30,7 @@ echo "Homepage: http://xbmc.org/"                 >> $PACKAGE/DEBIAN/control
 echo "Maintainer: Scott Davilla, Edgar Hucek"     >> $PACKAGE/DEBIAN/control
 echo "Author: TeamXBMC"                           >> $PACKAGE/DEBIAN/control
 echo "Section: Multimedia"                        >> $PACKAGE/DEBIAN/control
-echo "Icon: file:///Applications/XBMC.app/XBMC.png" >> $PACKAGE/DEBIAN/control
+echo "Icon: file:///Applications/XBMC.app/cydia.png" >> $PACKAGE/DEBIAN/control
 
 # prerm: called on remove and upgrade - get rid of existing bits.
 echo "#!/bin/sh"                                  >  $PACKAGE/DEBIAN/prerm

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		187A35D012E4E6C6009F18C1 /* cydia.png in Resources */ = {isa = PBXBuildFile; fileRef = 187A35CF12E4E6C6009F18C1 /* cydia.png */; };
 		18A0B34F129FC3A5007BB966 /* XBMC.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A0B34E129FC3A5007BB966 /* XBMC.png */; };
 		321B5FAD12B0075F00429E0F /* xbmcViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 321B5FAC12B0075F00429E0F /* xbmcViewController.xib */; };
 		321B63B012B2091400429E0F /* WinEventsIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 321B63AF12B2091400429E0F /* WinEventsIOS.mm */; };
@@ -936,6 +937,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		187A35CF12E4E6C6009F18C1 /* cydia.png */ = {isa = PBXFileReference; explicitFileType = file; name = cydia.png; path = xbmc/osx/ios/cydia.png; sourceTree = "<group>"; };
 		18A0B34E129FC3A5007BB966 /* XBMC.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = XBMC.png; path = xbmc/osx/ios/XBMC.png; sourceTree = "<group>"; };
 		321B5FAC12B0075F00429E0F /* xbmcViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = xbmcViewController.xib; path = xbmc/osx/ios/xbmcViewController.xib; sourceTree = "<group>"; };
 		321B63AE12B208FF00429E0F /* WinEventsIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WinEventsIOS.h; sourceTree = "<group>"; };
@@ -3015,6 +3017,7 @@
 		F5899E0E128724AC00D8079E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				187A35CF12E4E6C6009F18C1 /* cydia.png */,
 				18A0B34E129FC3A5007BB966 /* XBMC.png */,
 				F589ACB61287A70C00D8079E /* XBMCIOS-Info.plist */,
 				F589ACB81287A72900D8079E /* English.lproj */,
@@ -5873,6 +5876,7 @@
 				18A0B34F129FC3A5007BB966 /* XBMC.png in Resources */,
 				32D8145F12B0039C002F3874 /* MainWindow.xib in Resources */,
 				321B5FAD12B0075F00429E0F /* xbmcViewController.xib in Resources */,
+				187A35D012E4E6C6009F18C1 /* cydia.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
