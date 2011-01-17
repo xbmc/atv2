@@ -109,23 +109,38 @@ int  GetIOSExecutablePath(char* path, uint32_t *pathsize)
 bool iOS_HasVideoToolboxDecoder(void)
 {
   bool bDecoderAvailable = false;
-  uint64_t vnode_enforce = 0; 
-  uint64_t proc_enforce = 0;
-  size_t size = sizeof(vnode_enforce);
-  
-  sysctlbyname("security.mac.vnode_enforce", &vnode_enforce, &size, NULL, 0);
 
-  sysctlbyname("security.mac.proc_enforce", &proc_enforce, &size, NULL, 0);  
-  
-  if(vnode_enforce && proc_enforce) {
-    CLog::Log(LOGINFO, "VideoToolBox decoder not available. Use : sysctl -w security.mac.proc_enforce=0; sysctl -w security.mac.vnode_enforce=0\n");
-    NSLog(@"%s VideoToolBox decoder not available. Use : sysctl -w security.mac.proc_enforce=0; sysctl -w security.mac.vnode_enforce=0", __PRETTY_FUNCTION__);
-  } else {
+  Class XBMCfrapp = NSClassFromString(@"XBMCAppliance");
+  if (XBMCfrapp != NULL)
+  {
+    // atv2 has seatbelt profile key removed so nothing to do here
     bDecoderAvailable = true;
-    CLog::Log(LOGINFO, "VideoToolBox decoder available\n");
-    NSLog(@"%s VideoToolBox decoder available", __PRETTY_FUNCTION__);
   }
-  
+  /*
+  else
+  {
+    uint64_t proc_enforce = 0;
+    uint64_t vnode_enforce = 0; 
+    size_t size = sizeof(vnode_enforce);
+
+    sysctlbyname("security.mac.proc_enforce", &proc_enforce, &size, NULL, 0);  
+    sysctlbyname("security.mac.vnode_enforce", &vnode_enforce, &size, NULL, 0);
+
+    if(vnode_enforce && proc_enforce)
+    {
+      CLog::Log(LOGINFO, "VideoToolBox decoder not available. Use : sysctl -w security.mac.proc_enforce=0; sysctl -w security.mac.vnode_enforce=0\n");
+      NSLog(@"%s VideoToolBox decoder not available. Use : sysctl -w security.mac.proc_enforce=0; sysctl -w security.mac.vnode_enforce=0", __PRETTY_FUNCTION__);
+    }
+    else
+    {
+      bDecoderAvailable = true;
+      CLog::Log(LOGINFO, "VideoToolBox decoder available\n");
+      NSLog(@"%s VideoToolBox decoder available", __PRETTY_FUNCTION__);
+    }
+  }
+  */
+    bDecoderAvailable = true;
+
   return bDecoderAvailable;
 }
 
