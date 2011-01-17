@@ -4,7 +4,7 @@ if [ -f "/usr/bin/sudo" ]; then
   SUDO="/usr/bin/sudo"
 fi
 
-PACKAGE=com.xbmc.xbmc-seatbeltunlock
+PACKAGE=org.xbmc.xbmc-seatbeltunlock
 
 VERSION=1.0
 REVISION=0

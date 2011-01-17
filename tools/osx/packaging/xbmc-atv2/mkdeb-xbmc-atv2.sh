@@ -8,7 +8,7 @@ if [ -f "/usr/bin/sudo" ]; then
   SUDO="/usr/bin/sudo"
 fi
 
-PACKAGE=com.xbmc.xbmc-atv2
+PACKAGE=org.xbmc.xbmc-atv2
 
 VERSION=10.0
 REVISION=0
@@ -23,7 +23,7 @@ mkdir -p $PACKAGE/DEBIAN
 echo "Package: $PACKAGE"                          >  $PACKAGE/DEBIAN/control
 echo "Priority: Extra"                            >> $PACKAGE/DEBIAN/control
 echo "Name: XBMC-ATV2"                            >> $PACKAGE/DEBIAN/control
-echo "Depends: org.awkwardtv.whitelist"           >> $PACKAGE/DEBIAN/control
+echo "Depends: org.awkwardtv.whitelist, org.xbmc.xbmc-seatbeltunlock" >> $PACKAGE/DEBIAN/control
 echo "Version: $VERSION-$REVISION"                >> $PACKAGE/DEBIAN/control
 echo "Architecture: iphoneos-arm"                 >> $PACKAGE/DEBIAN/control
 echo "Description: XBMC Multimedia center for AppleTV 2" >> $PACKAGE/DEBIAN/control
