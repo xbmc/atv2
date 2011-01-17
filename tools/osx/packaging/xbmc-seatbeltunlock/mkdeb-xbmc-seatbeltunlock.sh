@@ -18,7 +18,7 @@ ${SUDO} rm -rf $ARCHIVE
 mkdir -p $PACKAGE/DEBIAN
 echo "Package: $PACKAGE"                                >  $PACKAGE/DEBIAN/control
 echo "Priority: Extra"                                  >> $PACKAGE/DEBIAN/control
-echo "Depends: coreutils, bsdiff"                       >> $PACKAGE/DEBIAN/control
+echo "Depends: coreutils, bsdiff, gawk"                       >> $PACKAGE/DEBIAN/control
 echo "Name: XBMC seatbelt unlock for AppleTV 2"         >> $PACKAGE/DEBIAN/control
 echo "Version: $VERSION-$REVISION"                      >> $PACKAGE/DEBIAN/control
 echo "Architecture: iphoneos-arm"                       >> $PACKAGE/DEBIAN/control
