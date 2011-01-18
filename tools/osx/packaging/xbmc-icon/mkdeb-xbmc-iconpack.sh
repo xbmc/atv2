@@ -1,16 +1,12 @@
 #!/bin/sh
 
-if [ ! -d XBMC.app ]; then
-  echo "XBMC.app not found! copy it from build dir to here -> `pwd`"
-  exit 1
-fi
 if [ -f "/usr/bin/sudo" ]; then
   SUDO="/usr/bin/sudo"
 fi
 
-PACKAGE=org.xbmc.xbmc-ios
+PACKAGE=org.xbmc.xbmc-iconpack
 
-VERSION=10.0
+VERSION=1.0
 REVISION=0
 ARCHIVE=${PACKAGE}_${VERSION}-${REVISION}_iphoneos-arm.deb
 
@@ -22,31 +18,28 @@ ${SUDO} rm -rf $ARCHIVE
 mkdir -p $PACKAGE/DEBIAN
 echo "Package: $PACKAGE"                          >  $PACKAGE/DEBIAN/control
 echo "Priority: Extra"                            >> $PACKAGE/DEBIAN/control
-echo "Name: XBMC-iOS"                             >> $PACKAGE/DEBIAN/control
-echo "Depends: org.xbmc.xbmc-iconpack"            >> $PACKAGE/DEBIAN/control
+echo "Name: XBMC-IconPack"                        >> $PACKAGE/DEBIAN/control
 echo "Version: $VERSION-$REVISION"                >> $PACKAGE/DEBIAN/control
 echo "Architecture: iphoneos-arm"                 >> $PACKAGE/DEBIAN/control
-echo "Description: XBMC Multimedia Center for 4.x iOS" >> $PACKAGE/DEBIAN/control
+echo "Description: XBMC Icon Pack"                >> $PACKAGE/DEBIAN/control
 echo "Homepage: http://xbmc.org/"                 >> $PACKAGE/DEBIAN/control
-echo "Maintainer: Scott Davilla, Edgar Hucek"     >> $PACKAGE/DEBIAN/control
+echo "Maintainer: TeamXBMC"                       >> $PACKAGE/DEBIAN/control
 echo "Author: TeamXBMC"                           >> $PACKAGE/DEBIAN/control
 echo "Section: Multimedia"                        >> $PACKAGE/DEBIAN/control
 echo "Icon: file:///Applications/Cydia.app/Sources/mirrors.xbmc.org.png" >> $PACKAGE/DEBIAN/control
 
 # prerm: called on remove and upgrade - get rid of existing bits.
 echo "#!/bin/sh"                                  >  $PACKAGE/DEBIAN/prerm
-echo "rm -rf /Applications/XBMC.app"              >> $PACKAGE/DEBIAN/prerm
+echo "rm -f /Applications/Cydia.app/Sources/mirrors.xbmc.org.png">> $PACKAGE/DEBIAN/prerm
 chmod +x $PACKAGE/DEBIAN/prerm
 
 # postinst: nothing for now.
 echo "#!/bin/sh"                                  >  $PACKAGE/DEBIAN/postinst
 chmod +x $PACKAGE/DEBIAN/postinst
 
-# prep XBMC.app
-mkdir -p $PACKAGE/Applications
-cp -r XBMC.app $PACKAGE/Applications/
-find $PACKAGE/Applications/ -name '.svn' -exec rm -rf {} \;
-find $PACKAGE/Applications/ -name '.gitignore' -exec rm -rf {} \;
+# create the patch directory and copy in patch
+mkdir -p $PACKAGE/Applications/Cydia.app/Sources
+cp mirrors.xbmc.org.png                           $PACKAGE/Applications/Cydia.app/Sources/
 
 # set ownership to root:root
 ${SUDO} chown -R 0:0 $PACKAGE
