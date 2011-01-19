@@ -2054,6 +2054,8 @@ void CLinuxRendererGLES::AddProcessor(COpenMaxVideo* openMax, DVDVideoPicture *p
 void CLinuxRendererGLES::AddProcessor(CDVDVideoCodecVideoToolBox* vtb, DVDVideoPicture *picture)
 {
   YUVBUFFER &buf = m_buffers[NextYV12Texture()];
+  if (buf.cvBufferRef)
+    CVBufferRelease(buf.cvBufferRef);
   buf.cvBufferRef = picture->cvBufferRef;
   // unhook corevideo buffer reference so it does not get released
   picture->cvBufferRef = NULL;
