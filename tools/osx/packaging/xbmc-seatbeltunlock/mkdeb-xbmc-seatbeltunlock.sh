@@ -41,13 +41,21 @@ echo "  echo \"Found ATV2 running ios 4.2+/AppleTV\""   >> $PACKAGE/DEBIAN/posti
 echo "fi"                                               >> $PACKAGE/DEBIAN/postinst
 echo "case \`md5sum \$BINPATH | awk '{print \$1}'\` in"  >> $PACKAGE/DEBIAN/postinst
 echo " 12313417e3afeba6531255af58cb5283 )"              >> $PACKAGE/DEBIAN/postinst
-echo "   echo \"Removing seatbelt profile key from Lowtide\"" >> $PACKAGE/DEBIAN/postinst
+echo "   echo \"Found 4.1 :Removing seatbelt profile key from Lowtide\"" >> $PACKAGE/DEBIAN/postinst
 echo "   bspatch /Applications/Lowtide.app/Lowtide /var/tmp/Lowtide-nosb /var/tmp/12313417e3afeba6531255af58cb5283.patch" >> $PACKAGE/DEBIAN/postinst
 echo "   rm /var/tmp/12313417e3afeba6531255af58cb5283.patch" >> $PACKAGE/DEBIAN/postinst
 echo "   chmod 755 /var/tmp/Lowtide-nosb"               >> $PACKAGE/DEBIAN/postinst
 echo "   rm -f /Applications/Lowtide.app/Lowtide"       >> $PACKAGE/DEBIAN/postinst
 echo "   mv /var/tmp/Lowtide-nosb /Applications/Lowtide.app/Lowtide" >> $PACKAGE/DEBIAN/postinst
 echo "   killall Lowtide ;;"                            >> $PACKAGE/DEBIAN/postinst
+echo " 5a28620a15c15d41e1ae836dd1f95f8d )"              >> $PACKAGE/DEBIAN/postinst
+echo "   echo \"Found 4.2.1:Removing seatbelt profile key from AppleTV\"" >> $PACKAGE/DEBIAN/postinst
+echo "   bspatch /Applications/AppleTV.app/AppleTV /var/tmp/AppleTV-nosb /var/tmp/5a28620a15c15d41e1ae836dd1f95f8d.patch" >> $PACKAGE/DEBIAN/postinst
+echo "   rm /var/tmp/5a28620a15c15d41e1ae836dd1f95f8d.patch" >> $PACKAGE/DEBIAN/postinst
+echo "   chmod 755 /var/tmp/AppleTV-nosb"               >> $PACKAGE/DEBIAN/postinst
+echo "   rm -f /Applications/AppleTV.app/AppleTV"       >> $PACKAGE/DEBIAN/postinst
+echo "   mv /var/tmp/AppleTV-nosb /Applications/AppleTV/AppleTV" >> $PACKAGE/DEBIAN/postinst
+echo "   killall AppleTV ;;"                            >> $PACKAGE/DEBIAN/postinst
 echo " * )"                                             >> $PACKAGE/DEBIAN/postinst
 echo "   echo \"Frontrow app md5sum is unknown, not patching\" ;;" >> $PACKAGE/DEBIAN/postinst
 echo "esac"                                             >> $PACKAGE/DEBIAN/postinst
@@ -56,6 +64,7 @@ chmod +x $PACKAGE/DEBIAN/postinst
 # create the patch directory and copy in patch
 mkdir -p $PACKAGE/var/tmp
 cp 12313417e3afeba6531255af58cb5283.patch               $PACKAGE/var/tmp/
+cp 5a28620a15c15d41e1ae836dd1f95f8d.patch               $PACKAGE/var/tmp/
 
 # set ownership to root:root
 ${SUDO} chown -R 0:0 $PACKAGE
