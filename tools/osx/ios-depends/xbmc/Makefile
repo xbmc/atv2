@@ -7,7 +7,7 @@ SOURCE=../../../../
 # configuration settings
 CONFIGURE=./configure --prefix=$(PREFIX) --host=$(HOST) \
   --with-arch=arm --with-cpu=cortex-a8 --enable-external-python --enable-gles \
-  --disable-optical-drive --disable-dvdcss --disable-webserver --disable-optimizations \
+  --disable-optical-drive --disable-dvdcss --disable-optimizations \
   PKG_CONFIG_PATH=$(PREFIX)/lib/pkgconfig
 
 all: configure
