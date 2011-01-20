@@ -131,6 +131,8 @@ XBMCController *g_xbmcController;
 @interface ATVSettingsFacade : BRSettingsFacade {}
 -(int)screenSaverTimeout;
 -(void)setScreenSaverTimeout:(int) f_timeout;
+-(void)setSleepTimeout:(int)timeout;
+-(int)sleepTimeout;
 @end
 
 // notification messages
@@ -143,8 +145,11 @@ extern NSString* kBRScreenSaverDismissed;
 UIWindow      *m_window;
 XBMCEAGLView  *m_glView;
 int           m_screensaverTimeout;
+int           m_systemsleepTimeout;
 
 - (void) observeDefaultCenterStuff: (NSNotification *) notification;
+- (void) disableSystemSleep;
+- (void) enableSystemSleep;
 - (void) disableScreenSaver;
 - (void) enableScreenSaver;
 @end
@@ -257,6 +262,7 @@ int           m_screensaverTimeout;
   
   [super controlWasActivated];
 
+  [self disableSystemSleep];
   [self disableScreenSaver];
   [m_window makeKeyAndVisible];
   [[[[BRWindow windowList] objectAtIndex:0] content] addControl: m_window];
@@ -273,6 +279,7 @@ int           m_screensaverTimeout;
   [[[[BRWindow windowList] objectAtIndex:0] content] _removeControl: m_window];
   [m_window resignKeyWindow];
   [self enableScreenSaver];
+  [self enableSystemSleep];
 
   [super controlWasDeactivated];
 }
@@ -409,6 +416,17 @@ int           m_screensaverTimeout;
   
   //if ([notification name] == kBRScreenSaverDismissed)
   //  [m_glView startAnimation];
+}
+
+- (void) disableSystemSleep
+{
+  m_systemsleepTimeout = [[ATVSettingsFacade singleton] sleepTimeout];
+  [[ATVSettingsFacade singleton] setSleepTimeout: -1];
+}
+
+- (void) enableSystemSleep
+{
+  [[ATVSettingsFacade singleton] setSleepTimeout: m_systemsleepTimeout];
 }
 
 - (void) disableScreenSaver
