@@ -23,7 +23,7 @@ mkdir -p $PACKAGE/DEBIAN
 echo "Package: $PACKAGE"                          >  $PACKAGE/DEBIAN/control
 echo "Priority: Extra"                            >> $PACKAGE/DEBIAN/control
 echo "Name: XBMC-iOS"                             >> $PACKAGE/DEBIAN/control
-echo "Depends: org.xbmc.xbmc-iconpack"            >> $PACKAGE/DEBIAN/control
+echo "Depends: firmware (>= 4.1), curl, org.xbmc.xbmc-iconpack" >> $PACKAGE/DEBIAN/control
 echo "Version: $VERSION-$REVISION"                >> $PACKAGE/DEBIAN/control
 echo "Architecture: iphoneos-arm"                 >> $PACKAGE/DEBIAN/control
 echo "Description: XBMC Multimedia Center for 4.x iOS" >> $PACKAGE/DEBIAN/control
