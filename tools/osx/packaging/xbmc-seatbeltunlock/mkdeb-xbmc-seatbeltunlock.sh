@@ -7,7 +7,7 @@ fi
 PACKAGE=org.xbmc.xbmc-seatbeltunlock
 
 VERSION=1.0
-REVISION=0
+REVISION=1
 ARCHIVE=${PACKAGE}_${VERSION}-${REVISION}_iphoneos-arm.deb
 
 echo Creating $PACKAGE package version $VERSION revision $REVISION
@@ -54,7 +54,7 @@ echo "   bspatch /Applications/AppleTV.app/AppleTV /var/tmp/AppleTV-nosb /var/tm
 echo "   rm /var/tmp/5a28620a15c15d41e1ae836dd1f95f8d.patch" >> $PACKAGE/DEBIAN/postinst
 echo "   chmod 755 /var/tmp/AppleTV-nosb"               >> $PACKAGE/DEBIAN/postinst
 echo "   mv -f /Applications/AppleTV.app/AppleTV /Applications/AppleTV.app/AppleTV_org" >> $PACKAGE/DEBIAN/postinst
-echo "   mv /var/tmp/AppleTV-nosb /Applications/AppleTV/AppleTV" >> $PACKAGE/DEBIAN/postinst
+echo "   mv /var/tmp/AppleTV-nosb /Applications/AppleTV.app/AppleTV" >> $PACKAGE/DEBIAN/postinst
 echo "   killall AppleTV ;;"                            >> $PACKAGE/DEBIAN/postinst
 echo " * )"                                             >> $PACKAGE/DEBIAN/postinst
 echo "   echo \"Frontrow app md5sum is unknown, not patching\" ;;" >> $PACKAGE/DEBIAN/postinst
