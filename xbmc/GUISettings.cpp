@@ -359,7 +359,7 @@ void CGUISettings::Initialize()
   AddGroup(4, 13000);
   CSettingsCategory* vs = AddCategory(4, "videoscreen", 21373);
 
-#if !(defined(__APPLE__) && defined(__arm__))
+#if (defined(__APPLE__) && defined(__arm__))
   // define but hide display, resolution and blankdisplays settings on atv2/ios, they are not user controlled
   AddInt(NULL, "videoscreen.screen", 240, 0, -1, 1, g_Windowing.GetNumScreens(), SPIN_CONTROL_TEXT);
   AddInt(NULL, "videoscreen.resolution", 131, -1, 0, 1, INT_MAX, SPIN_CONTROL_TEXT);
