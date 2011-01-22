@@ -15,6 +15,7 @@
 		3255316612B2D02400837CD2 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3255316512B2D02400837CD2 /* CoreAudio.framework */; };
 		3270F20112CDEB560043E5FA /* AutoPool.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3270F20012CDEB560043E5FA /* AutoPool.mm */; };
 		32D8145F12B0039C002F3874 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 32D8145E12B0039C002F3874 /* MainWindow.xib */; };
+		32EC393E12EAC808007D305C /* libcurl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F5653BB4128B9441009C7ABB /* libcurl.dylib */; };
 		F54D9E8112B713F8006870F9 /* libc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9E8012B713F8006870F9 /* libc.dylib */; };
 		F56B13AF12CAE812009B4C96 /* libpython2.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F56B13AE12CAE812009B4C96 /* libpython2.6.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
 		F56B141112CAF053009B4C96 /* IOSCoreAudio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F56B140F12CAF053009B4C96 /* IOSCoreAudio.cpp */; };
@@ -945,6 +946,8 @@
 		3255316512B2D02400837CD2 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		3270F1FF12CDEB560043E5FA /* AutoPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoPool.h; sourceTree = "<group>"; };
 		3270F20012CDEB560043E5FA /* AutoPool.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AutoPool.mm; sourceTree = "<group>"; };
+		32BD82A512E4B13B00516E4E /* DVDDemuxVobsub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVDDemuxVobsub.h; sourceTree = "<group>"; };
+		32BD82A612E4B14900516E4E /* DVDFactoryDemuxer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVDFactoryDemuxer.h; sourceTree = "<group>"; };
 		32D8145E12B0039C002F3874 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MainWindow.xib; path = xbmc/osx/ios/MainWindow.xib; sourceTree = "<group>"; };
 		8D576316048677EA00EA77CD /* XBMC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XBMC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F54D9E8012B713F8006870F9 /* libc.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libc.dylib; path = usr/lib/libc.dylib; sourceTree = SDKROOT; };
@@ -2957,6 +2960,7 @@
 				F56B160812CD6999009B4C96 /* ImageIO.framework in Frameworks */,
 				3226912612CDDC9300BC84D8 /* libfaad.dylib in Frameworks */,
 				3226912812CDDCD500BC84D8 /* libvorbisfile.dylib in Frameworks */,
+				32EC393E12EAC808007D305C /* libcurl.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4146,7 +4150,9 @@
 			isa = PBXGroup;
 			children = (
 				F589A32312879A9900D8079E /* DVDDemuxVobsub.cpp */,
+				32BD82A512E4B13B00516E4E /* DVDDemuxVobsub.h */,
 				F589A32412879A9900D8079E /* DVDFactoryDemuxer.cpp */,
+				32BD82A612E4B14900516E4E /* DVDFactoryDemuxer.h */,
 				F589A32512879A9900D8079E /* DVDDemuxFFmpeg.cpp */,
 				F589A32612879A9900D8079E /* DVDDemuxFFmpeg.h */,
 				F589A32712879A9900D8079E /* DVDDemuxHTSP.cpp */,
@@ -7022,10 +7028,12 @@
 				CODE_SIGN_IDENTITY = "Don't Code Sign";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_THUMB_SUPPORT = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.1;
 				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CFLAGS = "";
 				PREBINDING = NO;
 				SDKROOT = iphoneos4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -7040,10 +7048,12 @@
 				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
 				CODE_SIGN_IDENTITY = "Don't Code Sign";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_THUMB_SUPPORT = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.1;
 				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CFLAGS = "";
 				PREBINDING = NO;
 				SDKROOT = iphoneos4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
