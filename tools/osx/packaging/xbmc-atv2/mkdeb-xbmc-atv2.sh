@@ -23,7 +23,7 @@ mkdir -p $PACKAGE/DEBIAN
 echo "Package: $PACKAGE"                          >  $PACKAGE/DEBIAN/control
 echo "Priority: Extra"                            >> $PACKAGE/DEBIAN/control
 echo "Name: XBMC-ATV2"                            >> $PACKAGE/DEBIAN/control
-echo "Depends: org.awkwardtv.whitelist, org.xbmc.xbmc-seatbeltunlock" >> $PACKAGE/DEBIAN/control
+echo "Depends: curl, org.awkwardtv.whitelist, org.xbmc.xbmc-seatbeltunlock" >> $PACKAGE/DEBIAN/control
 echo "Version: $VERSION-$REVISION"                >> $PACKAGE/DEBIAN/control
 echo "Architecture: iphoneos-arm"                 >> $PACKAGE/DEBIAN/control
 echo "Description: XBMC Multimedia Center for AppleTV 2" >> $PACKAGE/DEBIAN/control
