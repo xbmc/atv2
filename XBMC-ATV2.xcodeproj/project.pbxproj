@@ -18,6 +18,7 @@
 		F54D9E2112B70E46006870F9 /* IOSAudioRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F54D9E1F12B70E46006870F9 /* IOSAudioRenderer.cpp */; };
 		F54D9E3312B70F57006870F9 /* WinEventsIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = F54D9E3212B70F57006870F9 /* WinEventsIOS.mm */; };
 		F54D9E8E12B71457006870F9 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9E8D12B71457006870F9 /* CoreAudio.framework */; };
+		F55E026612EB5F84003E067B /* libcurl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F5653BB4128B9441009C7ABB /* libcurl.dylib */; };
 		F56B15FB12CD6922009B4C96 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F56B15FA12CD6922009B4C96 /* CoreVideo.framework */; };
 		F56B15FD12CD6930009B4C96 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F56B15FC12CD6930009B4C96 /* AudioToolbox.framework */; };
 		F56B15FF12CD695C009B4C96 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F56B15FE12CD695C009B4C96 /* CoreGraphics.framework */; };
@@ -952,6 +953,8 @@
 		F54D9E3112B70F57006870F9 /* WinEventsIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WinEventsIOS.h; sourceTree = "<group>"; };
 		F54D9E3212B70F57006870F9 /* WinEventsIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = WinEventsIOS.mm; sourceTree = "<group>"; };
 		F54D9E8D12B71457006870F9 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		F55E026812EB602F003E067B /* DVDDemuxVobsub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVDDemuxVobsub.h; sourceTree = "<group>"; };
+		F55E026912EB6036003E067B /* DVDFactoryDemuxer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVDFactoryDemuxer.h; sourceTree = "<group>"; };
 		F5653BB4128B9441009C7ABB /* libcurl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.dylib; path = "tools/osx/ios-depends/build/lib/libcurl.dylib"; sourceTree = "<group>"; };
 		F56B15FA12CD6922009B4C96 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		F56B15FC12CD6930009B4C96 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -2958,6 +2961,7 @@
 				F56B15FD12CD6930009B4C96 /* AudioToolbox.framework in Frameworks */,
 				F56B15FF12CD695C009B4C96 /* CoreGraphics.framework in Frameworks */,
 				F56B161B12CD69DB009B4C96 /* ImageIO.framework in Frameworks */,
+				F55E026612EB5F84003E067B /* libcurl.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4147,7 +4151,9 @@
 			isa = PBXGroup;
 			children = (
 				F589A32312879A9900D8079E /* DVDDemuxVobsub.cpp */,
+				F55E026812EB602F003E067B /* DVDDemuxVobsub.h */,
 				F589A32412879A9900D8079E /* DVDFactoryDemuxer.cpp */,
+				F55E026912EB6036003E067B /* DVDFactoryDemuxer.h */,
 				F589A32512879A9900D8079E /* DVDDemuxFFmpeg.cpp */,
 				F589A32612879A9900D8079E /* DVDDemuxFFmpeg.h */,
 				F589A32712879A9900D8079E /* DVDDemuxHTSP.cpp */,
