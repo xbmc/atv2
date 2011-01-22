@@ -94,7 +94,9 @@ typedef enum {
   kBREventRemoteActionCenterHold42,
 
   // Gestures, for originator kBREventOriginatorGesture
-  kBREventRemoteActionTap = 30,
+  kBREventRemoteActionTouchBegin = 30,
+  kBREventRemoteActionTouchMove,
+  kBREventRemoteActionTouchEnd,
   kBREventRemoteActionSwipeLeft,
   kBREventRemoteActionSwipeRight,
   kBREventRemoteActionSwipeUp,
@@ -293,82 +295,116 @@ int           m_systemsleepTimeout;
 - (eATVClientEvent) ATVClientEventFromBREvent:(BREvent*) f_event
 {
   int remoteAction = [f_event remoteAction];
-  //BOOL downEvent = [f_event value];
-  //DLOG(@"got action %i %@", remoteAction, (downEvent)? @"pressed":@"released");
 
   switch (remoteAction)
   {
+    // tap up
     case kBREventRemoteActionUp:
-    case 65676:  // tap up
+    case 65676:
       if([f_event value] == 1)
         return ATV_BUTTON_UP;
       else
         return ATV_INVALID_BUTTON;
         //return ATV_BUTTON_UP_RELEASE;
+
+    // tap down
     case kBREventRemoteActionDown:
-    case 65677:  // tap down
+    case 65677:
       if([f_event value] == 1)
         return ATV_BUTTON_DOWN;
       else
         return ATV_INVALID_BUTTON;
         //return ATV_BUTTON_DOWN_RELEASE;
+
+    // tap left
     case kBREventRemoteActionLeft:
-    case 65675:  // tap left
+    case 65675:
       if([f_event value] == 1)
         return ATV_BUTTON_LEFT;
       else
         return ATV_INVALID_BUTTON;
         //return ATV_BUTTON_LEFT_RELEASE;
-    case 786612: // hold left
+
+    // hold left
+    case 786612:
       if([f_event value] == 1)
         return ATV_LEARNED_REWIND;
       else
         return ATV_INVALID_BUTTON;
         //return ATV_LEARNED_REWIND_RELEASE;
+
+    // tap right
     case kBREventRemoteActionRight:
-    case 65674:  // tap right
+    case 65674:
       if ([f_event value] == 1)
         return ATV_BUTTON_RIGHT;
       else
         return ATV_INVALID_BUTTON;
         //return ATV_BUTTON_RIGHT_RELEASE;
-    case 786611: // hold right
+
+    // hold right
+    case 786611:
       if ([f_event value] == 1)
         return ATV_LEARNED_FORWARD;
       else
         return ATV_INVALID_BUTTON;
         //return ATV_LEARNED_FORWARD_RELEASE;
+
+    // tap play
     case kBREventRemoteActionPlay:
-    case 65673:  // tap play
+    case 65673:
       return ATV_BUTTON_PLAY;
+
+    // hold play
     case kBREventRemoteActionPlayHold:
     case kBREventRemoteActionCenterHold:
     case kBREventRemoteActionCenterHold42:
-    case 65668:  // hold play
+    case 65668:
       return ATV_BUTTON_PLAY_H;
+
+    // menu
     case kBREventRemoteActionMenu:
-    case 65670:  // menu
+    case 65670:
       return ATV_BUTTON_MENU;
+
+    // hold menu
     case kBREventRemoteActionMenuHold:
-    case 786496: // hold menu
+    case 786496:
       return ATV_BUTTON_MENU_H;
-    case 786608: //learned play
+
+    // learned play
+    case 786608:
       return ATV_LEARNED_PLAY;
-    case 786609: //learned pause
+
+    // learned pause
+    case 786609:
       return ATV_LEARNED_PAUSE;
-    case 786615: //learned stop
+
+    // learned stop
+    case 786615:
       return ATV_LEARNED_STOP;
-    case 786613: //learned nexxt
+
+    // learned nexxt
+    case 786613:
       return ATV_LEARNED_NEXT;
-    case 786614: //learned previous
+
+    // learned previous
+    case 786614:
       return ATV_LEARNED_PREVIOUS;
-    case 786630: //learned enter, like go into something
+
+    // learned enter, like go into something
+    case 786630:
       return ATV_LEARNED_ENTER;
-    case 786631: //learned return, like go back
+
+    // learned return, like go back
+    case 786631:
       return ATV_LEARNED_RETURN;
+
+    // tap play on new Al IR remote
     case kBREventRemoteActionALPlay:
     case 786637:
       return ATV_ALUMINIUM_PLAY;
+
     default:
       ELOG(@"XBMCPureController: Unknown button press remoteAction = %i", remoteAction);
       return ATV_INVALID_BUTTON;
