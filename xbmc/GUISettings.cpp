@@ -358,43 +358,51 @@ void CGUISettings::Initialize()
   // System settings
   AddGroup(4, 13000);
   CSettingsCategory* vs = AddCategory(4, "videoscreen", 21373);
+
+#if !(defined(__APPLE__) && defined(__arm__))
+  // define but hide display, resolution and blankdisplays settings on atv2/ios, they are not user controlled
+  AddInt(NULL, "videoscreen.screen", 240, 0, -1, 1, g_Windowing.GetNumScreens(), SPIN_CONTROL_TEXT);
+  AddInt(NULL, "videoscreen.resolution", 131, -1, 0, 1, INT_MAX, SPIN_CONTROL_TEXT);
+  AddBool(NULL, "videoscreen.blankdisplays", 13130, false);
+#else
   // this setting would ideally not be saved, as its value is systematically derived from videoscreen.screenmode.
   // contains a DISPLAYMODE
   AddInt(vs, "videoscreen.screen", 240, 0, -1, 1, g_Windowing.GetNumScreens(), SPIN_CONTROL_TEXT);
   // this setting would ideally not be saved, as its value is systematically derived from videoscreen.screenmode.
   // contains an index to the g_settings.m_ResInfo array. the only meaningful fields are iScreen, iWidth, iHeight.
-#if defined (__APPLE__)
-  AddInt(vs, "videoscreen.resolution", 131, -1, 0, 1, INT_MAX, SPIN_CONTROL_TEXT);
-#else
-  AddInt(vs, "videoscreen.resolution", 169, -1, 0, 1, INT_MAX, SPIN_CONTROL_TEXT);
-#endif
+  #if defined (__APPLE__)
+    AddInt(vs, "videoscreen.resolution", 131, -1, 0, 1, INT_MAX, SPIN_CONTROL_TEXT);
+  #else
+    AddInt(vs, "videoscreen.resolution", 169, -1, 0, 1, INT_MAX, SPIN_CONTROL_TEXT);
+  #endif
   AddString(g_application.IsStandAlone() ? vs : NULL, "videoscreen.screenmode", 243, "DESKTOP", SPIN_CONTROL_TEXT);
 
-#if defined(_WIN32) || defined (__APPLE__)
-  // We prefer a fake fullscreen mode (window covering the screen rather than dedicated fullscreen)
-  // as it works nicer with switching to other applications. However on some systems vsync is broken
-  // when we do this (eg non-Aero on ATI in particular) and on others (AppleTV) we can't get XBMC to
-  // the front
-  bool fakeFullScreen = true;
-  bool showSetting = true;
-  if (g_sysinfo.IsAeroDisabled())
-    fakeFullScreen = false;
+  #if defined(_WIN32) || defined (__APPLE__)
+    // We prefer a fake fullscreen mode (window covering the screen rather than dedicated fullscreen)
+    // as it works nicer with switching to other applications. However on some systems vsync is broken
+    // when we do this (eg non-Aero on ATI in particular) and on others (AppleTV) we can't get XBMC to
+    // the front
+    bool fakeFullScreen = true;
+    bool showSetting = true;
+    if (g_sysinfo.IsAeroDisabled())
+      fakeFullScreen = false;
 
-#if defined(_WIN32) && defined(HAS_GL)
-  fakeFullScreen = true;
-  showSetting = false;
-#endif
+    #if defined(_WIN32) && defined(HAS_GL)
+      fakeFullScreen = true;
+      showSetting = false;
+    #endif
 
-#if defined (__APPLE__)
-  if (g_sysinfo.IsAppleTV())
-  {
-    fakeFullScreen = false;
-  }
-  showSetting = false;
-#endif
-  AddBool(showSetting ? vs : NULL, "videoscreen.fakefullscreen", 14083, fakeFullScreen);
-  AddBool(vs, "videoscreen.blankdisplays", 13130, false);
-  AddSeparator(vs, "videoscreen.sep1");
+    #if defined (__APPLE__)
+      if (g_sysinfo.IsAppleTV())
+      {
+        fakeFullScreen = false;
+      }
+      showSetting = false;
+    #endif
+    AddBool(showSetting ? vs : NULL, "videoscreen.fakefullscreen", 14083, fakeFullScreen);
+    AddBool(vs, "videoscreen.blankdisplays", 13130, false);
+    AddSeparator(vs, "videoscreen.sep1");
+  #endif
 #endif
 
   map<int,int> vsync;
