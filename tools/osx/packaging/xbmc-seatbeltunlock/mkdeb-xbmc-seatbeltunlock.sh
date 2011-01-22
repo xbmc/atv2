@@ -3,6 +3,11 @@
 if [ -f "/usr/bin/sudo" ]; then
   SUDO="/usr/bin/sudo"
 fi
+if [ -f "../../ios-depends/build/bin/dpkg-deb" ]; then
+  DPKGDEB="../../ios-depends/build/bin/dpkg-deb"
+else
+  DPKGDEB="dpkg-deb"
+fi
 
 PACKAGE=org.xbmc.xbmc-seatbeltunlock
 
@@ -75,9 +80,9 @@ echo Packaging $PACKAGE
 # Also allows archiving and extracting actual ._* files.
 export COPYFILE_DISABLE=true
 export COPY_EXTENDED_ATTRIBUTES_DISABLE=true
-../../ios-depends/build/bin/dpkg-deb -b $PACKAGE $ARCHIVE
-../../ios-depends/build/bin/dpkg-deb --info $ARCHIVE
-../../ios-depends/build/bin/dpkg-deb --contents $ARCHIVE
+${DPKGDEB} -b $PACKAGE $ARCHIVE
+${DPKGDEB} --info $ARCHIVE
+${DPKGDEB} --contents $ARCHIVE
 
 # clean up by removing package dir
 ${SUDO} rm -rf $PACKAGE
