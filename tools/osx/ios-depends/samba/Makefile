@@ -92,6 +92,7 @@ $(SOURCE): $(ARCHIVE)
 	-rm -rf $(SOURCE)
 	$(ARCHIVE_TOOL) $(ARCHIVE_TOOL_FLAGS) $(ARCHIVE)
 	echo $(SOURCE) >> .gitignore
+	cd $(SOURCE); patch -p1 < ../01-microsoft.live.signin.assistant.patch
 	cd $(SOURCE)/source; ./autogen.sh
 	cd $(SOURCE)/source; $(CONFIGURE)
 
