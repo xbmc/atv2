@@ -73,11 +73,12 @@ extern NSString* kBRScreenSaverDismissed;
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-  if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+  if (interfaceOrientation == UIInterfaceOrientationLandscapeLeft)
     return YES;
-  else {
+  else if (interfaceOrientation == UIInterfaceOrientationLandscapeRight)
+    return YES;
+  else
     return NO;
-  }
 
 }
 
