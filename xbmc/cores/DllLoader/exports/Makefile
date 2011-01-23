@@ -16,4 +16,4 @@ exports_python_linux.o : exports_python_linux.cpp
 	$(CXX) $(CXXFLAGS) $(DEFINES) -c $(INCLUDES) $< -o $@
 
 wrapper.def : wrapper.o
-	nm wrapper.o | grep __wrap | awk '{printf("%s ", $$3);}' | sed "s/___wrap_/-Wl,-wrap,/g" > $@
+	nm wrapper.o | grep __wrap | awk '{printf("%s ", $$3);}' | sed "s/___wrap_/__wrap_/g" | sed "s/__wrap_/-Wl,-wrap,/g" > $@
