@@ -15,9 +15,5 @@ wrapper.o : wrapper.c
 exports_python_linux.o : exports_python_linux.cpp
 	$(CXX) $(CXXFLAGS) $(DEFINES) -c $(INCLUDES) $< -o $@
 
-wrapper.def : wrapper.c
-	LD_OPTS=$$(for func in $$(grep __wrap wrapper.c | grep -v bash | \
-	    sed "s/.*__wrap_//g" | sed "s/(.*//g" | \
-	    awk '{printf("%s ",$$0);}'); \
-	    do echo -n "-Wl,-wrap,$$func "; done); \
-	    echo -n $$LD_OPTS > $@
+wrapper.def : wrapper.o
+	nm wrapper.o | grep __wrap | awk '{printf("%s ", $$3);}' | sed "s/___wrap_/-Wl,-wrap,/g" > $@
