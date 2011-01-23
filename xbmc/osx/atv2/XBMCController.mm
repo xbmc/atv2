@@ -74,6 +74,9 @@ typedef enum {
   ATV_GESTURE_SWIPE_RIGHT   = 81,
   ATV_GESTURE_SWIPE_UP      = 82,
   ATV_GESTURE_SWIPE_DOWN    = 83,
+  
+  ATV_BTKEYPRESS            = 84,
+  
   ATV_INVALID_BUTTON
 } eATVClientEvent;
 
@@ -101,6 +104,10 @@ typedef enum {
   kBREventRemoteActionSwipeRight,
   kBREventRemoteActionSwipeUp,
   kBREventRemoteActionSwipeDown,
+  
+  kBREventRemoteActionKeyPress = 47,
+  kBREventRemoteActionKeyPress42,
+  
 
   // Custom remote actions for old remote actions
   kBREventRemoteActionHoldLeft = 0xfeed0001,
@@ -405,6 +412,10 @@ int           m_systemsleepTimeout;
     case 786637:
       return ATV_ALUMINIUM_PLAY;
 
+    case kBREventRemoteActionKeyPress:
+    case kBREventRemoteActionKeyPress42:
+      return ATV_BTKEYPRESS;
+
     default:
       ELOG(@"XBMCPureController: Unknown button press remoteAction = %i", remoteAction);
       return ATV_INVALID_BUTTON;
@@ -417,22 +428,41 @@ int           m_systemsleepTimeout;
 
 	if ([m_glView isAnimating])
   {
+    BOOL is_handled = NO;
     eATVClientEvent xbmc_ir_key = [self ATVClientEventFromBREvent:event];
     
-    if ( xbmc_ir_key == ATV_INVALID_BUTTON )
-    {
-      return NO;
-    } 
-    else
+    if ( xbmc_ir_key != ATV_INVALID_BUTTON )
     {
       XBMC_Event newEvent;
       memset(&newEvent, 0, sizeof(newEvent));
 
-      newEvent.type = XBMC_USEREVENT;
-      newEvent.user.code = xbmc_ir_key;
-      CWinEventsIOS::MessagePush(&newEvent);
-      return TRUE;
+      if (xbmc_ir_key == ATV_BTKEYPRESS && [event value] == 1)
+      {
+        NSDictionary *dict = [event eventDictionary];
+        NSString *key_nsstring = [dict objectForKey:@"kBRKeyEventCharactersKey"];
+        if (key_nsstring != nil && [key_nsstring length] == 1)
+        {
+          //ns_string contains the letter you want to input
+          const char *str = [key_nsstring UTF8String];
+          newEvent.key.keysym.sym = (XBMCKey)str[0];
+
+          newEvent.type = XBMC_KEYDOWN;
+          CWinEventsIOS::MessagePush(&newEvent);
+
+          newEvent.type = XBMC_KEYUP;
+          CWinEventsIOS::MessagePush(&newEvent);
+          is_handled = TRUE;
+        }
+      }
+      else
+      {
+        newEvent.type = XBMC_USEREVENT;
+        newEvent.user.code = xbmc_ir_key;
+        CWinEventsIOS::MessagePush(&newEvent);
+        is_handled = TRUE;
+      }
     }
+    return is_handled;
 	}
   else
   {
