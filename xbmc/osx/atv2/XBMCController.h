@@ -37,6 +37,10 @@
 - (void) setFramebuffer;
 - (bool) presentFramebuffer;
 - (CGSize) getScreenSize;
+- (void) disableSystemSleep;
+- (void) enableSystemSleep;
+- (void) disableScreenSaver;
+- (void) enableScreenSaver;
 
 @end
 

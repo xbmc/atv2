@@ -157,10 +157,6 @@ int           m_screensaverTimeout;
 int           m_systemsleepTimeout;
 
 - (void) observeDefaultCenterStuff: (NSNotification *) notification;
-- (void) disableSystemSleep;
-- (void) enableSystemSleep;
-- (void) disableScreenSaver;
-- (void) enableScreenSaver;
 @end
 //
 //
@@ -187,6 +183,7 @@ int           m_systemsleepTimeout;
   [[[[BRWindow windowList] objectAtIndex:0] content] _removeControl: m_window];
   [m_window resignKeyWindow];
   [self enableScreenSaver];
+  [self enableSystemSleep];
 
   [[self stack] popController];
 }

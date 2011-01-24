@@ -326,6 +326,8 @@ enum {
   // grrr, xbmc does not shutdown properly and leaves
   // several classes in an indeterminant state, we must exit and
   // reload Lowtide/AppleTV, boo.
+  [g_xbmcController enableScreenSaver];
+  [g_xbmcController enableSystemSleep];
   exit(0);
   //[g_xbmcController applicationDidExit];
 }
