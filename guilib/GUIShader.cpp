@@ -60,8 +60,10 @@ void CGUIShader::OnCompiledAndLinked()
   m_hCord1  = glGetAttribLocation(ProgramHandle(),  "m_attrcord1");
 
   // it's okay to do this only one time. Textures units never change
+  glUseProgram( ProgramHandle() );
   glUniform1i(m_hTex0, 0);
   glUniform1i(m_hTex1, 1);
+  glUseProgram( 0 );
 }
 
 bool CGUIShader::OnEnabled()
