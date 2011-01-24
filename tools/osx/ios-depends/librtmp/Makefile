@@ -45,10 +45,12 @@ $(LIBDYLIB): $(SOURCE)
 
 .installed:
 	make SYS=darwin prefix=$(PREFIX) -C $(SOURCE)/librtmp install
+	cp $(PREFIX)/lib/librtmp.so ../../../../system/
 	touch $@
 
 clean:
 	make -C $(SOURCE) clean
+	rm -f ../../../../system/librtmp.so
 	rm -f .installed
 
 distclean::
