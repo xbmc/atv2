@@ -48,6 +48,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "../../../../cores/DllLoader/exports/ios_wrap.h"
+
 #include "ximadef.h"
 
 class DLL_EXP CxFile

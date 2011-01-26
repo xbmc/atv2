@@ -374,6 +374,11 @@ int __wrap_ungetc(int c, FILE *stream)
   return dll_ungetc(c, stream);
 }
 
+int __wrap_getc(FILE *stream)
+{
+  return dll_getc(stream);
+}
+
 int __wrap_ioctl(int d, unsigned long int request, ...)
 {
     int res;

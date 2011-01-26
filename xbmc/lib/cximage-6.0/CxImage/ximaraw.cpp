@@ -11,6 +11,7 @@
  */
 
 #include "ximaraw.h"
+#include "xfile.h"
 
 #if CXIMAGE_SUPPORT_RAW
 
