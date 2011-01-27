@@ -63,6 +63,7 @@
 #include "utils/log.h"
 #include "utils/FileUtils.h"
 #include "utils/AnnouncementManager.h"
+#include "TextureCache.h"
 
 #include "addons/Skin.h"
 #include "MediaManager.h"
@@ -846,6 +847,12 @@ int  CGUIWindowVideoBase::GetResumeItemOffset(const CFileItem *item)
 
 bool CGUIWindowVideoBase::OnClick(int iItem)
 {
+  CFileItemPtr fileitem = m_vecItems->Get(iItem);
+  if (!fileitem->m_bIsFolder && fileitem->IsVideo())
+  {
+    m_thumbLoader.CancelJobs();
+    CTextureCache::Get().CancelJobs();
+  }  
   return CGUIMediaWindow::OnClick(iItem);
 }
 
