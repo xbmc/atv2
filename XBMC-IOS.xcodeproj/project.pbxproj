@@ -6919,7 +6919,7 @@
 					"\"$(SRCROOT)/xbmc/lib/libshout\"",
 					"\"$(SRCROOT)/tools/osx/ios-depends/build/lib\"",
 				);
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = "-Wl,-all_load";
 				PLIST_FILE_OUTPUT_FORMAT = xml;
 				PRODUCT_NAME = XBMC;
 				SDKROOT = iphoneos4.2;
@@ -7010,7 +7010,7 @@
 					"\"$(SRCROOT)/xbmc/lib/libshout\"",
 					"\"$(SRCROOT)/tools/osx/ios-depends/build/lib\"",
 				);
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = "-Wl,-all_load";
 				PLIST_FILE_OUTPUT_FORMAT = xml;
 				PRODUCT_NAME = XBMC;
 				SDKROOT = iphoneos4.2;
@@ -7035,7 +7035,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 4.1;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "-Wl,-all_load";
+				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				SDKROOT = iphoneos4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -7058,7 +7058,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 4.1;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "-Wl,-all_load";
+				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				SDKROOT = iphoneos4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
