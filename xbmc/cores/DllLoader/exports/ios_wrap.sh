@@ -36,9 +36,13 @@ do
   echo "#define $FUN $i" >> $OUTFILE
 done
 
+echo "#ifdef __cplusplus" >> $OUTFILE
 echo "extern \"C\" {" >> $OUTFILE
+echo "#endif" >> $OUTFILE
 grep -r __wrap $INFILE | grep -v bash | sed 's/)/);/g' >> $OUTFILE
+echo "#ifdef __cplusplus" >> $OUTFILE
 echo "}" >> $OUTFILE
+echo "#endif" >> $OUTFILE
 
 echo "#endif" >> $OUTFILE
 echo "#endif //_IOS_WRAP_H_" >> $OUTFILE
