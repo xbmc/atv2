@@ -911,7 +911,7 @@
 		F589AE4D1288E0A300D8079E /* libm.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE4C1288E0A300D8079E /* libm.dylib */; };
 		F589AE531288E20900D8079E /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE521288E20900D8079E /* libsqlite3.dylib */; };
 		F589AE6A128909F000D8079E /* libfreetype.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE1E1288DE2700D8079E /* libfreetype.dylib */; };
-		F589AE7512890B9E00D8079E /* libcmyth.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE6E12890B9E00D8079E /* libcmyth.a */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F589AE7512890B9E00D8079E /* libcmyth.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE6E12890B9E00D8079E /* libcmyth.a */; settings = {ATTRIBUTES = (Required, ); }; };
 		F589AE7612890B9E00D8079E /* librefmem.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE6F12890B9E00D8079E /* librefmem.a */; };
 		F589AE7712890B9E00D8079E /* libapetag.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE7012890B9E00D8079E /* libapetag.a */; };
 		F589AE7812890B9E00D8079E /* libhttpapi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE7112890B9E00D8079E /* libhttpapi.a */; };
@@ -919,10 +919,10 @@
 		F589AE7A12890B9F00D8079E /* libjsoncpp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE7312890B9E00D8079E /* libjsoncpp.a */; };
 		F589AE7B12890B9F00D8079E /* libmicrohttpd.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE7412890B9E00D8079E /* libmicrohttpd.a */; };
 		F589AE8212890BEF00D8079E /* libsquish-arm-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE7D12890BEF00D8079E /* libsquish-arm-osx.a */; };
-		F589AE8312890BEF00D8079E /* librtv-arm-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE7E12890BEF00D8079E /* librtv-arm-osx.a */; settings = {ATTRIBUTES = (Weak, ); }; };
-		F589AE8412890BEF00D8079E /* libxbms-arm-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE7F12890BEF00D8079E /* libxbms-arm-osx.a */; settings = {ATTRIBUTES = (Weak, ); }; };
-		F589AE8512890BEF00D8079E /* libxdaap-arm-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE8012890BEF00D8079E /* libxdaap-arm-osx.a */; settings = {ATTRIBUTES = (Weak, ); }; };
-		F589AE8612890BF000D8079E /* libshout-arm-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE8112890BEF00D8079E /* libshout-arm-osx.a */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F589AE8312890BEF00D8079E /* librtv-arm-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE7E12890BEF00D8079E /* librtv-arm-osx.a */; settings = {ATTRIBUTES = (Required, ); }; };
+		F589AE8412890BEF00D8079E /* libxbms-arm-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE7F12890BEF00D8079E /* libxbms-arm-osx.a */; settings = {ATTRIBUTES = (Required, ); }; };
+		F589AE8512890BEF00D8079E /* libxdaap-arm-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE8012890BEF00D8079E /* libxdaap-arm-osx.a */; settings = {ATTRIBUTES = (Required, ); }; };
+		F589AE8612890BF000D8079E /* libshout-arm-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE8112890BEF00D8079E /* libshout-arm-osx.a */; settings = {ATTRIBUTES = (Required, ); }; };
 		F589AE9B128913BB00D8079E /* LinuxRendererGLES.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589AE9A128913BB00D8079E /* LinuxRendererGLES.cpp */; };
 		F589AEA61289209500D8079E /* MatrixGLES.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589AEA41289209500D8079E /* MatrixGLES.cpp */; };
 		F589AF57128A131900D8079E /* RenderSystemGLES.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589AF55128A131900D8079E /* RenderSystemGLES.cpp */; };
@@ -6906,6 +6906,7 @@
 					"\"$(SRCROOT)/tools/osx/ios-depends/build/lib\"",
 				);
 				OTHER_LDFLAGS = (
+					"-Wl,-all_load",
 					"-Wl,-undefined,dynamic_lookup",
 					"-Wl,-read_only_relocs,suppress",
 				);
@@ -6997,6 +6998,7 @@
 					"\"$(SRCROOT)/tools/osx/ios-depends/build/lib\"",
 				);
 				OTHER_LDFLAGS = (
+					"-Wl,-all_load",
 					"-Wl,-undefined,dynamic_lookup",
 					"-Wl,-read_only_relocs,suppress",
 				);
