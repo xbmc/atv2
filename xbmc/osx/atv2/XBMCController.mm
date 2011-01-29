@@ -485,11 +485,13 @@ int           m_systemsleepTimeout;
 {
   m_systemsleepTimeout = [[ATVSettingsFacade singleton] sleepTimeout];
   [[ATVSettingsFacade singleton] setSleepTimeout: -1];
+  [[ATVSettingsFacade singleton] flushDiskChanges];
 }
 
 - (void) enableSystemSleep
 {
   [[ATVSettingsFacade singleton] setSleepTimeout: m_systemsleepTimeout];
+  [[ATVSettingsFacade singleton] flushDiskChanges];
 }
 
 - (void) disableScreenSaver
