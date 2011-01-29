@@ -40,8 +40,6 @@
 
 #import "XBMCEAGLView.h"
 
-#import <BackRow/BackRow.h>
-
 #import "XBMCController.h"
 #import "XBMCApplication.h"
 #import "XBMCDebugHelpers.h"
