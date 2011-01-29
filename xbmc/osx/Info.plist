@@ -7,7 +7,7 @@
 	<key>CFBundleExecutable</key>
 	<string>XBMC</string>
 	<key>CFBundleGetInfoString</key>
-	<string>10.05.pre</string>
+	<string>10.0.pre</string>
 	<key>CFBundleIconFile</key>
 	<string>xbmc.icns</string>
 	<key>CFBundleIdentifier</key>
