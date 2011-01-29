@@ -437,18 +437,33 @@ int           m_systemsleepTimeout;
       {
         NSDictionary *dict = [event eventDictionary];
         NSString *key_nsstring = [dict objectForKey:@"kBRKeyEventCharactersKey"];
+        
         if (key_nsstring != nil && [key_nsstring length] == 1)
         {
           //ns_string contains the letter you want to input
-          const char *str = [key_nsstring UTF8String];
-          newEvent.key.keysym.sym = (XBMCKey)str[0];
+          const char* wstr = [key_nsstring cStringUsingEncoding:NSUTF16StringEncoding];
+          //NSLog(@"%s, key: wstr[0] = %d, wstr[1] = %d", __PRETTY_FUNCTION__, wstr[0], wstr[1]);
 
-          newEvent.type = XBMC_KEYDOWN;
-          CWinEventsIOS::MessagePush(&newEvent);
+          if (wstr[0] != 92) // trap out "\" which toggle fullscreen/windowed
+          {
+            if (wstr[0] == 62 && wstr[1] == -9)
+            {
+              // stupid delete key
+              newEvent.key.keysym.sym = (XBMCKey)8;
+              newEvent.key.keysym.unicode = 8;
+            }
+            else
+            {
+              newEvent.key.keysym.sym = (XBMCKey)wstr[0];
+              newEvent.key.keysym.unicode = wstr[0];
+            }
+            newEvent.type = XBMC_KEYDOWN;
+            CWinEventsIOS::MessagePush(&newEvent);
 
-          newEvent.type = XBMC_KEYUP;
-          CWinEventsIOS::MessagePush(&newEvent);
-          is_handled = TRUE;
+            newEvent.type = XBMC_KEYUP;
+            CWinEventsIOS::MessagePush(&newEvent);
+            is_handled = TRUE;
+          }
         }
       }
       else
