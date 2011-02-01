@@ -481,6 +481,7 @@ if expr "X$host_cpu" : 'Xarm.*' > /dev/null; then
     CFLAGS+=""
     CXXFLAGS+=""
     #FFMPEG_EXTRACFLAGS+=" -mfpu=neon"
+    use_cpu=cortex-a8
   fi
 fi
 
@@ -1645,10 +1646,9 @@ XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/ffmpeg], [
       --disable-amd3dnow \
       --disable-armv5te \
       --disable-armv6t2 \
-      --disable-neon \
+      --enable-neon \
       --disable-amd3dnow \
       --disable-static \
-      --enable-hardcoded-tables \
       `if test "$use_debug" = "no"; then echo --disable-debug; fi` \
       --disable-muxers \
       --enable-muxer=spdif \
@@ -1656,6 +1656,7 @@ XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/ffmpeg], [
       --disable-encoders \
       --enable-encoder=ac3 \
       --enable-encoder=aac \
+      --enable-hardcoded-tables \
       `if test "$use_ffmpeg_libvorbis" == "yes"; then echo --enable-libvorbis --enable-muxer=ogg --enable-encoder=libvorbis; else echo --disable-libvorbis; fi` \
       --disable-devices \
       --disable-ffplay \
