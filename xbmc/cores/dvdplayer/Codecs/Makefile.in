@@ -74,9 +74,9 @@ ifeq ($(findstring arm,$(ARCH)),arm)
 else
 	$(CC) $(SYSROOT) $(LDFLAGS) -o $@ \
 		ffmpeg/libavutil/*.o
-endif
 	$(WRAPPER_OSX) $@;mv output.so $@
 	chmod +x $@
+endif
 
 $(SYSDIR)/avcodec-52-$(ARCH).so: ffmpeg/libavcodec/libavcodec.dylib
 ifeq ($(findstring arm,$(ARCH)),arm)
@@ -87,9 +87,9 @@ else
 	$(CC) $(SYSROOT) $(LDFLAGS) -o $@ \
 		ffmpeg/libavcodec/*.o \
 		ffmpeg/libavcodec/$(ARCH_DIR)/*.o
-endif
 	$(WRAPPER_OSX) $@;mv output.so $@
 	chmod +x $@
+endif
 
 $(SYSDIR)/avformat-52-$(ARCH).so: ffmpeg/libavformat/libavformat.dylib
 ifeq ($(findstring arm,$(ARCH)),arm)
@@ -98,9 +98,9 @@ ifeq ($(findstring arm,$(ARCH)),arm)
 else
 	$(CC) $(SYSROOT) $(LDFLAGS) -o $@ \
 		ffmpeg/libavformat/*.o
-endif
 	$(WRAPPER_OSX) $@;mv output.so $@
 	chmod +x $@
+endif
 
 $(SYSDIR)/swscale-0.6.1-$(ARCH).so: ffmpeg/libswscale/libswscale.dylib
 ifeq ($(findstring arm,$(ARCH)),arm)
@@ -109,9 +109,9 @@ ifeq ($(findstring arm,$(ARCH)),arm)
 else
 	$(CC) $(SYSROOT) $(LDFLAGS) -o $@ \
 		ffmpeg/libswscale/*.o ffmpeg/libswscale/$(ARCH_DIR)/*.o
-endif
 	$(WRAPPER_OSX) $@;mv output.so $@
 	chmod +x $@
+endif
 
 $(SYSDIR)/postproc-51-$(ARCH).so: ffmpeg/libpostproc/libpostproc.dylib
 ifeq ($(findstring arm,$(ARCH)),arm)
@@ -120,9 +120,9 @@ ifeq ($(findstring arm,$(ARCH)),arm)
 else
 	$(CC) $(SYSROOT) $(LDFLAGS) -o $@ \
 		ffmpeg/libpostproc/*.o
-endif
 	$(WRAPPER_OSX) $@;mv output.so $@
 	chmod +x $@
+endif
 
 ffmpeg/libavutil/libavutil.dylib     : ffmpeg;
 ffmpeg/libavcodec/libavcodec.dylib   : ffmpeg;
@@ -137,18 +137,24 @@ $(SYSDIR)/libdts-$(ARCH).so:  $(WRAPPER_OSX) libdts/libdts/libdts.a
 		-o $@ libdts/libdts/bitstream.o \
 		libdts/libdts/downmix.o \
 		libdts/libdts/parse.o
+ifneq ($(findstring arm,$(ARCH)),arm)
 	$(WRAPPER_OSX) $@;mv output.so $@
 	chmod +x $@
+endif
 
 $(SYSDIR)/liba52-$(ARCH).so: $(WRAPPER_OSX) liba52/liba52/liba52.la
 	$(CC) $(SYSROOT) $(LDFLAGS) -o $@ \
 		liba52/liba52/.libs/*.o $(BUNDLE1_O)
+ifneq ($(findstring arm,$(ARCH)),arm)
 	$(WRAPPER_OSX) $@;mv output.so $@
+endif
 
 $(SYSDIR)/libao-$(ARCH).so: $(WRAPPER_OSX) liba52/libao/libao.a
 	$(CC) $(SYSROOT) $(LDFLAGS) -o $@ \
 		liba52/libao/libao.a $(BUNDLE1_O)
-	#$(WRAPPER_OSX) $@;mv output.so $@
+ifneq ($(findstring arm,$(ARCH)),arm)
+	$(WRAPPER_OSX) $@;mv output.so $@
+endif
 
 libdts/libdts/libdts.a : libdts;
 libdts:
