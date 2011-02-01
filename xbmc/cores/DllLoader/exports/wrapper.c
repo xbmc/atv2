@@ -389,7 +389,7 @@ int __wrap_ioctl(int d, unsigned long int request, ...)
     return res;
 } 
 
-int __wrap_stat(const char *path, struct _stat *buffer)
+int __wrap__stat(const char *path, struct _stat *buffer)
 {
   return dll_stat(path, buffer);
 }
