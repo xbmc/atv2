@@ -94,6 +94,7 @@ public:
   virtual AVFrame *avcodec_alloc_frame(void)=0;
   virtual int avpicture_fill(AVPicture *picture, uint8_t *ptr, PixelFormat pix_fmt, int width, int height)=0;
   virtual int avcodec_decode_video(AVCodecContext *avctx, AVFrame *picture, int *got_picture_ptr, uint8_t *buf, int buf_size)=0;
+  virtual int avcodec_decode_video2(AVCodecContext *avctx, AVFrame *picture, int *got_picture_ptr, AVPacket *avpkt)=0;
   virtual int avcodec_decode_audio2(AVCodecContext *avctx, int16_t *samples, int *frame_size_ptr, uint8_t *buf, int buf_size)=0;
   virtual int avcodec_decode_subtitle(AVCodecContext *avctx, AVSubtitle *sub, int *got_sub_ptr, const uint8_t *buf, int buf_size)=0;
   virtual int avcodec_encode_audio(AVCodecContext *avctx, uint8_t *buf, int buf_size, const short *samples)=0;
@@ -162,6 +163,7 @@ public:
   virtual AVFrame *avcodec_alloc_frame() { return ::avcodec_alloc_frame(); }
   virtual int avpicture_fill(AVPicture *picture, uint8_t *ptr, PixelFormat pix_fmt, int width, int height) { return ::avpicture_fill(picture, ptr, pix_fmt, width, height); }
   virtual int avcodec_decode_video(AVCodecContext *avctx, AVFrame *picture, int *got_picture_ptr, uint8_t *buf, int buf_size) { return ::avcodec_decode_video(avctx, picture, got_picture_ptr, buf, buf_size); }
+  virtual int avcodec_decode_video2(AVCodecContext *avctx, AVFrame *picture, int *got_picture_ptr, AVPacket *avpkt) { return ::avcodec_decode_video2(avctx, picture, got_picture_ptr, avpkt); }
   virtual int avcodec_decode_audio2(AVCodecContext *avctx, int16_t *samples, int *frame_size_ptr, uint8_t *buf, int buf_size) { return ::avcodec_decode_audio2(avctx, samples, frame_size_ptr, buf, buf_size); }
   virtual int avcodec_decode_subtitle(AVCodecContext *avctx, AVSubtitle *sub, int *got_sub_ptr, const uint8_t *buf, int buf_size) { return ::avcodec_decode_subtitle(avctx, sub, got_sub_ptr, buf, buf_size); }
   virtual int avcodec_encode_audio(AVCodecContext *avctx, uint8_t *buf, int buf_size, const short *samples) { return ::avcodec_encode_audio(avctx, buf, buf_size, samples); }
@@ -219,6 +221,7 @@ class DllAvCodec : public DllDynamic, DllAvCodecInterface
   DEFINE_FUNC_ALIGNED1(void, __cdecl, avcodec_flush_buffers, AVCodecContext*)
   DEFINE_FUNC_ALIGNED2(int, __cdecl, avcodec_open_dont_call, AVCodecContext*, AVCodec *)
   DEFINE_FUNC_ALIGNED5(int, __cdecl, avcodec_decode_video, AVCodecContext*, AVFrame*, int*, uint8_t*, int)
+  DEFINE_FUNC_ALIGNED4(int, __cdecl, avcodec_decode_video2, AVCodecContext*, AVFrame*, int*, AVPacket *avpkt)
   DEFINE_FUNC_ALIGNED5(int, __cdecl, avcodec_decode_audio2, AVCodecContext*, int16_t*, int*, uint8_t*, int)
   DEFINE_FUNC_ALIGNED5(int, __cdecl, avcodec_decode_subtitle, AVCodecContext*, AVSubtitle*, int*, const uint8_t *, int)
   DEFINE_FUNC_ALIGNED4(int, __cdecl, avcodec_encode_audio, AVCodecContext*, uint8_t*, int, const short*)
@@ -229,6 +232,7 @@ class DllAvCodec : public DllDynamic, DllAvCodecInterface
   DEFINE_METHOD1(void, avcodec_flush_buffers, (AVCodecContext* p1))
   DEFINE_METHOD2(int, avcodec_open_dont_call, (AVCodecContext* p1, AVCodec *p2))
   DEFINE_METHOD5(int, avcodec_decode_video, (AVCodecContext* p1, AVFrame *p2, int *p3, uint8_t *p4, int p5))
+  DEFINE_METHOD4(int, avcodec_decode_video2, (AVCodecContext* p1, AVFrame *p2, int *p3, AVPacket *p4))
   DEFINE_METHOD5(int, avcodec_decode_audio2, (AVCodecContext* p1, int16_t *p2, int *p3, uint8_t *p4, int p5))
   DEFINE_METHOD5(int, avcodec_decode_subtitle, (AVCodecContext* p1, AVSubtitle *p2, int *p3, const uint8_t *p4, int p5))
   DEFINE_METHOD4(int, avcodec_encode_audio, (AVCodecContext* p1, uint8_t *p2, int p3, const short *p4))
@@ -280,6 +284,7 @@ class DllAvCodec : public DllDynamic, DllAvCodecInterface
     RESOLVE_METHOD_RENAME(avcodec_register_all, avcodec_register_all_dont_call)
     RESOLVE_METHOD(avpicture_fill)
     RESOLVE_METHOD(avcodec_decode_video)
+    RESOLVE_METHOD(avcodec_decode_video2)
     RESOLVE_METHOD(avcodec_decode_audio2)
     RESOLVE_METHOD(avcodec_decode_subtitle)
     RESOLVE_METHOD(avcodec_encode_audio)
@@ -374,16 +379,16 @@ public:
   virtual uint32_t av_crc(const AVCRC *ctx, uint32_t crc, const uint8_t *buffer, size_t length) { return ::av_crc(ctx, crc, buffer, length); }
   //
   virtual AVFifoBuffer *av_fifo_alloc(unsigned int size) {return ::av_fifo_alloc(size); }
-  virtual void av_fifo_free(AVFifoBuffer *f) (av_fifo_free(f); )
-  virtual void av_fifo_reset(AVFifoBuffer *f) { av_fifo_reset(f); }
-  virtual int av_fifo_size(AVFifoBuffer *f) { return av_fifo_size(f); }
+  virtual void av_fifo_free(AVFifoBuffer *f) { ::av_fifo_free(f); }
+  virtual void av_fifo_reset(AVFifoBuffer *f) { ::av_fifo_reset(f); }
+  virtual int av_fifo_size(AVFifoBuffer *f) { return ::av_fifo_size(f); }
   virtual int av_fifo_generic_read(AVFifoBuffer *f, void *dest, int buf_size, void (*func)(void*, void*, int))
   {
-    return av_fifo_generic_read(f, dest, buf_size, func);
+    return ::av_fifo_generic_read(f, dest, buf_size, func);
   }
   virtual int av_fifo_generic_write(AVFifoBuffer *f, void *src, int size, int (*func)(void*, void*, int))
   {
-    return av_fifo_generic_read(f, src, size, func);
+    return ::av_fifo_generic_write(f, src, size, func);
   }
 
   // DLL faking.
