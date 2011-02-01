@@ -140,6 +140,7 @@ bool iOS_HasVideoToolboxDecoder(void)
         
         if(vnode_enforce && proc_enforce)
         {
+          bDecoderAvailable = false;
           CLog::Log(LOGINFO, "VideoToolBox decoder not available. Use : sysctl -w security.mac.proc_enforce=0; sysctl -w security.mac.vnode_enforce=0\n");
           NSLog(@"%s VideoToolBox decoder not available. Use : sysctl -w security.mac.proc_enforce=0; sysctl -w security.mac.vnode_enforce=0", __PRETTY_FUNCTION__);
         }
