@@ -20,7 +20,7 @@ ARCHIVE_TOOL=tar
 ARCHIVE_TOOL_FLAGS=xf
 
 # configuration settings
-export CFLAGS+=-undefined dynamic_lookup
+export CFLAGS+=-undefined dynamic_lookup 
 export CXXFLAGS+=-undefined dynamic_lookup
 export LDFLAGS+=-Wl,-read_only_relocs,suppress
 CONFIGURE=./configure --prefix=$(PREFIX) --host=$(HOST) --enable-shared=yes --disable-sdl
@@ -40,6 +40,8 @@ $(SOURCE): $(ARCHIVE)
 	echo $(ARCHIVE) > .gitignore
 	echo $(SOURCE) >> .gitignore
 	cd $(SOURCE); patch -p1 < ../01-libmpeg2-add-asm-leading-underscores.patch
+	cd $(SOURCE); patch -p0 < ../02-neon.patch
+	cd $(SOURCE); patch -p1 < ../03-config-fix.patch
 	cd $(SOURCE); $(CONFIGURE)
 
 $(LIBDYLIB): $(SOURCE)
