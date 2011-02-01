@@ -878,9 +878,7 @@ bool CApplication::InitDirectoriesOSX()
 
     // location for temp files
     #if defined(__arm__)
-      CStdString strTempPath = CUtil::AddFileToFolder(userHome + "/Library/Preferences", ".xbmc/");
-      CDirectory::Create(strTempPath);
-      strTempPath = CUtil::AddFileToFolder(userHome + "/Library/Preferences", ".xbmc/temp");
+      CStdString strTempPath = CUtil::AddFileToFolder(userHome,  "Library/Preferences/XBMC/temp");
     #else
       CStdString strTempPath = CUtil::AddFileToFolder(userHome, ".xbmc/");
       CDirectory::Create(strTempPath);
@@ -889,9 +887,7 @@ bool CApplication::InitDirectoriesOSX()
     CSpecialProtocol::SetTempPath(strTempPath);
 
     // xbmc.log file location
-    #if defined(__arm__)
-      strTempPath = userHome + "/Library/Preferences";
-    #else
+    #if !defined(__arm__)
       strTempPath = userHome + "/Library/Preferences";
     #endif
     CUtil::AddSlashAtEnd(strTempPath);
