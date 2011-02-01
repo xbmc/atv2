@@ -37,4 +37,8 @@ uint32_t dvdread_getbits(getbits_state_t *state, uint32_t number_of_bits);
 #ifdef __cplusplus
 };
 #endif
+#if defined(__APPLE__) && defined(__arm__)
+#include "../../../../../DllLoader/exports/ios_wrap.h"
+#endif
+
 #endif /* BITREADER_H_INCLUDED */

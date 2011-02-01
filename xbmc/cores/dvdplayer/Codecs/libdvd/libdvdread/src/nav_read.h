@@ -21,6 +21,10 @@
 
 #include "nav_types.h"
 
+#if defined(__APPLE__) && defined(__arm__)
+#include "../../../../../DllLoader/exports/ios_wrap.h"
+#endif
+
 /**
  * Parsing of NAV data, PCI and DSI parts.
  */
