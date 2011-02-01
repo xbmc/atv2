@@ -8,9 +8,12 @@ echo "#ifndef _IOS_WRAP_H_" > $OUTFILE
 echo "#define _IOS_WRAP_H_" >> $OUTFILE
 
 echo "#include <string.h>" >> $OUTFILE
+echo "#include <stdio.h>" >> $OUTFILE
 echo "#include <stdlib.h>" >> $OUTFILE
 echo "#include <stdint.h>" >> $OUTFILE
 echo "#include <dirent.h>" >> $OUTFILE
+echo "#include <sys/stat.h>" >> $OUTFILE
+echo "#include <sys/statvfs.h>" >> $OUTFILE
 
 echo "#if defined(__APPLE__) && defined(__arm__)" >> $OUTFILE
 
