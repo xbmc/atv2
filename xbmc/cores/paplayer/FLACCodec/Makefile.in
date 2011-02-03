@@ -14,9 +14,8 @@ all: $(FLAC_LIB)
 ifeq ($(findstring osx,$(ARCH)), osx)
 $(FLAC_LIB): flac-1.2.1/src/libFLAC/.libs/libFLAC.a
 	$(CC) $(SYSROOT) -bundle -flat_namespace -undefined dynamic_lookup -read_only_relocs suppress -fPIC \
-	-o $@ flac-1.2.1/src/libFLAC/.libs/*.o
-	../../../../tools/Mach5/wrapper.rb $@;mv output.so $@
-	chmod +x $@
+	 -alias_list $(WRAPPER_MACH_ALIAS) \
+	-o $@ ../../DllLoader/exports/wrapper.o flac-1.2.1/src/libFLAC/.libs/*.o
 else
 ifneq (@USE_EXTERNAL_LIBFLAC@,1)
 $(FLAC_LIB): flac-1.2.1/src/libFLAC/.libs/libFLAC.a

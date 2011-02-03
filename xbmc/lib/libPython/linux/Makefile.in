@@ -79,11 +79,9 @@ $(SLIB): $(PYWRAP) ../Python/libpython2.4.a $(PYO) ../../../../tools/Mach5/wrapp
 	../../../../tools/Mach5/wrapper.rb $@;mv output.so $@
 	@rm -rf tmp
 else
-$(SLIB): $(PYWRAP) ../../../../tools/Mach5/wrapper.rb
+$(SLIB): $(PYWRAP)
 	$(CC) $(LDFLAGS) -bundle -flat_namespace -undefined dynamic_lookup -o $@ \
 		-l$(PYVERSION) wrapper_python.o
-	../../../../tools/Mach5/wrapper.rb $@ libpython;mv output.so $@
-	../../../../tools/Mach5/wrapper.rb $@;mv output.so $@
 endif
 
 ../Python/libpython2.4.a: compile

@@ -18,7 +18,7 @@ endif
 
 SYSDIR=../../../../system/players/dvdplayer
 WRAPPER=../../DllLoader/exports/wrapper.o
-WRAPPER_OSX=../../../../tools/Mach5/wrapper.rb
+WRAPPER_MACH_ALIAS=../../DllLoader/exports/wrapper_mach_alias
 DIRS=
 ifneq (@USE_EXTERNAL_FFMPEG@,1)
   DIRS+=ffmpeg
@@ -67,61 +67,51 @@ ifeq ($(ARCH), powerpc-osx)
 BUNDLE1_O = -lbundle1.o
 endif
 
-$(SYSDIR)/avutil-50-$(ARCH).so: ffmpeg/libavutil/libavutil.dylib
+$(SYSDIR)/avutil-50-$(ARCH).so: $(WRAPPER) ffmpeg/libavutil/libavutil.dylib
 ifeq ($(findstring arm,$(ARCH)),arm)
-	$(LD) $(LDFLAGS) -o $@ \
-		ffmpeg/libavutil/*.o
+	$(LD) $(LDFLAGS) -alias_list $(WRAPPER_MACH_ALIAS) -o $@ \
+		$(WRAPPER) ffmpeg/libavutil/*.o
 else
 	$(CC) $(SYSROOT) $(LDFLAGS) -o $@ \
 		ffmpeg/libavutil/*.o
-	$(WRAPPER_OSX) $@;mv output.so $@
-	chmod +x $@
 endif
 
-$(SYSDIR)/avcodec-52-$(ARCH).so: ffmpeg/libavcodec/libavcodec.dylib
+$(SYSDIR)/avcodec-52-$(ARCH).so: $(WRAPPER) ffmpeg/libavcodec/libavcodec.dylib
 ifeq ($(findstring arm,$(ARCH)),arm)
-	$(LD) $(LDFLAGS) -o $@ \
-		ffmpeg/libavcodec/*.o \
+	$(LD) $(LDFLAGS) -alias_list $(WRAPPER_MACH_ALIAS) -o $@ \
+		$(WRAPPER) ffmpeg/libavcodec/*.o \
 		ffmpeg/libavcodec/$(ARCH_DIR)/*.o
 else
 	$(CC) $(SYSROOT) $(LDFLAGS) -o $@ \
 		ffmpeg/libavcodec/*.o \
 		ffmpeg/libavcodec/$(ARCH_DIR)/*.o
-	$(WRAPPER_OSX) $@;mv output.so $@
-	chmod +x $@
 endif
 
-$(SYSDIR)/avformat-52-$(ARCH).so: ffmpeg/libavformat/libavformat.dylib
+$(SYSDIR)/avformat-52-$(ARCH).so: $(WRAPPER) ffmpeg/libavformat/libavformat.dylib
 ifeq ($(findstring arm,$(ARCH)),arm)
-	$(LD) $(LDFLAGS) -o $@ \
-		ffmpeg/libavformat/*.o
+	$(LD) $(LDFLAGS) -alias_list $(WRAPPER_MACH_ALIAS)  -o $@ \
+		$(WRAPPER) ffmpeg/libavformat/*.o
 else
 	$(CC) $(SYSROOT) $(LDFLAGS) -o $@ \
 		ffmpeg/libavformat/*.o
-	$(WRAPPER_OSX) $@;mv output.so $@
-	chmod +x $@
 endif
 
-$(SYSDIR)/swscale-0.6.1-$(ARCH).so: ffmpeg/libswscale/libswscale.dylib
+$(SYSDIR)/swscale-0.6.1-$(ARCH).so: $(WRAPPER) ffmpeg/libswscale/libswscale.dylib
 ifeq ($(findstring arm,$(ARCH)),arm)
-	$(LD) $(LDFLAGS) -o $@ \
-		ffmpeg/libswscale/*.o
+	$(LD) $(LDFLAGS) -alias_list $(WRAPPER_MACH_ALIAS)  -o $@ \
+		$(WRAPPER) ffmpeg/libswscale/*.o
 else
 	$(CC) $(SYSROOT) $(LDFLAGS) -o $@ \
 		ffmpeg/libswscale/*.o ffmpeg/libswscale/$(ARCH_DIR)/*.o
-	$(WRAPPER_OSX) $@;mv output.so $@
-	chmod +x $@
 endif
 
-$(SYSDIR)/postproc-51-$(ARCH).so: ffmpeg/libpostproc/libpostproc.dylib
+$(SYSDIR)/postproc-51-$(ARCH).so: $(WRAPPER) ffmpeg/libpostproc/libpostproc.dylib
 ifeq ($(findstring arm,$(ARCH)),arm)
-	$(LD) $(LDFLAGS) -o $@ \
-		ffmpeg/libpostproc/*.o
+	$(LD) $(LDFLAGS) -alias_list $(WRAPPER_MACH_ALIAS)  -o $@ \
+		$(WRAPPER) ffmpeg/libpostproc/*.o
 else
 	$(CC) $(SYSROOT) $(LDFLAGS) -o $@ \
 		ffmpeg/libpostproc/*.o
-	$(WRAPPER_OSX) $@;mv output.so $@
-	chmod +x $@
 endif
 
 ffmpeg/libavutil/libavutil.dylib     : ffmpeg;
@@ -132,29 +122,19 @@ ffmpeg/libpostproc/libpostproc.dylib : ffmpeg;
 ffmpeg:
 	$(MAKE) -C $@
 
-$(SYSDIR)/libdts-$(ARCH).so:  $(WRAPPER_OSX) libdts/libdts/libdts.a
-	$(CC) $(SYSROOT) $(LDFLAGS) \
-		-o $@ libdts/libdts/bitstream.o \
+$(SYSDIR)/libdts-$(ARCH).so: $(WRAPPER) libdts/libdts/libdts.a
+	$(CC) $(SYSROOT) $(LDFLAGS) -Wl,-alias_list,$(WRAPPER_MACH_ALIAS) -o $@ \
+		$(WRAPPER) libdts/libdts/bitstream.o \
 		libdts/libdts/downmix.o \
 		libdts/libdts/parse.o
-ifneq ($(findstring arm,$(ARCH)),arm)
-	$(WRAPPER_OSX) $@;mv output.so $@
-	chmod +x $@
-endif
 
-$(SYSDIR)/liba52-$(ARCH).so: $(WRAPPER_OSX) liba52/liba52/liba52.la
-	$(CC) $(SYSROOT) $(LDFLAGS) -o $@ \
-		liba52/liba52/.libs/*.o $(BUNDLE1_O)
-ifneq ($(findstring arm,$(ARCH)),arm)
-	$(WRAPPER_OSX) $@;mv output.so $@
-endif
+$(SYSDIR)/liba52-$(ARCH).so: $(WRAPPER) liba52/liba52/liba52.la
+	$(CC) $(SYSROOT) $(LDFLAGS) -Wl,-alias_list,$(WRAPPER_MACH_ALIAS) -o $@ \
+		$(WRAPPER) liba52/liba52/.libs/*.o $(BUNDLE1_O)
 
-$(SYSDIR)/libao-$(ARCH).so: $(WRAPPER_OSX) liba52/libao/libao.a
-	$(CC) $(SYSROOT) $(LDFLAGS) -o $@ \
-		liba52/libao/libao.a $(BUNDLE1_O)
-ifneq ($(findstring arm,$(ARCH)),arm)
-	$(WRAPPER_OSX) $@;mv output.so $@
-endif
+$(SYSDIR)/libao-$(ARCH).so: $(WRAPPER) liba52/libao/libao.a
+	$(CC) $(SYSROOT) $(LDFLAGS) -Wl,-alias_list,$(WRAPPER_MACH_ALIAS) -o $@ \
+		$(WRAPPER) liba52/libao/libao.a $(BUNDLE1_O)
 
 libdts/libdts/libdts.a : libdts;
 libdts:
