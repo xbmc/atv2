@@ -40,9 +40,6 @@ static void DeleteFile(const char* name)
 {
   unlink(name);
 }
-
-#include "xfile.h"
-
 #endif
 
 // helper functions

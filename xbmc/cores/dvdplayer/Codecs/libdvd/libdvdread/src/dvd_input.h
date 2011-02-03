@@ -45,11 +45,6 @@
 #   define wstat _wstati64
 #endif
 
-
-#if defined(__APPLE__) && defined(__arm__)
-#include "../../../../../DllLoader/exports/ios_wrap.h"
-#endif
-
 typedef struct dvd_input_s *dvd_input_t;
 
 /**

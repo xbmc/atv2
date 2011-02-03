@@ -31,10 +31,6 @@
 #include <sys/types.h>
 #include <inttypes.h>
 
-#if defined(__APPLE__) && defined(__arm__)
-#include "../../../../../DllLoader/exports/ios_wrap.h"
-#endif
-
 /**
  * The DVD access interface.
  *

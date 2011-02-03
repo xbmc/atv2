@@ -5,10 +5,6 @@
 #include <unistd.h>
 #endif /* _MSC_VER */
 
-#if defined(__APPLE__) && defined(__arm__)
-#include "../../../../../DllLoader/exports/ios_wrap.h"
-#endif
-
 #define CHECK_VALUE(arg) \
  if(!(arg)) { \
    fprintf(stderr, "\n*** libdvdread: CHECK_VALUE failed in %s:%i ***" \

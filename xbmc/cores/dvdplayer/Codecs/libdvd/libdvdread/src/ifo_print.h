@@ -23,10 +23,6 @@
 #include <inttypes.h>
 #include "ifo_types.h"
 
-#if defined(__APPLE__) && defined(__arm__)
-#include "../../../../../DllLoader/exports/ios_wrap.h"
-#endif
-
 void ifo_print(dvd_reader_t *dvd, int title);
 void dvdread_print_time(dvd_time_t *dtime);
 

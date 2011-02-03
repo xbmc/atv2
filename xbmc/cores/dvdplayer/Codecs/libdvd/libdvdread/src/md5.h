@@ -77,10 +77,6 @@ typedef u_int32_t md5_uint32;
 #define	__P(x) ()
 #endif
 
-#if defined(__APPLE__) && defined(__arm__)
-#include "../../../../../DllLoader/exports/ios_wrap.h"
-#endif
-
 /* Structure to save state of computation between the single steps.  */
 struct md5_ctx
 {

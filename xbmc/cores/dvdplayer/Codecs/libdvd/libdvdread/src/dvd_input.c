@@ -170,7 +170,7 @@ static dvd_input_t file_open(const char *target)
   dev->fd = open(target, O_RDONLY | O_BINARY);
 #endif
   if(dev->fd < 0) {
-    perror("libdvdread: Could not open input");
+    fprintf(stderr, "libdvdread: Could not open input, %s.\n", target);
     free(dev);
     return NULL;
   }
