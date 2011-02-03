@@ -2023,6 +2023,19 @@ bool CLinuxRendererGLES::SupportsMultiPassRendering()
 
 bool CLinuxRendererGLES::Supports(EINTERLACEMETHOD method)
 {
+  if(m_renderMethod & RENDER_OMXEGL)
+    return false;
+
+  if(m_renderMethod & RENDER_CVREF)
+    return false;
+
+  if(method == VS_INTERLACEMETHOD_NONE
+  || method == VS_INTERLACEMETHOD_AUTO)
+    return true;
+
+  if(method == VS_INTERLACEMETHOD_DEINTERLACE)
+    return true;
+
   return false;
 }
 
