@@ -10,7 +10,7 @@ ifeq ($(findstring osx,$(ARCH)),osx)
 ifeq ($(findstring arm,$(ARCH)),arm)
 LDFLAGS=-arch armv7 -iphoneos_version_min 4.1 -bundle -undefined dynamic_lookup -read_only_relocs suppress
 else
-LDFLAGS=-bundle -flat_namespace -undefined dynamic_lookup -read_only_relocs suppress
+LDFLAGS=-bundle -undefined dynamic_lookup -read_only_relocs suppress
 endif
 else
 LDFLAGS=-shared -fPIC -rdynamic
