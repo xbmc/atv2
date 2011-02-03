@@ -520,7 +520,7 @@ int           m_systemsleepTimeout;
   [[ATVSettingsFacade singleton] setScreenSaverTimeout: -1];
   [[ATVSettingsFacade singleton] flushDiskChanges];
 
-  [[BRBackgroundTaskManager singleton] holdOffBackgroundTasks];
+  // breaks in 4.2.1 [[BRBackgroundTaskManager singleton] holdOffBackgroundTasks];
 }
 
 - (void) enableScreenSaver
@@ -531,7 +531,7 @@ int           m_systemsleepTimeout;
   [[ATVSettingsFacade singleton] setScreenSaverTimeout: m_screensaverTimeout];
   [[ATVSettingsFacade singleton] flushDiskChanges];
 
-  [[BRBackgroundTaskManager singleton] okToDoBackgroundProcessing];
+  // breaks in 4.2.1 [[BRBackgroundTaskManager singleton] okToDoBackgroundProcessing];
 }
 
 - (XBMC_Event) translateCocoaToXBMCEvent: (unichar) c
