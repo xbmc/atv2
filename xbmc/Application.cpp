@@ -887,7 +887,7 @@ bool CApplication::InitDirectoriesOSX()
     CSpecialProtocol::SetTempPath(strTempPath);
 
     // xbmc.log file location
-    #if !defined(__arm__)
+    #if defined(__arm__)
       strTempPath = userHome + "/Library/Preferences";
     #endif
     CUtil::AddSlashAtEnd(strTempPath);
