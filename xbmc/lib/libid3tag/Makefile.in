@@ -11,7 +11,7 @@ CLEAN_FILES=libid3tag/compat.c libid3tag/frametype.c
 ifeq ($(findstring osx,$(ARCH)), osx)
 $(SLIB): libid3tag/.libs/libid3tag.dylib
 	$(CXX) $(LDFLAGS) -Wl,-alias_list,../../cores/DllLoader/exports/wrapper_mach_alias \
-		-bundle -flat_namespace -undefined dynamic_lookup -read_only_relocs suppress -fPIC \
+		-bundle -undefined dynamic_lookup -read_only_relocs suppress -fPIC \
 		-o $@ ../../cores/DllLoader/exports/wrapper.o libid3tag/.libs/*.o
 else
 $(SLIB): libid3tag/.libs/libid3tag.so

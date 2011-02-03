@@ -13,7 +13,7 @@ DIRS=..
 ifeq ($(findstring osx,$(ARCH)), osx)
 $(SLIB): ../libass/.libs/libass.dylib
 	$(CC) $(SYSROOT) $(LDFLAGS) -Wl,-alias_list,../../../xbmc/cores/DllLoader/exports/wrapper_mach_alias \
-		-bundle -flat_namespace -undefined dynamic_lookup -read_only_relocs suppress \
+		-bundle -undefined dynamic_lookup -read_only_relocs suppress \
 		-lfontconfig -o $@ ../../../xbmc/cores/DllLoader/exports/wrapper.o ../libass/.libs/*.o
 
 ../libass/.libs/libass.dylib: compile
