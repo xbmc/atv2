@@ -13,6 +13,7 @@ prefix_path=$(shell cd $(TOP); pwd)/build
 platform_sdk_path=${platform_path}/SDKs/${platform_os}${platform_sdk_version}.sdk
 platform_bin_path=${platform_path}/usr/bin
 
+export platform_sdk_version
 export NM=/usr/bin/nm
 export CPP=/usr/bin/cpp
 export CXXCPP=${CPP} -I${platform_sdk_path}/usr/include/c++/${platform_gcc_version}/${platform_host}
