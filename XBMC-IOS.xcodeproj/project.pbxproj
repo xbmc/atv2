@@ -10,6 +10,7 @@
 		18A0B34F129FC3A5007BB966 /* XBMC.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A0B34E129FC3A5007BB966 /* XBMC.png */; };
 		321B5FAD12B0075F00429E0F /* xbmcViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 321B5FAC12B0075F00429E0F /* xbmcViewController.xib */; };
 		321B63B012B2091400429E0F /* WinEventsIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 321B63AF12B2091400429E0F /* WinEventsIOS.mm */; };
+		3220D84012FB565C00F19FF7 /* libtalloc.dylib.1 in Frameworks */ = {isa = PBXBuildFile; fileRef = 3220D83F12FB565C00F19FF7 /* libtalloc.dylib.1 */; };
 		3226912612CDDC9300BC84D8 /* libfaad.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3226912512CDDC9300BC84D8 /* libfaad.dylib */; };
 		3226912812CDDCD500BC84D8 /* libvorbisfile.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3226912712CDDCD500BC84D8 /* libvorbisfile.dylib */; };
 		3255316612B2D02400837CD2 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3255316512B2D02400837CD2 /* CoreAudio.framework */; };
@@ -941,6 +942,7 @@
 		321B5FAC12B0075F00429E0F /* xbmcViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = xbmcViewController.xib; path = xbmc/osx/ios/xbmcViewController.xib; sourceTree = "<group>"; };
 		321B63AE12B208FF00429E0F /* WinEventsIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WinEventsIOS.h; sourceTree = "<group>"; };
 		321B63AF12B2091400429E0F /* WinEventsIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = WinEventsIOS.mm; sourceTree = "<group>"; };
+		3220D83F12FB565C00F19FF7 /* libtalloc.dylib.1 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; name = libtalloc.dylib.1; path = "tools/osx/ios-depends/build/lib/libtalloc.dylib.1"; sourceTree = "<group>"; };
 		3226912512CDDC9300BC84D8 /* libfaad.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfaad.dylib; path = "tools/osx/ios-depends/build/lib/libfaad.dylib"; sourceTree = "<group>"; };
 		3226912712CDDCD500BC84D8 /* libvorbisfile.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libvorbisfile.dylib; path = "tools/osx/ios-depends/build/lib/libvorbisfile.dylib"; sourceTree = "<group>"; };
 		3255316512B2D02400837CD2 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
@@ -2961,6 +2963,7 @@
 				3226912612CDDC9300BC84D8 /* libfaad.dylib in Frameworks */,
 				3226912812CDDCD500BC84D8 /* libvorbisfile.dylib in Frameworks */,
 				32EC393E12EAC808007D305C /* libcurl.dylib in Frameworks */,
+				3220D84012FB565C00F19FF7 /* libtalloc.dylib.1 in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5786,6 +5789,7 @@
 				F589AE1A1288DE0800D8079E /* libsamplerate.dylib */,
 				F5653BB4128B9441009C7ABB /* libcurl.dylib */,
 				F589AE181288DDFD00D8079E /* libsmbclient.dylib.0 */,
+				3220D83F12FB565C00F19FF7 /* libtalloc.dylib.1 */,
 				F589AE1E1288DE2700D8079E /* libfreetype.dylib */,
 				F589AE161288DDE400D8079E /* libfontconfig.dylib */,
 				F589AE381288DF1F00D8079E /* libmysqlclient.dylib */,
