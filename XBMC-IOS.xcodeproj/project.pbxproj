@@ -18,6 +18,7 @@
 		32D8145F12B0039C002F3874 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 32D8145E12B0039C002F3874 /* MainWindow.xib */; };
 		32EC393E12EAC808007D305C /* libcurl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F5653BB4128B9441009C7ABB /* libcurl.dylib */; };
 		F54D9E8112B713F8006870F9 /* libc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9E8012B713F8006870F9 /* libc.dylib */; };
+		F5656D7D12FBB75B0085ED7F /* libtdb.dylib.1 in Resources */ = {isa = PBXBuildFile; fileRef = F5656D7C12FBB75B0085ED7F /* libtdb.dylib.1 */; };
 		F56B13AF12CAE812009B4C96 /* libpython2.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F56B13AE12CAE812009B4C96 /* libpython2.6.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
 		F56B141112CAF053009B4C96 /* IOSCoreAudio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F56B140F12CAF053009B4C96 /* IOSCoreAudio.cpp */; };
 		F56B141412CAF0A3009B4C96 /* IOSAudioRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F56B141212CAF0A3009B4C96 /* IOSAudioRenderer.cpp */; };
@@ -954,6 +955,7 @@
 		8D576316048677EA00EA77CD /* XBMC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XBMC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F54D9E8012B713F8006870F9 /* libc.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libc.dylib; path = usr/lib/libc.dylib; sourceTree = SDKROOT; };
 		F5653BB4128B9441009C7ABB /* libcurl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.dylib; path = "tools/osx/ios-depends/build/lib/libcurl.dylib"; sourceTree = "<group>"; };
+		F5656D7C12FBB75B0085ED7F /* libtdb.dylib.1 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; fileEncoding = 4; name = libtdb.dylib.1; path = "tools/osx/ios-depends/build/lib/libtdb.dylib.1"; sourceTree = "<group>"; };
 		F56B13AE12CAE812009B4C96 /* libpython2.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpython2.6.dylib; path = "tools/osx/ios-depends/build/lib/libpython2.6.dylib"; sourceTree = "<group>"; };
 		F56B140F12CAF053009B4C96 /* IOSCoreAudio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IOSCoreAudio.cpp; sourceTree = "<group>"; };
 		F56B141012CAF053009B4C96 /* IOSCoreAudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOSCoreAudio.h; sourceTree = "<group>"; };
@@ -5790,6 +5792,7 @@
 				F5653BB4128B9441009C7ABB /* libcurl.dylib */,
 				F589AE181288DDFD00D8079E /* libsmbclient.dylib.0 */,
 				3220D83F12FB565C00F19FF7 /* libtalloc.dylib.1 */,
+				F5656D7C12FBB75B0085ED7F /* libtdb.dylib.1 */,
 				F589AE1E1288DE2700D8079E /* libfreetype.dylib */,
 				F589AE161288DDE400D8079E /* libfontconfig.dylib */,
 				F589AE381288DF1F00D8079E /* libmysqlclient.dylib */,
@@ -5882,6 +5885,7 @@
 				18A0B34F129FC3A5007BB966 /* XBMC.png in Resources */,
 				32D8145F12B0039C002F3874 /* MainWindow.xib in Resources */,
 				321B5FAD12B0075F00429E0F /* xbmcViewController.xib in Resources */,
+				F5656D7D12FBB75B0085ED7F /* libtdb.dylib.1 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
