@@ -142,13 +142,13 @@ bool iOS_HasVideoToolboxDecoder(void)
         {
           bDecoderAvailable = false;
           CLog::Log(LOGINFO, "VideoToolBox decoder not available. Use : sysctl -w security.mac.proc_enforce=0; sysctl -w security.mac.vnode_enforce=0\n");
-          NSLog(@"%s VideoToolBox decoder not available. Use : sysctl -w security.mac.proc_enforce=0; sysctl -w security.mac.vnode_enforce=0", __PRETTY_FUNCTION__);
+          //NSLog(@"%s VideoToolBox decoder not available. Use : sysctl -w security.mac.proc_enforce=0; sysctl -w security.mac.vnode_enforce=0", __PRETTY_FUNCTION__);
         }
         else
         {
           bDecoderAvailable = true;
           CLog::Log(LOGINFO, "VideoToolBox decoder available\n");
-          NSLog(@"%s VideoToolBox decoder available", __PRETTY_FUNCTION__);
+          //NSLog(@"%s VideoToolBox decoder available", __PRETTY_FUNCTION__);
         }  
       }
       else
@@ -156,7 +156,7 @@ bool iOS_HasVideoToolboxDecoder(void)
         bDecoderAvailable = true;
       }
       
-      NSLog(@"%s Executable path %s", __PRETTY_FUNCTION__, given_path);
+      //NSLog(@"%s Executable path %s", __PRETTY_FUNCTION__, given_path);
     }
     else
     {

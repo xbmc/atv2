@@ -55,8 +55,7 @@ extern NSString* kBRScreenSaverDismissed;
 //
 
 @interface XBMCController ()
-@property (nonatomic, retain) EAGLContext *context;
-@property (nonatomic, assign) CADisplayLink *displayLink;
+XBMCEAGLView  *m_glView;
 @end
 
 @interface UIApplication (extended)
@@ -64,25 +63,47 @@ extern NSString* kBRScreenSaverDismissed;
 @end
 
 @implementation XBMCController
-@synthesize animating, context, displayLink;
 @synthesize firstTouch;
 @synthesize lastTouch;
 @synthesize lastEvent;
+@synthesize screensize;
 
+//--------------------------------------------------------------
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-  if (interfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+  return YES;
+  
+  /*
+  if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) 
+  {
     return YES;
-  else if (interfaceOrientation == UIInterfaceOrientationLandscapeRight)
+  }
+  else if(interfaceOrientation == UIInterfaceOrientationLandscapeRight)
+  {
     return YES;
+  }
   else
+  {
     return NO;
-
+  }
+  */
 }
-
+//--------------------------------------------------------------
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
   orientation = toInterfaceOrientation;
+
+  CGRect rect;
+  CGRect srect = [[UIScreen mainScreen] bounds];
+  
+	if(toInterfaceOrientation == UIInterfaceOrientationPortrait || toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+    rect = srect;
+	} else if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+    rect.size = CGSizeMake( srect.size.height, srect.size.width );
+	}
+  
+	m_glView.frame = rect;
+  
 }
 
 - (UIInterfaceOrientation) getOrientation
@@ -104,8 +125,9 @@ extern NSString* kBRScreenSaverDismissed;
   newEvent.type = XBMC_KEYUP;
   CWinEventsIOS::MessagePush(&newEvent);
 }
-
-- (void)createGestureRecognizers {
+//--------------------------------------------------------------
+- (void)createGestureRecognizers 
+{
   
   UITapGestureRecognizer *singleFingerDTap = [[UITapGestureRecognizer alloc]
                                               initWithTarget:self action:@selector(handleSingleDoubleTap:)];  
@@ -129,20 +151,23 @@ extern NSString* kBRScreenSaverDismissed;
   [swipeRight release];
 
 }
-
-- (IBAction)handleSwipeLeft:(UISwipeGestureRecognizer *)sender {
+//--------------------------------------------------------------
+- (IBAction)handleSwipeLeft:(UISwipeGestureRecognizer *)sender 
+{
   //NSLog(@"%s swipeLeft", __PRETTY_FUNCTION__);
   [self sendKey:XBMCK_BACKSPACE];
 }
-
-- (IBAction)handleSwipeRight:(UISwipeGestureRecognizer *)sender {
+//--------------------------------------------------------------
+- (IBAction)handleSwipeRight:(UISwipeGestureRecognizer *)sender 
+{
   //NSLog(@"%s swipeRight", __PRETTY_FUNCTION__);
   [self sendKey:XBMCK_TAB];
 }
-
-- (IBAction)handleSingleDoubleTap:(UIGestureRecognizer *)sender {
-  firstTouch = [sender locationOfTouch:0 inView:self.view];
-  lastTouch = [sender locationOfTouch:0 inView:self.view];
+//--------------------------------------------------------------
+- (IBAction)handleSingleDoubleTap:(UIGestureRecognizer *)sender 
+{
+  firstTouch = [sender locationOfTouch:0 inView:m_glView];
+  lastTouch = [sender locationOfTouch:0 inView:m_glView];
   
   //NSLog(@"%s toubleTap", __PRETTY_FUNCTION__);
   
@@ -164,13 +189,14 @@ extern NSString* kBRScreenSaverDismissed;
   memset(&lastEvent, 0x0, sizeof(XBMC_Event));         
   
 }
-
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-  UITouch* touch = [[event touchesForView:self.view] anyObject];
-  firstTouch = [touch locationInView:self.view];
-  lastTouch = [touch locationInView:self.view];
+//--------------------------------------------------------------
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event 
+{
+  UITouch *touch = [touches anyObject];
+  firstTouch = [touch locationInView:m_glView];
+  lastTouch = [touch locationInView:m_glView];
   
-  //NSLog(@"%s touchesBegan x=%d, y=%d count=%d", __PRETTY_FUNCTION__, lastTouch.x, lastTouch.y, [touch tapCount]);
+  //NSLog(@"%s touchesBegan x=%f, y=%f count=%d", __PRETTY_FUNCTION__, lastTouch.x, lastTouch.y, [touch tapCount]);
 
   XBMC_Event newEvent;
   memset(&newEvent, 0, sizeof(newEvent));
@@ -185,12 +211,13 @@ extern NSString* kBRScreenSaverDismissed;
   /* Store the tap action for later */
   memcpy(&lastEvent, &newEvent, sizeof(XBMC_Event));
 }
-
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+//--------------------------------------------------------------
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event 
+{
   UITouch *touch = [touches anyObject];
-  lastTouch = [touch locationInView:self.view];
+  lastTouch = [touch locationInView:m_glView];
 
-  //NSLog(@"%s touchesMoved x=%d, y=%d count=%d", __PRETTY_FUNCTION__, lastTouch.x, lastTouch.y, touch.tapCount);
+  //NSLog(@"%s touchesMoved x=%f, y=%f count=%d", __PRETTY_FUNCTION__, lastTouch.x, lastTouch.y, touch.tapCount);
 
   static int nCount = 0;
   
@@ -213,12 +240,13 @@ extern NSString* kBRScreenSaverDismissed;
     
   }
 }
-
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+//--------------------------------------------------------------
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event 
+{
   UITouch *touch = [touches anyObject];
-  lastTouch = [touch locationInView:self.view];
+  lastTouch = [touch locationInView:m_glView];
   
-  //NSLog(@"%s touchesEnded x=%d, y=%d count=%d", __PRETTY_FUNCTION__, lastTouch.x, lastTouch.y, [touch tapCount]);
+  //NSLog(@"%s touchesEnded x=%f, y=%f count=%d", __PRETTY_FUNCTION__, lastTouch.x, lastTouch.y, [touch tapCount]);
 
   XBMC_Event newEvent;
   memcpy(&newEvent, &lastEvent, sizeof(XBMC_Event));
@@ -232,296 +260,126 @@ extern NSString* kBRScreenSaverDismissed;
   memset(&lastEvent, 0x0, sizeof(XBMC_Event));         
   
 }
-
-- (void)awakeFromNib
+//--------------------------------------------------------------
+- (id)initWithFrame:(CGRect)frame
 { 
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
+
+  self = [super init];
+  if ( !self )
+    return ( nil );
 
   NSNotificationCenter *center;
-  // first the default notification center, which is all
-  // notifications that only happen inside of our program
   center = [NSNotificationCenter defaultCenter];
   [center addObserver: self
-    selector: @selector(observeDefaultCenterStuff:)
-    name: nil
-    object: nil];
-	
-  CWinEventsIOS::Init();
-
-  EAGLContext *aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-	
-  if (!aContext)
-    NSLog(@"Failed to create ES context");
-  else if (![EAGLContext setCurrentContext:aContext])
-    NSLog(@"Failed to set ES context current");
-	
-  self.context = aContext;
-  [aContext release];
-	
-  [(XBMCEAGLView *)self.view setContext:context];
-  [(XBMCEAGLView *)self.view createFramebuffer];
-  [(XBMCEAGLView *)self.view setFramebuffer];
-
-  [self createGestureRecognizers];
+             selector: @selector(observeDefaultCenterStuff:)
+                 name: nil
+               object: nil];
   
-  animating = FALSE;
-  self.displayLink = nil;
-	
-  g_xbmcController = self;
-}
+  /* We start in landscape mode */
+  CGRect srect = frame;
+  srect.size = CGSizeMake( frame.size.height, frame.size.width );
+  orientation = UIInterfaceOrientationLandscapeLeft;
+  
+  m_glView = [[XBMCEAGLView alloc] initWithFrame: srect];
+  [m_glView setMultipleTouchEnabled:YES];
 
+  //[self setView: m_glView];
+
+  [self.view addSubview: m_glView];
+  
+  [self createGestureRecognizers];
+
+  g_xbmcController = self;
+  
+  return self;
+}
+//--------------------------------------------------------------
+-(void)viewDidLoad
+{
+  [super viewDidLoad];
+}
+//--------------------------------------------------------------
 - (void)dealloc
 {
-  NSLog(@"%s", __PRETTY_FUNCTION__);
+  [m_glView stopAnimation];
+  [m_glView release];
 
   NSNotificationCenter *center;
   // take us off the default center for our app
   center = [NSNotificationCenter defaultCenter];
   [center removeObserver: self];
 
-  // Tear down context.
-  if ([EAGLContext currentContext] == context)
-	  [EAGLContext setCurrentContext:nil];
-  self.context = nil;
-
-  CWinEventsIOS::DeInit();
-
-  [context release];	
-	
   [super dealloc];
 }
-
+//--------------------------------------------------------------
 - (void)viewWillAppear:(BOOL)animated
 {
   //NSLog(@"%s", __PRETTY_FUNCTION__);
 
   // move this later into CocoaPowerSyscall
   [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
-  [self startAnimation];
-	
+
+  [self resumeAnimation];
+
   [super viewWillAppear:animated];
 }
-
+//--------------------------------------------------------------
 - (void)viewWillDisappear:(BOOL)animated
 {  
   //NSLog(@"%s", __PRETTY_FUNCTION__);
   
-  [self stopAnimation];
+  [self pauseAnimation];
+  
   // move this later into CocoaPowerSyscall
   [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
 	
   [super viewWillDisappear:animated];
 }
-
+//--------------------------------------------------------------
 - (void)viewDidUnload
 {
-  //NSLog(@"%s", __PRETTY_FUNCTION__);
-  
-	[super viewDidUnload];
-	
-  // Tear down context.
-  if ([EAGLContext currentContext] == context)
-      [EAGLContext setCurrentContext:nil];
-	self.context = nil;
-}
-
-- (void)viewDidLoad
-{
-  [super viewDidLoad];
-  
-  self.view.multipleTouchEnabled=YES;  
-}
-
-- (void)presentFramebuffer
-{
-	
-	[(XBMCEAGLView *)self.view presentFramebuffer];
-}
-
-- (void)setFramebuffer
-{
-	
-	[(XBMCEAGLView *)self.view setFramebuffer];
-}
-
-- (void)startAnimation
-{
-  //NSLog(@"%s", __PRETTY_FUNCTION__);
-  
-	if (!animating)
-	{
-		animating = TRUE;
-    
-		// kick off an animation thread
-		animationThreadLock = [[NSConditionLock alloc] initWithCondition: FALSE];
-		animationThread = [[NSThread alloc] initWithTarget:self 
-												  selector:@selector(runAnimation:) 
-													object:animationThreadLock];
-		[animationThread start];
-		
-		[self initDisplayLink];
-	}
-	
-}
-
-- (void)stopAnimation
-{
-  //NSLog(@"%s", __PRETTY_FUNCTION__);
-
-	if (animating)
-	{
-		[self deinitDisplayLink];
-		animating = FALSE;
-		if(!g_application.m_bStop)
-      g_application.Stop();
-		// wait for animation thread to die
-		if ([animationThread isFinished] == NO)
-			[animationThreadLock lockWhenCondition:TRUE];
-    [self.displayLink invalidate];
-    self.displayLink = nil;
-    animating = FALSE;
-	}
-}
-
-//--------------------------------------------------------------
-- (void) runAnimation:(id) arg
-{
-	//NSLog(@"%s", __PRETTY_FUNCTION__);
-  CCocoaAutoPool outerpool;
-	
-	//[NSThread setThreadPriority:1]
-	// Changing to SCHED_RR is safe under OSX, you don't need elevated privileges and the
-	// OSX scheduler will monitor SCHED_RR threads and drop to SCHED_OTHER if it detects
-	// the thread running away. OSX automatically does this with the CoreAudio audio
-	// device handler thread.
-	int32_t result;
-	thread_extended_policy_data_t theFixedPolicy;
-	
-	// make thread fixed, set to 'true' for a non-fixed thread
-	theFixedPolicy.timeshare = false;
-	result = thread_policy_set(pthread_mach_thread_np(pthread_self()), THREAD_EXTENDED_POLICY, 
-							   (thread_policy_t)&theFixedPolicy, THREAD_EXTENDED_POLICY_COUNT);
-	
-	int policy;
-	struct sched_param param;
-	result = pthread_getschedparam(pthread_self(), &policy, &param );
-	// change from default SCHED_OTHER to SCHED_RR
-	policy = SCHED_RR;
-	result = pthread_setschedparam(pthread_self(), policy, &param );
-	
-	// signal we are alive
-	NSConditionLock* myLock = arg;
-	[myLock lock];
-	
-#ifdef _DEBUG
-    g_advancedSettings.m_logLevel     = LOG_LEVEL_DEBUG;
-    g_advancedSettings.m_logLevelHint = LOG_LEVEL_DEBUG;
-#else
-    g_advancedSettings.m_logLevel     = LOG_LEVEL_NORMAL;
-    g_advancedSettings.m_logLevelHint = LOG_LEVEL_NORMAL;
-#endif
-	
-	// Prevent child processes from becoming zombies on exit if not waited upon. See also Util::Command
-	struct sigaction sa;
-	memset(&sa, 0, sizeof(sa));
-	sa.sa_flags = SA_NOCLDWAIT;
-	sa.sa_handler = SIG_IGN;
-	sigaction(SIGCHLD, &sa, NULL);
-  
-	setlocale(LC_NUMERIC, "C");
-	g_advancedSettings.Initialize();
-	
-	g_advancedSettings.m_startFullScreen = true;
-  g_application.SetStandAlone(true);
-	
-	g_application.Preflight();
-	if (g_application.Create())
-	{
-		try
-		{
-      CCocoaAutoPool innerpool;
-      g_application.Run();
-			g_Windowing.DestroyWindow();
-		}
-		catch(...)
-		{
-			NSLog(@"%sException caught on main loop. Exiting", __PRETTY_FUNCTION__);
-		}
-	}
-	else
-	{
-		NSLog(@"%sUnable to create application", __PRETTY_FUNCTION__);
-	}
-	
-	// signal we are dead
-	[myLock unlockWithCondition:TRUE];
-
-  CWinEventsIOS::DeInit();
-  [[UIApplication sharedApplication] terminateWithSuccess];
-	
-	//NSLog(@"%s:exit", __PRETTY_FUNCTION__);
-}
-//--------------------------------------------------------------
-- (void) runDisplayLink;
-{
-	//NSLog(@"%s", __PRETTY_FUNCTION__);
-	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-	displayFPS = 1.0 / [displayLink duration];
-	if (animationThread && [animationThread isExecuting] == YES)
-	{
-		if (g_VideoReferenceClock)
-			g_VideoReferenceClock.VblankHandler(CurrentHostCounter(), displayFPS);
-	}
-	[pool release];
+	[super viewDidUnload];	
 }
 //--------------------------------------------------------------
 - (void) initDisplayLink
 {
-	//NSLog(@"%s", __PRETTY_FUNCTION__);
-	CADisplayLink *aDisplayLink = [NSClassFromString(@"CADisplayLink") 
-				   displayLinkWithTarget:self
-				   selector:@selector(runDisplayLink)];
-	[aDisplayLink setFrameInterval:1];
-	[aDisplayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-	self.displayLink = aDisplayLink;
-	displayFPS = 60;
+	[m_glView initDisplayLink];
 }
 //--------------------------------------------------------------
 - (void) deinitDisplayLink
 {
-	//NSLog(@"%s", __PRETTY_FUNCTION__);
-	[displayLink invalidate];
-	displayLink = nil;
+  [m_glView deinitDisplayLink];
 }
 //--------------------------------------------------------------
 - (double) getDisplayLinkFPS;
 {
-	//NSLog(@"%s:displayFPS(%f)", __PRETTY_FUNCTION__, displayFPS);
-	return displayFPS;
+  return [m_glView getDisplayLinkFPS];
 }
+//--------------------------------------------------------------
+- (void) setFramebuffer
+{
+  [m_glView setFramebuffer];
+}
+//--------------------------------------------------------------
+- (bool) presentFramebuffer
+{
+  return [m_glView presentFramebuffer];
+}
+//--------------------------------------------------------------
 - (CGSize) getScreenSize
 {
-  CGSize screensize;
-
-  if (orientation == UIInterfaceOrientationPortrait)
-  {
-    screensize.width  = [[UIScreen mainScreen] bounds].size.width;
-    screensize.height = [[UIScreen mainScreen] bounds].size.height;
-  }
-  else
-  {
-    screensize.height = [[UIScreen mainScreen] bounds].size.width;
-    screensize.width  = [[UIScreen mainScreen] bounds].size.height;
-  }
+  screensize.width  = m_glView.bounds.size.width;
+  screensize.height = m_glView.bounds.size.height;  
   return screensize;
 }
-
+//--------------------------------------------------------------
 - (BOOL) recreateOnReselect
 { 
   //NSLog(@"%s", __PRETTY_FUNCTION__);
   return YES;
 }
-
+//--------------------------------------------------------------
 - (void)didReceiveMemoryWarning
 {
   // Releases the view if it doesn't have a superview.
@@ -529,6 +387,62 @@ extern NSString* kBRScreenSaverDismissed;
 
   // Release any cached data, images, etc. that aren't in use.
 }
+//--------------------------------------------------------------
+- (void) disableSystemSleep
+{
+}
+//--------------------------------------------------------------
+- (void) enableSystemSleep
+{
+}
+//--------------------------------------------------------------
+- (void) disableScreenSaver
+{
+}
+//--------------------------------------------------------------
+- (void) enableScreenSaver
+{
+}
+//--------------------------------------------------------------
+- (void)pauseAnimation
+{
+  XBMC_Event newEvent;
+  memcpy(&newEvent, &lastEvent, sizeof(XBMC_Event));
+  
+  newEvent.appcommand.type = XBMC_APPCOMMAND;
+  newEvent.appcommand.action = ACTION_PLAYER_PLAYPAUSE;
+  CWinEventsIOS::MessagePush(&newEvent);
+  
+  /* Give player time to pause */
+  Sleep(2000);
+  //NSLog(@"%s", __PRETTY_FUNCTION__);
+  
+  [m_glView pauseAnimation];
+  
+}
+//--------------------------------------------------------------
+- (void)resumeAnimation
+{  
+  XBMC_Event newEvent;
+  memcpy(&newEvent, &lastEvent, sizeof(XBMC_Event));
+  
+  newEvent.appcommand.type = XBMC_APPCOMMAND;
+  newEvent.appcommand.action = ACTION_PLAYER_PLAY;
+  CWinEventsIOS::MessagePush(&newEvent);    
+    
+  [m_glView resumeAnimation];
+}
+//--------------------------------------------------------------
+- (void)startAnimation
+{
+  [m_glView startAnimation];
+}
+//--------------------------------------------------------------
+- (void)stopAnimation
+{
+  [m_glView stopAnimation];
+}
+//--------------------------------------------------------------
 
 #pragma mark -
 #pragma mark private helper methods

@@ -23,64 +23,67 @@
 #import "XBMCController.h"
 
 @implementation XBMCApplicationDelegate
-
-@synthesize window;
-@synthesize xbmcController;
-
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-  //NSLog(@"%s", __PRETTY_FUNCTION__);
-  [self.window addSubview:self.xbmcController.view];
-  return YES;
-}
+XBMCController *m_xbmcController;  
+UIWindow *m_window;
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-  [self.xbmcController startAnimation];
+  [m_xbmcController resumeAnimation];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-  [self.xbmcController startAnimation];
-}
-
-- (void)applicationWillTerminate:(UIApplication *)application
-{
-  [self.xbmcController stopAnimation];
+  [m_xbmcController resumeAnimation];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-  // Handle any background procedures not related to animation here.
+  [m_xbmcController pauseAnimation];
+}
+
+- (void)applicationWillTerminate:(UIApplication *)application
+{
+  [m_xbmcController pauseAnimation];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-  // Handle any foreground procedures not related to animation here.
+  [m_xbmcController resumeAnimation];
 }
 
-/*
-- (void)applicationDidFinishLaunching:(UIApplication *)application { 
-  xbmcController = [[XBMCController alloc]initWithNibName:@"xbmcController" bundle:nil];
-	
-  NSLog(@"%s", __PRETTY_FUNCTION__);
-  [window addSubview:[xbmcController view]];
-  [window makeKeyAndVisible];
+- (void)applicationDidFinishLaunching:(UIApplication *)application 
+{
+  m_window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+
+  /* Turn off autoresizing */
+  m_window.autoresizingMask = 0;
+  m_window.autoresizesSubviews = NO;
+
+  m_xbmcController = [[XBMCController alloc] initWithFrame: [m_window bounds]];  
+  m_xbmcController.wantsFullScreenLayout = YES;
+  
+  //m_window.rootViewController = m_xbmcController;
+  
+  [m_window addSubview: m_xbmcController.view];
+  [m_window makeKeyAndVisible];
+  
+  [m_xbmcController startAnimation];
 }
-*/
 
 - (void)dealloc
 {
-    [xbmcController release];
-    [window release];
+  [m_xbmcController stopAnimation];
+  [m_xbmcController release];
+  [m_window release];
 	
-    [super dealloc];
+  [super dealloc];
 }
 @end
 
 int main(int argc, char *argv[]) {
-    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];	
-
+  NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];	
+  int retVal = 0;
+  
   // Block SIGPIPE
   // SIGPIPE repeatably kills us, turn it off
   {
@@ -90,13 +93,10 @@ int main(int argc, char *argv[]) {
     sigprocmask(SIG_BLOCK, &set, NULL);
   }
   
-  //NSLog(@"%s", __PRETTY_FUNCTION__);
-
   @try
   {
-    
-    UIApplicationMain(argc, argv, nil, nil);
-  
+    retVal = UIApplicationMain(argc,argv,@"UIApplication",@"XBMCApplicationDelegate");
+    //UIApplicationMain(argc, argv, nil, nil);
   } 
   @catch (id theException) 
   {
@@ -109,6 +109,6 @@ int main(int argc, char *argv[]) {
     
   [pool release];
 	
-  return noErr;
+  return retVal;
 
 }
