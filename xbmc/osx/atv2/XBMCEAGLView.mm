@@ -43,22 +43,6 @@
 #import "XBMCController.h"
 #import "iOSUtils.h"
 
-// uniform index
-enum {
-	UNIFORM_MODELVIEW_PROJECTION_MATRIX,
-	NUM_UNIFORMS
-};
-GLint uniforms[NUM_UNIFORMS];
-
-// attribute index
-enum {
-	ATTRIB_VERTEX,
-	ATTRIB_COLOR,
-	NUM_ATTRIBUTES
-};
-
-
-//--------------------------------------------------------------
 //--------------------------------------------------------------
 @interface XBMCEAGLView (PrivateMethods)
 - (void) setContext:(EAGLContext *)newContext;

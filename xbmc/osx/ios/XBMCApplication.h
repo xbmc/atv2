@@ -18,13 +18,7 @@
 
 #import <UIKit/UIKit.h>
 
-@class XBMCController;
-
 @interface XBMCApplicationDelegate : NSObject <UIApplicationDelegate> {
-	UIWindow *window;
-	XBMCController *xbmcController;
 }
-@property (nonatomic, retain) IBOutlet UIWindow *window;
-@property (nonatomic, retain) IBOutlet XBMCController *xbmcController;
 @end
 

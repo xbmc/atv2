@@ -8,14 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		18A0B34F129FC3A5007BB966 /* XBMC.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A0B34E129FC3A5007BB966 /* XBMC.png */; };
-		321B5FAD12B0075F00429E0F /* xbmcViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 321B5FAC12B0075F00429E0F /* xbmcViewController.xib */; };
 		321B63B012B2091400429E0F /* WinEventsIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 321B63AF12B2091400429E0F /* WinEventsIOS.mm */; };
 		3220D84012FB565C00F19FF7 /* libtalloc.dylib.1 in Frameworks */ = {isa = PBXBuildFile; fileRef = 3220D83F12FB565C00F19FF7 /* libtalloc.dylib.1 */; };
 		3226912612CDDC9300BC84D8 /* libfaad.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3226912512CDDC9300BC84D8 /* libfaad.dylib */; };
 		3226912812CDDCD500BC84D8 /* libvorbisfile.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3226912712CDDCD500BC84D8 /* libvorbisfile.dylib */; };
 		3255316612B2D02400837CD2 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3255316512B2D02400837CD2 /* CoreAudio.framework */; };
 		3270F20112CDEB560043E5FA /* AutoPool.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3270F20012CDEB560043E5FA /* AutoPool.mm */; };
-		32D8145F12B0039C002F3874 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 32D8145E12B0039C002F3874 /* MainWindow.xib */; };
 		32EC393E12EAC808007D305C /* libcurl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F5653BB4128B9441009C7ABB /* libcurl.dylib */; };
 		F54D9E8112B713F8006870F9 /* libc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9E8012B713F8006870F9 /* libc.dylib */; };
 		F5656D7D12FBB75B0085ED7F /* libtdb.dylib.1 in Resources */ = {isa = PBXBuildFile; fileRef = F5656D7C12FBB75B0085ED7F /* libtdb.dylib.1 */; };
@@ -940,7 +938,6 @@
 
 /* Begin PBXFileReference section */
 		18A0B34E129FC3A5007BB966 /* XBMC.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = XBMC.png; path = xbmc/osx/ios/XBMC.png; sourceTree = "<group>"; };
-		321B5FAC12B0075F00429E0F /* xbmcViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = xbmcViewController.xib; path = xbmc/osx/ios/xbmcViewController.xib; sourceTree = "<group>"; };
 		321B63AE12B208FF00429E0F /* WinEventsIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WinEventsIOS.h; sourceTree = "<group>"; };
 		321B63AF12B2091400429E0F /* WinEventsIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = WinEventsIOS.mm; sourceTree = "<group>"; };
 		3220D83F12FB565C00F19FF7 /* libtalloc.dylib.1 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; name = libtalloc.dylib.1; path = "tools/osx/ios-depends/build/lib/libtalloc.dylib.1"; sourceTree = "<group>"; };
@@ -951,7 +948,6 @@
 		3270F20012CDEB560043E5FA /* AutoPool.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AutoPool.mm; sourceTree = "<group>"; };
 		32BD82A512E4B13B00516E4E /* DVDDemuxVobsub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVDDemuxVobsub.h; sourceTree = "<group>"; };
 		32BD82A612E4B14900516E4E /* DVDFactoryDemuxer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVDFactoryDemuxer.h; sourceTree = "<group>"; };
-		32D8145E12B0039C002F3874 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MainWindow.xib; path = xbmc/osx/ios/MainWindow.xib; sourceTree = "<group>"; };
 		8D576316048677EA00EA77CD /* XBMC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XBMC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F54D9E8012B713F8006870F9 /* libc.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libc.dylib; path = usr/lib/libc.dylib; sourceTree = SDKROOT; };
 		F5653BB4128B9441009C7ABB /* libcurl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.dylib; path = "tools/osx/ios-depends/build/lib/libcurl.dylib"; sourceTree = "<group>"; };
@@ -2975,8 +2971,6 @@
 		089C166AFE841209C02AAC07 /* XBMC-frapp */ = {
 			isa = PBXGroup;
 			children = (
-				321B5FAC12B0075F00429E0F /* xbmcViewController.xib */,
-				32D8145E12B0039C002F3874 /* MainWindow.xib */,
 				F589A10412879A8800D8079E /* guilib */,
 				F589A22312879A9900D8079E /* xbmc */,
 				F589AE6D12890B6700D8079E /* Internal Libs */,
@@ -5883,8 +5877,6 @@
 			files = (
 				F589ACBB1287A72900D8079E /* InfoPlist.strings in Resources */,
 				18A0B34F129FC3A5007BB966 /* XBMC.png in Resources */,
-				32D8145F12B0039C002F3874 /* MainWindow.xib in Resources */,
-				321B5FAD12B0075F00429E0F /* xbmcViewController.xib in Resources */,
 				F5656D7D12FBB75B0085ED7F /* libtdb.dylib.1 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7018,7 +7010,7 @@
 				DEAD_CODE_STRIPPING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_MODEL_TUNING = "";
-				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_THUMB_SUPPORT = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -7042,7 +7034,7 @@
 				DEAD_CODE_STRIPPING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_MODEL_TUNING = "";
-				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_THUMB_SUPPORT = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;

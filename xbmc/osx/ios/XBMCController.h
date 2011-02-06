@@ -27,19 +27,11 @@
 @interface XBMCController : UIViewController
 {
   int m_screensaverTimeout;
-  UIViewController *m_controller;
 	
-  EAGLContext *context;
-  CADisplayLink *displayLink;
-
-  NSConditionLock* animationThreadLock;
-  NSThread* animationThread;
-	
-  CFTimeInterval displayFPS;
-
   /* Touch handling */
   CGPoint firstTouch;
   CGPoint lastTouch;
+  CGSize screensize;
 	
   UIInterfaceOrientation orientation;
 
@@ -48,9 +40,12 @@
 @property (readonly, nonatomic, getter=isAnimating) BOOL animating;
 @property CGPoint firstTouch;
 @property CGPoint lastTouch;
+@property CGSize screensize;
 @property XBMC_Event lastEvent;
 
 // message from which our instance is obtained
+- (void)pauseAnimation;
+- (void)resumeAnimation;
 - (void)startAnimation;
 - (void)stopAnimation;
 - (void) sendKey: (XBMCKey) key;
@@ -58,13 +53,15 @@
 - (void) initDisplayLink;
 - (void) deinitDisplayLink;
 - (double) getDisplayLinkFPS;
-- (void) startAnimation;
-- (void) stopAnimation;
 - (void) setFramebuffer;
-- (void) presentFramebuffer;
+- (bool) presentFramebuffer;
 - (CGSize) getScreenSize;
 - (UIInterfaceOrientation) getOrientation;
 - (void)createGestureRecognizers;
+- (void) disableSystemSleep;
+- (void) enableSystemSleep;
+- (void) disableScreenSaver;
+- (void) enableScreenSaver;
 @end
 
 extern XBMCController *g_xbmcController;
