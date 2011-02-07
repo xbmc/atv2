@@ -71,9 +71,6 @@ XBMCEAGLView  *m_glView;
 //--------------------------------------------------------------
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-  return YES;
-  
-  /*
   if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) 
   {
     return YES;
@@ -86,7 +83,6 @@ XBMCEAGLView  *m_glView;
   {
     return NO;
   }
-  */
 }
 //--------------------------------------------------------------
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
