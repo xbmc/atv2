@@ -20,7 +20,6 @@
  *
  */
 #if !defined(__arm__)
-#include <memory>
 #if 0
   // An opaque reference representing a CFNetService.
   typedef struct __CFNetService* CFNetServiceRef;
@@ -28,6 +27,11 @@
   #include <Carbon/Carbon.h>
   #include <CoreServices/CoreServices.h>
 #endif
+#else
+  #include <CFNetwork/CFNetServices.h>
+#endif
+
+#include <memory>
 #include <CoreFoundation/CoreFoundation.h>
 
 #include "Zeroconf.h"
@@ -63,4 +67,3 @@ private:
   typedef std::map<std::string, CFNetServiceRef> tServiceMap;
   tServiceMap m_services;
 };
-#endif

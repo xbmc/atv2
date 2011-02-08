@@ -20,14 +20,16 @@
  *
  */
 
-#if !defined(__arm__)
 #include <memory>
 #include <map>
 
+#include <CoreFoundation/CoreFoundation.h>
 #include "ZeroconfBrowser.h"
+
 #include <Thread.h>
 #include <CriticalSection.h>
 
+#if !defined(__arm__)
 #if 0
   // An opaque reference representing a CFNetService.
   typedef struct __CFNetService* CFNetServiceRef;
@@ -37,7 +39,10 @@
   #include <Carbon/Carbon.h>
   #include <CoreServices/CoreServices.h>
 #endif
-#include <CoreFoundation/CoreFoundation.h>
+#else
+  #include <CFNetwork/CFNetServices.h>
+#endif
+
 
 //platform specific implementation of  zeroconfbrowser interface using native os x APIs
 class CZeroconfBrowserOSX : public CZeroconfBrowser
@@ -80,4 +85,3 @@ private:
   typedef std::map<CFNetServiceBrowserRef, std::vector<std::pair<ZeroconfService, unsigned int> > > tDiscoveredServicesMap;
   tDiscoveredServicesMap m_discovered_services;
 };
-#endif
