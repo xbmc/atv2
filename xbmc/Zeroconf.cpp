@@ -123,7 +123,7 @@ CZeroconf*  CZeroconf::GetInstance()
 #ifndef HAS_ZEROCONF
     smp_instance = new CZeroconfDummy;
 #else
-#if definded(__APPLE__)
+#if defined(__APPLE__)
     smp_instance = new CZeroconfOSX;
 #elif defined(_LINUX)
     smp_instance  = new CZeroconfAvahi;
