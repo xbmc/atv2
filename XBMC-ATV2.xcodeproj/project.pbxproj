@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		18A0B34F129FC3A5007BB966 /* XBMC.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A0B34E129FC3A5007BB966 /* XBMC.png */; };
 		322D9BAF12CDEF9400400943 /* AutoPool.mm in Sources */ = {isa = PBXBuildFile; fileRef = 322D9BAE12CDEF9400400943 /* AutoPool.mm */; };
+		4D5D2E131301753F006ABC13 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D5D2E121301753F006ABC13 /* CFNetwork.framework */; };
 		F51BD1F112CA77B500B8BD20 /* libpython2.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F51BD1F012CA77B500B8BD20 /* libpython2.6.dylib */; };
 		F54D9DD812B56A7D006870F9 /* libfaad.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9DD712B56A7D006870F9 /* libfaad.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
 		F54D9DDA12B56A9C006870F9 /* libvorbisfile.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9DD912B56A9C006870F9 /* libvorbisfile.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -941,6 +942,7 @@
 		18A0B34E129FC3A5007BB966 /* XBMC.png */ = {isa = PBXFileReference; explicitFileType = image.png; name = XBMC.png; path = xbmc/osx/atv2/XBMC.png; sourceTree = "<group>"; };
 		322D9BAD12CDEF9400400943 /* AutoPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoPool.h; sourceTree = "<group>"; };
 		322D9BAE12CDEF9400400943 /* AutoPool.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AutoPool.mm; sourceTree = "<group>"; };
+		4D5D2E121301753F006ABC13 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		8D576316048677EA00EA77CD /* XBMC.frappliance */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XBMC.frappliance; sourceTree = BUILT_PRODUCTS_DIR; };
 		F51BD1F012CA77B500B8BD20 /* libpython2.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpython2.6.dylib; path = "tools/osx/ios-depends/build/lib/libpython2.6.dylib"; sourceTree = "<group>"; };
 		F54D9DD712B56A7D006870F9 /* libfaad.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfaad.dylib; path = "tools/osx/ios-depends/build/lib/libfaad.dylib"; sourceTree = "<group>"; };
@@ -2966,6 +2968,7 @@
 				F56B15FF12CD695C009B4C96 /* CoreGraphics.framework in Frameworks */,
 				F56B161B12CD69DB009B4C96 /* ImageIO.framework in Frameworks */,
 				F55E026612EB5F84003E067B /* libcurl.dylib in Frameworks */,
+				4D5D2E131301753F006ABC13 /* CFNetwork.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3004,6 +3007,7 @@
 				F589AE421288E02000D8079E /* libiconv.dylib */,
 				F589AE521288E20900D8079E /* libsqlite3.dylib */,
 				F589AE4A1288E09200D8079E /* libncurses.dylib */,
+				4D5D2E121301753F006ABC13 /* CFNetwork.framework */,
 				F5899DCD1287212700D8079E /* Foundation.framework */,
 				F5899DCC1287212700D8079E /* UIKit.framework */,
 				F5899DCA1287212700D8079E /* QuartzCore.framework */,
