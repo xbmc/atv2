@@ -15,6 +15,7 @@
 		3255316612B2D02400837CD2 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3255316512B2D02400837CD2 /* CoreAudio.framework */; };
 		3270F20112CDEB560043E5FA /* AutoPool.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3270F20012CDEB560043E5FA /* AutoPool.mm */; };
 		32EC393E12EAC808007D305C /* libcurl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F5653BB4128B9441009C7ABB /* libcurl.dylib */; };
+		4D5D2E1E1301758F006ABC13 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D5D2E1D1301758F006ABC13 /* CFNetwork.framework */; };
 		F54D9E8112B713F8006870F9 /* libc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9E8012B713F8006870F9 /* libc.dylib */; };
 		F5656D7D12FBB75B0085ED7F /* libtdb.dylib.1 in Resources */ = {isa = PBXBuildFile; fileRef = F5656D7C12FBB75B0085ED7F /* libtdb.dylib.1 */; };
 		F56B13AF12CAE812009B4C96 /* libpython2.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F56B13AE12CAE812009B4C96 /* libpython2.6.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -948,6 +949,7 @@
 		3270F20012CDEB560043E5FA /* AutoPool.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AutoPool.mm; sourceTree = "<group>"; };
 		32BD82A512E4B13B00516E4E /* DVDDemuxVobsub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVDDemuxVobsub.h; sourceTree = "<group>"; };
 		32BD82A612E4B14900516E4E /* DVDFactoryDemuxer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVDFactoryDemuxer.h; sourceTree = "<group>"; };
+		4D5D2E1D1301758F006ABC13 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		8D576316048677EA00EA77CD /* XBMC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XBMC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F54D9E8012B713F8006870F9 /* libc.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libc.dylib; path = usr/lib/libc.dylib; sourceTree = SDKROOT; };
 		F5653BB4128B9441009C7ABB /* libcurl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.dylib; path = "tools/osx/ios-depends/build/lib/libcurl.dylib"; sourceTree = "<group>"; };
@@ -2962,6 +2964,7 @@
 				3226912812CDDCD500BC84D8 /* libvorbisfile.dylib in Frameworks */,
 				32EC393E12EAC808007D305C /* libcurl.dylib in Frameworks */,
 				3220D84012FB565C00F19FF7 /* libtalloc.dylib.1 in Frameworks */,
+				4D5D2E1E1301758F006ABC13 /* CFNetwork.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3000,6 +3003,7 @@
 				F589AE421288E02000D8079E /* libiconv.dylib */,
 				F589AE521288E20900D8079E /* libsqlite3.dylib */,
 				F589AE4A1288E09200D8079E /* libncurses.dylib */,
+				4D5D2E1D1301758F006ABC13 /* CFNetwork.framework */,
 				F5899DCD1287212700D8079E /* Foundation.framework */,
 				F5899DCC1287212700D8079E /* UIKit.framework */,
 				F5899DCA1287212700D8079E /* QuartzCore.framework */,
