@@ -8,7 +8,7 @@ include ../config.mk
 
 # lib name, version
 LIBNAME=samba
-VERSION=3.4.7
+VERSION=3.5.6
 SOURCE=$(LIBNAME)-$(VERSION)
 # download location and format
 #BASE_URL=http://mirrors.xbmc.org/build-deps/darwin-libs
@@ -93,7 +93,6 @@ $(SOURCE): $(ARCHIVE)
 	-rm -rf $(SOURCE)
 	$(ARCHIVE_TOOL) $(ARCHIVE_TOOL_FLAGS) $(ARCHIVE)
 	echo $(SOURCE) >> .gitignore
-	cd $(SOURCE); patch -p1 < ../01-spnego-auth-win7.patch
 	cd $(SOURCE)/source3; ./autogen.sh
 	cd $(SOURCE)/source3; $(CONFIGURE)
 	cp -f /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(platform_sdk_version).sdk/usr/include/crt_externs.h $(PREFIX)/include/
@@ -104,15 +103,15 @@ $(LIBDYLIB): $(SOURCE)
 .installed:
 	cp -f $(SOURCE)/source3/include/libsmbclient.h $(PREFIX)/include/
 	cp -f $(SOURCE)/source3/bin/libtdb.dylib.1 $(PREFIX)/lib/
-	cp -f $(SOURCE)/source3/bin/libtalloc.dylib.1 $(PREFIX)/lib/
+	cp -f $(SOURCE)/source3/bin/libtalloc.dylib.2 $(PREFIX)/lib/
 	cp -f $(SOURCE)/source3/bin/libsmbclient.dylib.0 $(PREFIX)/lib/
 	cd $(PREFIX)/lib; ln -sf libsmbclient.dylib.0 libsmbclient.dylib
 	install_name_tool -id $(PREFIX)/lib/libtdb.dylib.1 $(PREFIX)/lib/libtdb.dylib.1
-	install_name_tool -id $(PREFIX)/lib/libtalloc.dylib.1 $(PREFIX)/lib/libtalloc.dylib.1
+	install_name_tool -id $(PREFIX)/lib/libtalloc.dylib.2 $(PREFIX)/lib/libtalloc.dylib.2
 	install_name_tool -id $(PREFIX)/lib/libsmbclient.dylib.0 $(PREFIX)/lib/libsmbclient.dylib.0
 	install_name_tool -change bin/libtdb.dylib.1 $(PREFIX)/lib/libtdb.dylib.1 \
                 $(PREFIX)/lib/libsmbclient.dylib.0
-	install_name_tool -change bin/libtalloc.dylib.1 $(PREFIX)/lib/libtalloc.dylib.1 \
+	install_name_tool -change bin/libtalloc.dylib.2 $(PREFIX)/lib/libtalloc.dylib.2 \
 		$(PREFIX)/lib/libsmbclient.dylib.0
 	touch $@
 

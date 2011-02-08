@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		18A0B34F129FC3A5007BB966 /* XBMC.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A0B34E129FC3A5007BB966 /* XBMC.png */; };
 		321B63B012B2091400429E0F /* WinEventsIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 321B63AF12B2091400429E0F /* WinEventsIOS.mm */; };
-		3220D84012FB565C00F19FF7 /* libtalloc.dylib.1 in Frameworks */ = {isa = PBXBuildFile; fileRef = 3220D83F12FB565C00F19FF7 /* libtalloc.dylib.1 */; };
+		3220D84012FB565C00F19FF7 /* libtalloc.dylib.2 in Frameworks */ = {isa = PBXBuildFile; fileRef = 3220D83F12FB565C00F19FF7 /* libtalloc.dylib.2 */; };
 		3226912612CDDC9300BC84D8 /* libfaad.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3226912512CDDC9300BC84D8 /* libfaad.dylib */; };
 		3226912812CDDCD500BC84D8 /* libvorbisfile.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3226912712CDDCD500BC84D8 /* libvorbisfile.dylib */; };
 		3255316612B2D02400837CD2 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3255316512B2D02400837CD2 /* CoreAudio.framework */; };
@@ -17,8 +17,8 @@
 		32EC393E12EAC808007D305C /* libcurl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F5653BB4128B9441009C7ABB /* libcurl.dylib */; };
 		4D5D2E1E1301758F006ABC13 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D5D2E1D1301758F006ABC13 /* CFNetwork.framework */; };
 		F54D9E8112B713F8006870F9 /* libc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9E8012B713F8006870F9 /* libc.dylib */; };
-		F5656D7D12FBB75B0085ED7F /* libtdb.dylib.1 in Resources */ = {isa = PBXBuildFile; fileRef = F5656D7C12FBB75B0085ED7F /* libtdb.dylib.1 */; };
-		F56B13AF12CAE812009B4C96 /* libpython2.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F56B13AE12CAE812009B4C96 /* libpython2.6.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F565765D1301985F0085ED7F /* libtdb.dylib.1 in Frameworks */ = {isa = PBXBuildFile; fileRef = F5656D7C12FBB75B0085ED7F /* libtdb.dylib.1 */; };
+		F56B13AF12CAE812009B4C96 /* libpython2.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F56B13AE12CAE812009B4C96 /* libpython2.6.dylib */; settings = {ATTRIBUTES = (Required, ); }; };
 		F56B141112CAF053009B4C96 /* IOSCoreAudio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F56B140F12CAF053009B4C96 /* IOSCoreAudio.cpp */; };
 		F56B141412CAF0A3009B4C96 /* IOSAudioRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F56B141212CAF0A3009B4C96 /* IOSAudioRenderer.cpp */; };
 		F56B143412CAF279009B4C96 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F56B143312CAF279009B4C96 /* CoreVideo.framework */; };
@@ -888,22 +888,22 @@
 		F589AD9D1288C96100D8079E /* XBMC_mutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F589AD9A1288C96100D8079E /* XBMC_mutex.cpp */; };
 		F589ADC31288CC6100D8079E /* XBMCEAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = F589ADB91288CC6100D8079E /* XBMCEAGLView.mm */; };
 		F589AE171288DDE400D8079E /* libfontconfig.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE161288DDE400D8079E /* libfontconfig.dylib */; };
-		F589AE191288DDFD00D8079E /* libsmbclient.dylib.0 in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE181288DDFD00D8079E /* libsmbclient.dylib.0 */; settings = {ATTRIBUTES = (Weak, ); }; };
-		F589AE1B1288DE0800D8079E /* libsamplerate.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE1A1288DE0800D8079E /* libsamplerate.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
-		F589AE1D1288DE1B00D8079E /* libcdio.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE1C1288DE1B00D8079E /* libcdio.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
-		F589AE211288DE6400D8079E /* libfribidi.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE201288DE6400D8079E /* libfribidi.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
-		F589AE231288DE7200D8079E /* libvorbis.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE221288DE7200D8079E /* libvorbis.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
-		F589AE271288DE8A00D8079E /* libwavpack.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE261288DE8A00D8079E /* libwavpack.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
-		F589AE291288DE9600D8079E /* libmpeg2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE281288DE9600D8079E /* libmpeg2.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
-		F589AE2B1288DEA400D8079E /* libmad.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE2A1288DEA400D8079E /* libmad.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
-		F589AE2D1288DEB000D8079E /* libogg.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE2C1288DEB000D8079E /* libogg.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
-		F589AE2F1288DEC900D8079E /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE2E1288DEC900D8079E /* libcrypto.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F589AE191288DDFD00D8079E /* libsmbclient.dylib.0 in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE181288DDFD00D8079E /* libsmbclient.dylib.0 */; settings = {ATTRIBUTES = (Required, ); }; };
+		F589AE1B1288DE0800D8079E /* libsamplerate.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE1A1288DE0800D8079E /* libsamplerate.dylib */; settings = {ATTRIBUTES = (Required, ); }; };
+		F589AE1D1288DE1B00D8079E /* libcdio.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE1C1288DE1B00D8079E /* libcdio.dylib */; settings = {ATTRIBUTES = (Required, ); }; };
+		F589AE211288DE6400D8079E /* libfribidi.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE201288DE6400D8079E /* libfribidi.dylib */; settings = {ATTRIBUTES = (Required, ); }; };
+		F589AE231288DE7200D8079E /* libvorbis.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE221288DE7200D8079E /* libvorbis.dylib */; settings = {ATTRIBUTES = (Required, ); }; };
+		F589AE271288DE8A00D8079E /* libwavpack.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE261288DE8A00D8079E /* libwavpack.dylib */; settings = {ATTRIBUTES = (Required, ); }; };
+		F589AE291288DE9600D8079E /* libmpeg2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE281288DE9600D8079E /* libmpeg2.dylib */; settings = {ATTRIBUTES = (Required, ); }; };
+		F589AE2B1288DEA400D8079E /* libmad.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE2A1288DEA400D8079E /* libmad.dylib */; settings = {ATTRIBUTES = (Required, ); }; };
+		F589AE2D1288DEB000D8079E /* libogg.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE2C1288DEB000D8079E /* libogg.dylib */; settings = {ATTRIBUTES = (Required, ); }; };
+		F589AE2F1288DEC900D8079E /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE2E1288DEC900D8079E /* libcrypto.dylib */; settings = {ATTRIBUTES = (Required, ); }; };
 		F589AE311288DEE000D8079E /* libpcre.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE301288DEE000D8079E /* libpcre.dylib */; };
 		F589AE331288DEE900D8079E /* libpcrecpp.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE321288DEE900D8079E /* libpcrecpp.dylib */; };
 		F589AE351288DEF900D8079E /* liblzo2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE341288DEF900D8079E /* liblzo2.dylib */; };
 		F589AE371288DEFE00D8079E /* liblzo.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE361288DEFE00D8079E /* liblzo.dylib */; };
-		F589AE391288DF1F00D8079E /* libmysqlclient.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE381288DF1F00D8079E /* libmysqlclient.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
-		F589AE3B1288DF2A00D8079E /* libvorbisenc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE3A1288DF2A00D8079E /* libvorbisenc.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F589AE391288DF1F00D8079E /* libmysqlclient.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE381288DF1F00D8079E /* libmysqlclient.dylib */; settings = {ATTRIBUTES = (Required, ); }; };
+		F589AE3B1288DF2A00D8079E /* libvorbisenc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE3A1288DF2A00D8079E /* libvorbisenc.dylib */; settings = {ATTRIBUTES = (Required, ); }; };
 		F589AE431288E02000D8079E /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE421288E02000D8079E /* libiconv.dylib */; };
 		F589AE451288E06100D8079E /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE441288E06100D8079E /* libbz2.dylib */; };
 		F589AE471288E07400D8079E /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F589AE461288E07400D8079E /* libz.dylib */; };
@@ -941,7 +941,7 @@
 		18A0B34E129FC3A5007BB966 /* XBMC.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = XBMC.png; path = xbmc/osx/ios/XBMC.png; sourceTree = "<group>"; };
 		321B63AE12B208FF00429E0F /* WinEventsIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WinEventsIOS.h; sourceTree = "<group>"; };
 		321B63AF12B2091400429E0F /* WinEventsIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = WinEventsIOS.mm; sourceTree = "<group>"; };
-		3220D83F12FB565C00F19FF7 /* libtalloc.dylib.1 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; name = libtalloc.dylib.1; path = "tools/osx/ios-depends/build/lib/libtalloc.dylib.1"; sourceTree = "<group>"; };
+		3220D83F12FB565C00F19FF7 /* libtalloc.dylib.2 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; name = libtalloc.dylib.2; path = "tools/osx/ios-depends/build/lib/libtalloc.dylib.2"; sourceTree = "<group>"; };
 		3226912512CDDC9300BC84D8 /* libfaad.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfaad.dylib; path = "tools/osx/ios-depends/build/lib/libfaad.dylib"; sourceTree = "<group>"; };
 		3226912712CDDCD500BC84D8 /* libvorbisfile.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libvorbisfile.dylib; path = "tools/osx/ios-depends/build/lib/libvorbisfile.dylib"; sourceTree = "<group>"; };
 		3255316512B2D02400837CD2 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
@@ -2963,8 +2963,9 @@
 				3226912612CDDC9300BC84D8 /* libfaad.dylib in Frameworks */,
 				3226912812CDDCD500BC84D8 /* libvorbisfile.dylib in Frameworks */,
 				32EC393E12EAC808007D305C /* libcurl.dylib in Frameworks */,
-				3220D84012FB565C00F19FF7 /* libtalloc.dylib.1 in Frameworks */,
+				3220D84012FB565C00F19FF7 /* libtalloc.dylib.2 in Frameworks */,
 				4D5D2E1E1301758F006ABC13 /* CFNetwork.framework in Frameworks */,
+				F565765D1301985F0085ED7F /* libtdb.dylib.1 in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5789,7 +5790,7 @@
 				F589AE1A1288DE0800D8079E /* libsamplerate.dylib */,
 				F5653BB4128B9441009C7ABB /* libcurl.dylib */,
 				F589AE181288DDFD00D8079E /* libsmbclient.dylib.0 */,
-				3220D83F12FB565C00F19FF7 /* libtalloc.dylib.1 */,
+				3220D83F12FB565C00F19FF7 /* libtalloc.dylib.2 */,
 				F5656D7C12FBB75B0085ED7F /* libtdb.dylib.1 */,
 				F589AE1E1288DE2700D8079E /* libfreetype.dylib */,
 				F589AE161288DDE400D8079E /* libfontconfig.dylib */,
@@ -5881,7 +5882,6 @@
 			files = (
 				F589ACBB1287A72900D8079E /* InfoPlist.strings in Resources */,
 				18A0B34F129FC3A5007BB966 /* XBMC.png in Resources */,
-				F5656D7D12FBB75B0085ED7F /* libtdb.dylib.1 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
