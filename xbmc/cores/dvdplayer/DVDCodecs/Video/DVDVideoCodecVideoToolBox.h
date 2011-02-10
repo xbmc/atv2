@@ -20,8 +20,7 @@
  *
  */
 
-#if defined(__APPLE__) && defined(__arm__)
-//#if defined(HAVE_VIDEOTOOLBOXDECODER)
+#if defined(HAVE_VIDEOTOOLBOXDECODER)
 
 #include <queue>
 

@@ -595,9 +595,9 @@ void CGUISettings::Initialize()
 #ifdef HAVE_LIBOPENMAX
   AddBool(vp, "videoplayer.useomx", 13430, true);
 #endif
-//#ifdef HAVE_VIDEOTOOLBOXDECODER
+#ifdef HAVE_VIDEOTOOLBOXDECODER
   AddBool(g_sysinfo.HasVideoToolBoxDecoder() ? vp: NULL, "videoplayer.usevideotoolbox", 13432, true);
-//#endif
+#endif
 
 #ifdef HAS_GL
   AddBool(NULL, "videoplayer.usepbo", 13424, true);

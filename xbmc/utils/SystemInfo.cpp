@@ -729,7 +729,7 @@ bool CSysInfo::HasVideoToolBoxDecoder()
 {
   bool        result = false;
 
-#if defined(__APPLE__) && defined(__arm__)//&& defined(HAVE_VIDEOTOOLBOXDECODER)
+#if defined(HAVE_VIDEOTOOLBOXDECODER)
   result = iOS_HasVideoToolboxDecoder();
 #endif
   return result;
