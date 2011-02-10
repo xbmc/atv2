@@ -1619,6 +1619,7 @@ XB_CONFIG_MODULE([xbmc/lib/libPython/Python], [
 
 XB_CONFIG_MODULE([xbmc/cores/paplayer/FLACCodec/flac-1.2.1], [
   if test "$host_vendor" = "apple" ; then
+    rm -f config.cache
     CFLAGS="$CFLAGS -fno-common" \
     LDFLAGS="$LDFLAGS -Wl,-read_only_relocs,suppress -Wl,-undefined,dynamic_lookup" \
     ./configure -C \
