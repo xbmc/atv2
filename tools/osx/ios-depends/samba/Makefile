@@ -79,7 +79,7 @@ CONFIGURE=./configure --prefix=$(PREFIX) --host=$(HOST) --enable-shared=yes \
   fu_cv_sys_stat_statvfs64=no \
   libreplace_cv_HAVE_C99_VSNPRINTF=yes
 
-LIBDYLIB=$(SOURCE)/source/bin/libsmbclient.dylib
+LIBDYLIB=$(SOURCE)/source3/bin/libsmbclient.dylib
 
 CLEAN_FILES=$(ARCHIVE) $(SOURCE)
 
@@ -89,15 +89,13 @@ $(ARCHIVE):
 	$(RETRIEVE_TOOL) $(RETRIEVE_TOOL_FLAGS) $(BASE_URL)/$(ARCHIVE)
 	echo $(ARCHIVE) > .gitignore
 
-$(SOURCE): $(ARCHIVE)
-	-rm -rf $(SOURCE)
+$(LIBDYLIB): $(ARCHIVE)
+	rm -rf $(SOURCE)
 	$(ARCHIVE_TOOL) $(ARCHIVE_TOOL_FLAGS) $(ARCHIVE)
 	echo $(SOURCE) >> .gitignore
 	cd $(SOURCE)/source3; ./autogen.sh
 	cd $(SOURCE)/source3; $(CONFIGURE)
 	cp -f /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(platform_sdk_version).sdk/usr/include/crt_externs.h $(PREFIX)/include/
-
-$(LIBDYLIB): $(SOURCE)
 	cd $(SOURCE)/source3; make bin/libsmbclient.dylib
 
 .installed:
