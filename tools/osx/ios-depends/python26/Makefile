@@ -47,12 +47,10 @@ $(ARCHIVE):
 	$(RETRIEVE_TOOL) $(RETRIEVE_TOOL_FLAGS) $(BASE_URL)/$(ARCHIVE)
 	echo $(ARCHIVE) > .gitignore
 
-$(SOURCE): $(ARCHIVE)
+$(LIBDYLIB): $(ARCHIVE)
 	rm -rf $(SOURCE)
 	$(ARCHIVE_TOOL) $(ARCHIVE_TOOL_FLAGS) $(ARCHIVE)
 	echo $(SOURCE) >> .gitignore
-
-$(LIBDYLIB): $(SOURCE)
 	cd $(SOURCE); $(CONFIGURE_NATIVE)
 	cd $(SOURCE); make python.exe Parser/pgen
 	cd $(SOURCE); mv python.exe hostpython
@@ -72,8 +70,7 @@ $(LIBDYLIB): $(SOURCE)
 	touch $@
 
 clean:
-	cd $(SOURCE); make clean
-	rm  -rf $(SOURCE)/_install .installed
+	rm -rf $(SOURCE) .installed
 
 distclean::
 	rm -rf $(SOURCE) .installed
