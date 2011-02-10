@@ -28,8 +28,7 @@
 #include "Overlay/DVDOverlayCodec.h"
 
 #include "Video/DVDVideoCodecVDA.h"
-#if defined(__APPLE__) && defined(__arm__)
-//#if defined(HAVE_VIDEOTOOLBOXDECODER)
+#if defined(HAVE_VIDEOTOOLBOXDECODER)
 #include "Video/DVDVideoCodecVideoToolBox.h"
 #endif
 #include "Video/DVDVideoCodecFFmpeg.h"
@@ -143,13 +142,11 @@ CDVDVideoCodec* CDVDFactoryCodec::CreateVideoCodec( CDVDStreamInfo &hint )
 #elif defined(__APPLE__)
   hwSupport += "VDADecoder:no ";
 #endif
-/*
 #if defined(HAVE_VIDEOTOOLBOXDECODER) && defined(__APPLE__)
   hwSupport += "VideoToolBoxDecoder:yes ";
 #elif defined(__APPLE__)
   hwSupport += "VideoToolBoxDecoder:no ";
 #endif
-*/
   hwSupport += "VideoToolBoxDecoder:yes ";
 #ifdef HAVE_LIBCRYSTALHD
   hwSupport += "CrystalHD:yes ";
@@ -195,8 +192,7 @@ CDVDVideoCodec* CDVDFactoryCodec::CreateVideoCodec( CDVDStreamInfo &hint )
   }
 #endif
 
-#if defined(__APPLE__) && defined(__arm__)
-//#if defined(HAVE_VIDEOTOOLBOXDECODER)
+#if defined(HAVE_VIDEOTOOLBOXDECODER)
   if (!hint.software)
   {
     if (g_sysinfo.HasVideoToolBoxDecoder())
