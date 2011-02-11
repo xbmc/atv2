@@ -85,7 +85,7 @@ PAPCODEC_DIRS+= \
 	xbmc/cores/paplayer/asap
 endif
 
-ifeq ($(findstring osx,$(ARCH)),osx)
+ifeq ($(findstring osx,@ARCH@),osx)
 PAPCODEC_DIRS+= \
 	xbmc/cores/paplayer/FLACCodec
 endif
@@ -101,7 +101,7 @@ LIB_DIRS=\
 	lib/libmodplug \
 	lib/xbmc-dll-symbols \
 	lib/jsoncpp/jsoncpp/src/lib_json
-ifeq ($(findstring osx,$(ARCH)), osx)
+ifeq ($(findstring osx,@ARCH@), osx)
 LIB_DIRS+=lib/libmicrohttpd
 endif
 
@@ -112,7 +112,7 @@ VIS_DIRS=\
 	xbmc/visualizations/OpenGLSpectrum \
 	xbmc/visualizations/WaveForm \
 	xbmc/visualizations/XBMCProjectM
-ifeq ($(findstring osx,$(ARCH)), osx)
+ifeq ($(findstring osx,@ARCH@), osx)
 VIS_DIRS+=xbmc/visualizations/iTunes
 endif
 ifneq (@BUILD_GOOM@,1)
@@ -143,7 +143,7 @@ DISTCLEAN_FILES=config.h config.log config.status tools/Linux/xbmc.sh \
         xbmc/lib/libPython/Python/Include/pyconfig.h \
         xbmc/lib/libPython/Python/configure.lineno \
         xbmc/lib/libPython/Python/libpython2.4.so.1.0 \
-        system/libcpluff-$(ARCH).so
+        system/libcpluff-@ARCH@.so
 
 all : Makefile externals xbmc.bin xbmc-xrandr skins
 
@@ -168,7 +168,7 @@ configure: configure.in
 	@./bootstrap
 
 # skin textures
-ifneq ($(findstring arm,$(ARCH)), arm)
+ifneq ($(findstring arm,@ARCH@), arm)
 skins: tools/TexturePacker/TexturePacker force
 	 $(MAKE) -C $(CONFLUENCE_MEDIA)
 else
@@ -279,15 +279,15 @@ xbmc/lib/libapetag/.libs/libapetag.a: force
 	$(MAKE) -C xbmc/lib/libapetag
 lib/cpluff/libcpluff/.libs/libcpluff.a: force
 	$(MAKE) -C lib/cpluff/libcpluff
-system/libcpluff-$(ARCH).so: lib/cpluff/libcpluff/.libs/libcpluff.a
-ifeq ($(findstring osx,$(ARCH)), osx)
-  ifeq ($(ARCH), powerpc-osx)
+system/libcpluff-@ARCH@.so: lib/cpluff/libcpluff/.libs/libcpluff.a
+ifeq ($(findstring osx,@ARCH@), osx)
+  ifeq (@ARCH@, powerpc-osx)
 	$(CXX) $(LDFLAGS) -all_load -bundle -flat_namespace -undefined dynamic_lookup -arch i386 -lbundle1.o -o $@ $<
   endif
-  ifeq ($(ARCH), arm-osx)
+  ifeq (@ARCH@, arm-osx)
 	$(CXX) $(LDFLAGS) -all_load -bundle -flat_namespace -undefined dynamic_lookup -read_only_relocs suppress -arch armv7 -o $@ $<
   endif
-  ifeq ($(ARCH), x86-osx)
+  ifeq (@ARCH@, x86-osx)
 	$(CXX) $(LDFLAGS) -all_load -bundle -flat_namespace -undefined dynamic_lookup -arch i386 -o $@ $<
   endif
 else
@@ -295,14 +295,14 @@ else
 endif
 lib/libmodplug/src/.libs/libmodplug.a: force
 	$(MAKE) -C lib/libmodplug
-system/players/paplayer/libmodplug-$(ARCH).so: lib/libmodplug/src/.libs/libmodplug.a
-ifeq ($(ARCH), powerpc-osx)
+system/players/paplayer/libmodplug-@ARCH@.so: lib/libmodplug/src/.libs/libmodplug.a
+ifeq (@ARCH@, powerpc-osx)
 	$(CXX) $(LDFLAGS) -all_load -bundle -flat_namespace -undefined dynamic_lookup -arch ppc -lbundle1.o -o $@ $<
 endif
-ifeq ($(ARCH), arm-osx)
+ifeq (@ARCH@, arm-osx)
 	$(CXX) $(LDFLAGS) -all_load -bundle -flat_namespace -undefined dynamic_lookup -read_only_relocs suppress -arch armv7 -o $@ $<
 endif
-ifeq ($(ARCH), x86-osx)
+ifeq (@ARCH@, x86-osx)
 	$(CXX) $(LDFLAGS) -all_load -bundle -flat_namespace -undefined dynamic_lookup -arch i386 -o $@ $<
 endif
 lib/xbmc-dll-symbols/dll-symbols.a: force
@@ -317,21 +317,21 @@ exports:
 dllloader: exports
 	$(MAKE) xbmc/cores/DllLoader/dllloader.a
 visualizations: exports
-ifneq ($(findstring arm,$(ARCH)), arm)
+ifneq ($(findstring arm,@ARCH@), arm)
 	$(MAKE) -C xbmc/visualizations/OpenGLSpectrum
 	$(MAKE) -C xbmc/visualizations/WaveForm
 	$(MAKE) -C xbmc/visualizations/XBMCProjectM
-ifeq ($(findstring osx,$(ARCH)), osx)
+ifeq ($(findstring osx,@ARCH@), osx)
 	$(MAKE) -C xbmc/visualizations/iTunes
 endif
 ifneq (@BUILD_GOOM@,1)
-ifeq ($(or $(findstring powerpc-linux,$(ARCH)),$(findstring powerpc64-linux,$(ARCH))),)
+ifeq ($(or $(findstring powerpc-linux,@ARCH@),$(findstring powerpc64-linux,@ARCH@)),)
 	$(MAKE) -C xbmc/visualizations/Goom
 endif
 endif
 endif
 screensavers: exports
-ifneq ($(findstring arm,$(ARCH)), arm)
+ifneq ($(findstring arm,@ARCH@), arm)
 	$(MAKE) -C xbmc/screensavers/rsxs-0.9/xbmc
 endif
 libpython: dllloader
@@ -346,8 +346,8 @@ ifneq (@USE_EXTERNAL_LIBASS@,1)
 	$(MAKE) -C lib/libass/xbmc
 endif
 eventclients:
-ifeq ($(findstring osx,$(ARCH)), osx)
-ifneq ($(findstring arm,$(ARCH)), arm)
+ifeq ($(findstring osx,@ARCH@), osx)
+ifneq ($(findstring arm,@ARCH@), arm)
 	$(MAKE) -C tools/EventClients/Clients/OSXRemote
 endif
 else
@@ -364,32 +364,32 @@ ifeq (@USE_INTERNAL_LIBA52@,1)
 	$(MAKE) -C xbmc/cores/paplayer/AC3Codec
 endif
 	$(MAKE) -C xbmc/cores/paplayer/ADPCMCodec
-ifeq ($(findstring osx,$(ARCH)), osx)
+ifeq ($(findstring osx,@ARCH@), osx)
 	$(MAKE) -C xbmc/cores/paplayer/FLACCodec
 endif
 	$(MAKE) -C xbmc/cores/paplayer/vgmstream
 	$(MAKE) -C xbmc/cores/paplayer/timidity
 	$(MAKE) -C xbmc/cores/paplayer/NSFCodec
-ifneq ($(findstring arm-osx,$(ARCH)), arm-osx)
+ifneq ($(findstring arm-osx,@ARCH@), arm-osx)
 	$(MAKE) -C xbmc/cores/paplayer/SIDCodec
 endif
 ifeq (@USE_ASAP_CODEC@,1)
-  ifneq ($(findstring osx,$(ARCH)), osx)
+  ifneq ($(findstring osx,@ARCH@), osx)
 	$(MAKE) -C xbmc/cores/paplayer/asap asap-xbmc
   endif
 endif
 	$(MAKE) -C xbmc/cores/paplayer/YMCodec/StSoundLibrary	
-ifeq ($(or $(findstring powerpc,$(ARCH)),$(findstring x86_64-linux,$(ARCH)),$(findstring arm, $(ARCH))),)
+ifeq ($(or $(findstring powerpc,@ARCH@),$(findstring x86_64-linux,@ARCH@),$(findstring arm, @ARCH@)),)
 	$(MAKE) -C xbmc/cores/paplayer/SPCCodec/SNES/SNESAPU
 endif
 imagelib: dllloader
 	$(MAKE) -C xbmc/lib/cximage-6.0
 
 codecs: papcodecs dvdpcodecs
-ifeq ($(findstring osx,$(ARCH)), osx)
-libs: libhdhomerun libid3tag imagelib libexif python system/libcpluff-$(ARCH).so system/players/paplayer/libmodplug-$(ARCH).so
+ifeq ($(findstring osx,@ARCH@), osx)
+libs: libhdhomerun libid3tag imagelib libexif python system/libcpluff-@ARCH@.so system/players/paplayer/libmodplug-@ARCH@.so
 else
-libs: libhdhomerun libid3tag imagelib libexif python system/libcpluff-$(ARCH).so
+libs: libhdhomerun libid3tag imagelib libexif python system/libcpluff-@ARCH@.so
 endif
 externals: codecs libs python visualizations screensavers
 
@@ -458,17 +458,17 @@ OBJSXBMC+= \
 	xbmc/lib/UnrarXLib/UnrarXLib.a
 endif
 
-ifneq ($(findstring arm,$(ARCH)), arm)
+ifneq ($(findstring arm,@ARCH@), arm)
 # Can't include libhts for arm due to GPLv3
 OBJSXBMC+= \
 	xbmc/lib/libhts/libhts.a
 endif
 
 # platform dependent objects
-ifeq ($(findstring osx,$(ARCH)), osx)
+ifeq ($(findstring osx,@ARCH@), osx)
 OBJSXBMC += xbmc/osx/osx.a
 OBJSXBMC += lib/libmicrohttpd/src/daemon/.libs/libmicrohttpd.a
-ifneq ($(findstring arm,$(ARCH)), arm)
+ifneq ($(findstring arm,@ARCH@), arm)
 OBJSXBMC += lib/libSDL-OSX/libSDL-@ARCH@.a \
 	lib/libSDL-OSX/libSDL_mixer-@ARCH@.a
 endif
@@ -485,22 +485,22 @@ DYNOBJSXBMC= \
 	xbmc/cores/DllLoader/exports/util/exports_utils.a \
 	xbmc/cores/DllLoader/exports/exports.a
 
-ifneq ($(ARCH), arm-osx)
-ifeq ($(findstring arm,$(ARCH)), arm)
+ifneq (@ARCH@, arm-osx)
+ifeq ($(findstring arm,@ARCH@), arm)
 # Force external python2.5 for now!
 LIBS +=-lpython2.5
 endif
 endif
 
 xbmc.bin: $(OBJSXBMC) $(DYNOBJSXBMC)
-ifeq ($(findstring osx,$(ARCH)), osx)
+ifeq ($(findstring osx,@ARCH@), osx)
 	$(CXX) $(LDFLAGS) -o xbmc.bin -Wl,-all_load,-ObjC $(DYNOBJSXBMC) $(OBJSXBMC) $(LIBS) -rdynamic
 else
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o xbmc.bin -Wl,--whole-archive $(DYNOBJSXBMC) -Wl,--no-whole-archive $(OBJSXBMC) $(LIBS) -rdynamic
 endif
 
 xbmc-xrandr: xbmc-xrandr.c
-ifeq ($(findstring osx,$(ARCH)), osx)
+ifeq ($(findstring osx,@ARCH@), osx)
 	# xbmc-xrandr.c gets picked up by the default make rules
 	#  so only exclude it for osx builds
 	@echo "excluding xbmc-xrandr"
@@ -509,7 +509,7 @@ else
 endif
 
 tools/XBMCTex/XBMCTex:
-ifeq ($(findstring osx,$(ARCH)), osx)
+ifeq ($(findstring osx,@ARCH@), osx)
 	# hack this for now
 	$(MAKE) -C tools/XBMCTex -f Makefile.osx
 else
@@ -525,7 +525,7 @@ livedatas:
 install-bin: xbmc.bin # developement convenience target
 	sudo install -D xbmc.bin $(DESTDIR)$(libdir)/xbmc
 
-ifeq ($(findstring osx,$(ARCH)), osx)
+ifeq ($(findstring osx,@ARCH@), osx)
 	# TODO: add osx install
 else
 install: install-binaries install-arch install-datas
@@ -539,7 +539,7 @@ endif
 
 install-arch:
 	@# Arch dependent files
-	@find system addons -regextype posix-extended -type f -not -iregex ".*svn.*|.*script\.module\..*" -iregex ".*$(ARCH).*|.*\.vis|.*\.xbs|.*python.*\.zip" -exec install -D "{}" $(DESTDIR)$(libdir)/xbmc/"{}" \; -printf " -- %-75.75f\r"
+	@find system addons -regextype posix-extended -type f -not -iregex ".*svn.*|.*script\.module\..*" -iregex ".*@ARCH@.*|.*\.vis|.*\.xbs|.*python.*\.zip" -exec install -D "{}" $(DESTDIR)$(libdir)/xbmc/"{}" \; -printf " -- %-75.75f\r"
 	@cp -r addons/script.module.pil $(DESTDIR)$(libdir)/xbmc/addons/
 	@cp -r addons/script.module.pysqlite $(DESTDIR)$(libdir)/xbmc/addons/
 
@@ -556,7 +556,7 @@ install-datas: install-scripts
 	@echo "Done!"
 	@echo "Copying system files to $(DESTDIR)$(datarootdir)/xbmc"
 	@# Arch independent files
-	@find addons language media sounds userdata system -regextype posix-extended -type f -not -iregex ".*script\.module\..*|.*$(ARCH).*|.*\.vis|.*\.xbs|.*svn.*|.*\.so|.*\.dll|.*\.pyd|.*python.*\.zip" -exec install -D -m 0644 "{}" $(DESTDIR)$(datarootdir)/xbmc/"{}" \; -printf " -- %-75.75f\r"
+	@find addons language media sounds userdata system -regextype posix-extended -type f -not -iregex ".*script\.module\..*|.*@ARCH@.*|.*\.vis|.*\.xbs|.*svn.*|.*\.so|.*\.dll|.*\.pyd|.*python.*\.zip" -exec install -D -m 0644 "{}" $(DESTDIR)$(datarootdir)/xbmc/"{}" \; -printf " -- %-75.75f\r"
 	@# Icons and links
 	@mkdir -p $(DESTDIR)$(datarootdir)/applications
 	@cp -a tools/Linux/xbmc.desktop $(DESTDIR)$(datarootdir)/applications/
