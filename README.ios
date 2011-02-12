@@ -36,7 +36,7 @@ character itself should NOT be typed as part of the command.
 -----------------------------------------------------------------------------
 
  $ cd $HOME
- $ svn checkout https://xbmc.svn.sourceforge.net/svnroot/xbmc/trunk
+ $ git clone git://github.com/xbmc/atv2
 
 -----------------------------------------------------------------------------
 3.0 Install Xcode
