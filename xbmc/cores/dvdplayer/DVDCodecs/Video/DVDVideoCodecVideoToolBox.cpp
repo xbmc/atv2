@@ -767,6 +767,7 @@ CDVDVideoCodecVideoToolBox::CDVDVideoCodecVideoToolBox() : CDVDVideoCodec()
   pthread_mutex_init(&m_queue_mutex, NULL);
 
   m_convert_bytestream = false;
+  m_convert_3byteTo4byteNALSize = false; 
   m_dllAvUtil = NULL;
   m_dllAvFormat = NULL;
   memset(&m_videobuffer, 0, sizeof(DVDVideoPicture));
@@ -845,6 +846,13 @@ bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &o
 
         if (extradata[0] == 1)
         {
+          if (extradata[4] == 0xFE)
+          {
+            // video content is from so silly encoder that think 3 byte NAL sizes
+            // are valid, setup to convert 3 byte NAL sizes to 4 byte.
+            extradata[4] = 0xFF;
+            m_convert_3byteTo4byteNALSize = true;
+          }
           // valid avcC atom data always starts with the value 1 (version)
           m_fmt_desc = CreateFormatDescriptionFromCodecData(
             kVTFormatH264, width, height, extradata, extrasize, 'avcC');
@@ -988,11 +996,31 @@ int CDVDVideoCodecVideoToolBox::Decode(BYTE* pData, int iSize, double dts, doubl
     if (m_convert_bytestream)
     {
       // convert demuxer packet from bytestream (AnnexB) to bitstream
-
       if(m_dllAvFormat->url_open_dyn_buf(&pb) < 0)
         return VC_ERROR;
 
       demux_size = avc_parse_nal_units(m_dllAvFormat, pb, pData, iSize);
+      demux_size = m_dllAvFormat->url_close_dyn_buf(pb, &demux_buff);
+      sampleBuff = CreateSampleBufferFrom(m_fmt_desc, demux_buff, demux_size);
+    }
+    else if (m_convert_3byteTo4byteNALSize)
+    {
+      // convert demuxer packet from 3 byte NAL sizes to 4 byte
+      if (m_dllAvFormat->url_open_dyn_buf(&pb) < 0)
+        return VC_ERROR;
+
+      uint32_t nal_size;
+      uint8_t *end = pData + iSize;
+      uint8_t *nal_start = pData;
+      while (nal_start < end)
+      {
+        nal_size = VDA_RB24(nal_start);
+        m_dllAvFormat->put_be32(pb, nal_size);
+        nal_start += 3;
+        m_dllAvFormat->put_buffer(pb, nal_start, nal_size);
+        nal_start += nal_size;
+      }
+
       demux_size = m_dllAvFormat->url_close_dyn_buf(pb, &demux_buff);
       sampleBuff = CreateSampleBufferFrom(m_fmt_desc, demux_buff, demux_size);
     }
