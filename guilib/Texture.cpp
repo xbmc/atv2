@@ -173,31 +173,40 @@ bool CBaseTexture::LoadFromFile(const CStdString& texturePath, unsigned int maxW
 
 #if defined(__APPLE__)
   XFILE::CFile file;
-  UInt8 *remoteImageBuff = NULL;
-  int remoteImageBuffSize = 0;
+  UInt8 *imageBuff     = NULL;
+  int    imageBuffSize = 0;
 
   //open path and read data to buffer
-  if (file.Open(texturePath,0))
+  //this handles advancedsettings.xml pathsubstitution
+  //and resulting networking
+  if (file.Open(texturePath, 0))
   {
-    remoteImageBuffSize=file.GetLength();
-    remoteImageBuff=new UInt8[remoteImageBuffSize];
-    remoteImageBuffSize=file.Read(remoteImageBuff,remoteImageBuffSize);
-    if (!remoteImageBuffSize)
-      CLog::Log(LOGERROR,"Texture manager read texture file failed.");
+    imageBuffSize =file.GetLength();
+    imageBuff = new UInt8[imageBuffSize];
+    imageBuffSize = file.Read(imageBuff, imageBuffSize);
     file.Close();
   }
   else
-    CLog::Log(LOGERROR,"Texture manager unable to open file %s",texturePath.c_str());
-    
-  //create the image from remotebuffer;
+  {
+    CLog::Log(LOGERROR, "Texture manager unable to open file %s", texturePath.c_str());
+    return false;
+  }
+
+  if (!imageBuffSize)
+  {
+    CLog::Log(LOGERROR, "Texture manager read texture file failed.");
+    return false;
+  }
+
+  // create the image from buffer;
   CGImageSourceRef imageSource;
-  imageSource=CGImageSourceCreateWithData(CFDataCreate(NULL,remoteImageBuff,remoteImageBuffSize),NULL);
+  // create a CFDataRef using CFDataCreateWithBytesNoCopy and kCFAllocatorNull for deallocator.
+  // this allows us to do a nocopy reference and we handle the free of imageBuff
+  CFDataRef cfdata = CFDataCreateWithBytesNoCopy(NULL, imageBuff, imageBuffSize, kCFAllocatorNull);
+  imageSource = CGImageSourceCreateWithData(cfdata, NULL);   
     
-  // done with buffer, toss it
-  if (remoteImageBuff)
-    delete [] remoteImageBuff;
-    
-  if (imageSource == nil) {
+  if (imageSource == nil)
+  {
     CLog::Log(LOGERROR, "Texture manager unable to load file: %s", CSpecialProtocol::TranslatePath(texturePath).c_str());
     return false;
   }
@@ -246,6 +255,8 @@ bool CBaseTexture::LoadFromFile(const CStdString& texturePath, unsigned int maxW
   CGContextDrawImage(context, CGRectMake(0, 0, width, height), image);
   CGContextRelease(context);
   CGImageRelease(image);
+  CFRelease(cfdata);
+  delete [] imageBuff;
 
 #else
 
