@@ -1,7 +1,7 @@
 
 SUBDIRS = \
 	Backrow \
-	gas-preprocessor help2man autoconf automake pkg-config dpkg \
+	gas-preprocessor help2man autoconf automake pkg-config tar dpkg \
 	pcre expat gettext readline \
 	liblzo liblzo2 freetype2 fontconfig \
 	openssl libssh2 curl \

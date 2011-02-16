@@ -34,7 +34,7 @@ $(SOURCE_DEBIAN): $(ARCHIVE)
 	-rm -rf $(SOURCE_DEBIAN)
 	$(ARCHIVE_TOOL) $(ARCHIVE_TOOL_FLAGS) $(ARCHIVE)
 	echo $(SOURCE_DEBIAN) >> .gitignore
-	cd $(SOURCE_DEBIAN); patch -p1 -i ../dpkg-deb.patch; $(CONFIGURE)
+	cd $(SOURCE_DEBIAN); $(CONFIGURE)
 
 $(APPNAME): $(SOURCE_DEBIAN)
 	make -C $(SOURCE_DEBIAN)/lib CFLAGS="" LDFLAGS=""

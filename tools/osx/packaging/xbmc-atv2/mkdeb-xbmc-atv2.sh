@@ -8,9 +8,9 @@ if [ -f "/usr/bin/sudo" ]; then
   SUDO="/usr/bin/sudo"
 fi
 if [ -f "../../ios-depends/build/bin/dpkg-deb" ]; then
-  DPKGDEB="../../ios-depends/build/bin/dpkg-deb"
-else
-  DPKGDEB="dpkg-deb"
+  # make sure we pickup our tar, gnutar will fail when dpkg -i
+  bin_path=$(cd ../../ios-depends/build/bin; pwd)
+  export PATH=${bin_path}:${PATH}
 fi
 
 PACKAGE=org.xbmc.xbmc-atv2
@@ -63,6 +63,7 @@ mkdir -p $PACKAGE/Applications
 cp -r XBMC.frappliance $PACKAGE/Applications/
 find $PACKAGE/Applications/ -name '.svn' -exec rm -rf {} \;
 find $PACKAGE/Applications/ -name '.gitignore' -exec rm -rf {} \;
+find $PACKAGE/Applications/ -name '.DS_Store'  -exec rm -rf {} \;
 
 # set ownership to root:root
 ${SUDO} chown -R 0:0 $PACKAGE
@@ -74,9 +75,9 @@ echo Packaging $PACKAGE
 export COPYFILE_DISABLE=true
 export COPY_EXTENDED_ATTRIBUTES_DISABLE=true
 #
-${DPKGDEB} -b $PACKAGE $ARCHIVE
-${DPKGDEB} --info $ARCHIVE
-${DPKGDEB} --contents $ARCHIVE
+dpkg-deb -b $PACKAGE $ARCHIVE
+dpkg-deb --info $ARCHIVE
+dpkg-deb --contents $ARCHIVE
 
 # clean up by removing package dir
 ${SUDO} rm -rf $PACKAGE
