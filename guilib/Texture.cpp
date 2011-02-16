@@ -30,6 +30,7 @@
 #if defined(__APPLE__)
   #include <ImageIO/ImageIO.h>
   #include "iOSUtils.h"
+  #include "FileSystem/File.h"
 #endif
 
 /************************************************************************/
@@ -171,12 +172,32 @@ bool CBaseTexture::LoadFromFile(const CStdString& texturePath, unsigned int maxW
   }
 
 #if defined(__APPLE__)
-  CFURLRef textureURL = CreateCFURLRefFromFilePath(CSpecialProtocol::TranslatePath(texturePath).c_str());
+  XFILE::CFile file;
+  UInt8 *remoteImageBuff = NULL;
+  int remoteImageBuffSize = 0;
 
-  CGImageSourceRef imageSource = CGImageSourceCreateWithURL(textureURL, NULL);
-  CFRelease(textureURL);
-
-  if(imageSource == nil) {
+  //open path and read data to buffer
+  if (file.Open(texturePath,0))
+  {
+    remoteImageBuffSize=file.GetLength();
+    remoteImageBuff=new UInt8[remoteImageBuffSize];
+    remoteImageBuffSize=file.Read(remoteImageBuff,remoteImageBuffSize);
+    if (!remoteImageBuffSize)
+      CLog::Log(LOGERROR,"Texture manager read texture file failed.");
+    file.Close();
+  }
+  else
+    CLog::Log(LOGERROR,"Texture manager unable to open file %s",texturePath.c_str());
+    
+  //create the image from remotebuffer;
+  CGImageSourceRef imageSource;
+  imageSource=CGImageSourceCreateWithData(CFDataCreate(NULL,remoteImageBuff,remoteImageBuffSize),NULL);
+    
+  // done with buffer, toss it
+  if (remoteImageBuff)
+    delete [] remoteImageBuff;
+    
+  if (imageSource == nil) {
     CLog::Log(LOGERROR, "Texture manager unable to load file: %s", CSpecialProtocol::TranslatePath(texturePath).c_str());
     return false;
   }
