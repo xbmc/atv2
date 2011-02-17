@@ -48,6 +48,7 @@
   #include "../dvdplayer/DVDCodecs/Video/DVDVideoCodecVideoToolBox.h"
   #include <CoreVideo/CoreVideo.h>
 #endif
+#include "yuv2rgb.neon.h"
 
 using namespace Shaders;
 
@@ -1496,6 +1497,11 @@ void CLinuxRendererGLES::UploadYV12Texture(int source)
       m_rgbBuffer = new BYTE[m_rgbBufferSize];
     }
 
+#if 0
+//#if defined(__ARM_NEON__)
+    yuv420_2_rgb8888_neon(m_rgbBuffer, im->plane[0], im->plane[1], im->plane[2],
+      m_sourceWidth, m_sourceHeight, im->stride[0], im->stride[1], m_sourceWidth * 4);
+#else
     m_sw_context = m_dllSwScale->sws_getCachedContext(m_sw_context,
       im->width, im->height, PIX_FMT_YUV420P,
       im->width, im->height, PIX_FMT_RGBA,
@@ -1506,6 +1512,7 @@ void CLinuxRendererGLES::UploadYV12Texture(int source)
     uint8_t *dst[]  = { m_rgbBuffer, 0, 0, 0 };
     int dstStride[] = { m_sourceWidth*4, 0, 0, 0 };
     m_dllSwScale->sws_scale(m_sw_context, src, srcStride, 0, im->height, dst, dstStride);
+#endif
   }
   else if (IsSoftwareUpscaling()) // FIXME: s/w upscaling + RENDER_SW => broken
   {

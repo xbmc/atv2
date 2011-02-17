@@ -16,6 +16,7 @@
 		3270F20112CDEB560043E5FA /* AutoPool.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3270F20012CDEB560043E5FA /* AutoPool.mm */; };
 		32EC393E12EAC808007D305C /* libcurl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F5653BB4128B9441009C7ABB /* libcurl.dylib */; };
 		4D5D2E1E1301758F006ABC13 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D5D2E1D1301758F006ABC13 /* CFNetwork.framework */; };
+		F5475787130C8F2700850A9A /* yuv2rgb.neon.S in Sources */ = {isa = PBXBuildFile; fileRef = F5475785130C8F2700850A9A /* yuv2rgb.neon.S */; };
 		F54D9E8112B713F8006870F9 /* libc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9E8012B713F8006870F9 /* libc.dylib */; };
 		F565765D1301985F0085ED7F /* libtdb.dylib.1 in Frameworks */ = {isa = PBXBuildFile; fileRef = F5656D7C12FBB75B0085ED7F /* libtdb.dylib.1 */; };
 		F56B13AF12CAE812009B4C96 /* libpython2.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F56B13AE12CAE812009B4C96 /* libpython2.6.dylib */; settings = {ATTRIBUTES = (Required, ); }; };
@@ -951,6 +952,8 @@
 		32BD82A612E4B14900516E4E /* DVDFactoryDemuxer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVDFactoryDemuxer.h; sourceTree = "<group>"; };
 		4D5D2E1D1301758F006ABC13 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		8D576316048677EA00EA77CD /* XBMC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XBMC.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F5475785130C8F2700850A9A /* yuv2rgb.neon.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = yuv2rgb.neon.S; sourceTree = "<group>"; };
+		F5475786130C8F2700850A9A /* yuv2rgb.neon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = yuv2rgb.neon.h; sourceTree = "<group>"; };
 		F54D9E8012B713F8006870F9 /* libc.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libc.dylib; path = usr/lib/libc.dylib; sourceTree = SDKROOT; };
 		F5653BB4128B9441009C7ABB /* libcurl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.dylib; path = "tools/osx/ios-depends/build/lib/libcurl.dylib"; sourceTree = "<group>"; };
 		F5656D7C12FBB75B0085ED7F /* libtdb.dylib.1 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; fileEncoding = 4; name = libtdb.dylib.1; path = "tools/osx/ios-depends/build/lib/libtdb.dylib.1"; sourceTree = "<group>"; };
@@ -4403,6 +4406,8 @@
 				F589A3FB12879A9A00D8079E /* VideoShaders */,
 				F589A40212879A9A00D8079E /* WinRenderer.h */,
 				F589A40312879A9A00D8079E /* WinRenderManager.h */,
+				F5475785130C8F2700850A9A /* yuv2rgb.neon.S */,
+				F5475786130C8F2700850A9A /* yuv2rgb.neon.h */,
 			);
 			path = VideoRenderers;
 			sourceTree = "<group>";
@@ -6808,6 +6813,7 @@
 				F56B141112CAF053009B4C96 /* IOSCoreAudio.cpp in Sources */,
 				F56B141412CAF0A3009B4C96 /* IOSAudioRenderer.cpp in Sources */,
 				3270F20112CDEB560043E5FA /* AutoPool.mm in Sources */,
+				F5475787130C8F2700850A9A /* yuv2rgb.neon.S in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
