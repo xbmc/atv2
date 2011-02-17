@@ -207,6 +207,8 @@ bool CBaseTexture::LoadFromFile(const CStdString& texturePath, unsigned int maxW
     
   if (imageSource == nil)
   {
+    CFRelease(cfdata);
+    delete [] imageBuff;
     CLog::Log(LOGERROR, "Texture manager unable to load file: %s", CSpecialProtocol::TranslatePath(texturePath).c_str());
     return false;
   }
