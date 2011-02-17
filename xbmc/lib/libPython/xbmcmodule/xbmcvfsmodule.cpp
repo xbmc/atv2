@@ -37,7 +37,6 @@
 
 #include "filesystem/File.h"
 #include "pyutil.h"
-#include "FileUtils.h"
 
 using namespace std;
 using namespace XFILE;
@@ -168,44 +167,13 @@ namespace xbmcvfs
     return Py_BuildValue((char*)"b", bResult);
     
   }  
-  PyDoc_STRVAR(subHash__doc__,
-    "subHash(file)\n"
-    "\n"
-    "file        : file to calculate subtitle hash for"
-    "\n"
-    "example:\n"
-    "  hash = xbmcvfs.subHash(file)\n"); 
-  PyObject* vfs_subHash(File *self, PyObject *args, PyObject *kwds)
-  {
-    PyObject *f_line;
-    if (!PyArg_ParseTuple(
-      args,
-      (char*)"O",
-      &f_line))
-    {
-      return NULL;
-    }
-    CStdString strSource;
-    if (!PyXBMCGetUnicodeString(strSource, f_line, 1)) return NULL;
-    
-    CStdString strSize;
-    CStdString strHash;
-    Py_BEGIN_ALLOW_THREADS
-    CFileUtils::SubtitleFileSizeAndHash(strSource, strSize, strHash);
-    Py_END_ALLOW_THREADS
-    
-    return Py_BuildValue((char*)"ss",strSize.c_str(), strHash.c_str());
-  }  
-
-  
-  
+   
   
   // define c functions to be used in python here
   PyMethodDef xbmcvfsMethods[] = {
     {(char*)"copy", (PyCFunction)vfs_copy, METH_VARARGS, copy__doc__},
     {(char*)"delete", (PyCFunction)vfs_delete, METH_VARARGS, delete__doc__},
     {(char*)"rename", (PyCFunction)vfs_rename, METH_VARARGS, rename__doc__},
-    {(char*)"subHash", (PyCFunction)vfs_subHash, METH_VARARGS, subHash__doc__},
     {NULL, NULL, 0, NULL}
   };
 
