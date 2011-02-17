@@ -57,7 +57,7 @@ public:
   virtual bool ClearPicture(DVDVideoPicture* pDvdVideoPicture);
   virtual void SetDropState(bool bDrop);
   virtual const char* GetName(void) { return (const char*)m_pFormatName; }
-  
+
 protected:
   void DisplayQueuePop(void);
   void CreateVTSession(int width, int height, CMFormatDescriptionRef fmt_desc);
@@ -80,6 +80,7 @@ protected:
 
   bool              m_convert_bytestream;
   bool              m_convert_3byteTo4byteNALSize;
+
   DllAvUtil         *m_dllAvUtil;
   DllAvFormat       *m_dllAvFormat;
 };

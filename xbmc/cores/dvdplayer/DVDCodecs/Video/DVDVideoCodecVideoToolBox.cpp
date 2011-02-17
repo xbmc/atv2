@@ -405,96 +405,91 @@ typedef struct {
   uint8_t* decoderConfig;
 } quicktime_esds_t;
 
-unsigned int descrLength(unsigned int len)
+int quicktime_write_mp4_descr_length(DllAvFormat *av_format_ctx, ByteIOContext *pb, int length, int compact)
 {
   int i;
-  for(i=1; len>>(7*i); i++);
-  return len + 1 + i;
-}
+  uint8_t b;
+  int numBytes;
+  
+  if (compact)
+  {
+    if (length <= 0x7F)
+    {
+      numBytes = 1;
+    }
+    else if (length <= 0x3FFF)
+    {
+      numBytes = 2;
+    }
+    else if (length <= 0x1FFFFF)
+    {
+      numBytes = 3;
+    }
+    else
+    {
+      numBytes = 4;
+    }
+  }
+  else
+  {
+    numBytes = 4;
+  }
 
-void putDescr(DllAvFormat *av_format_ctx, ByteIOContext *pb, int tag, unsigned int size)
-{
-  int i= descrLength(size) - size - 2;
-  av_format_ctx->put_byte(pb, tag);
-  for(; i>0; i--)
-    av_format_ctx->put_byte(pb, (size>>(7*i)) | 0x80);
-  av_format_ctx->put_byte(pb, size & 0x7F);
+  for (i = numBytes-1; i >= 0; i--)
+  {
+    b = (length >> (i * 7)) & 0x7F;
+    if (i != 0)
+    {
+      b |= 0x80;
+    }
+    av_format_ctx->put_byte(pb, b);
+  }
+
+  return numBytes; 
 }
 
 void quicktime_write_esds(DllAvFormat *av_format_ctx, ByteIOContext *pb, quicktime_esds_t *esds)
 {
-  //quicktime_atom_t atom;
-  int decoderSpecificInfoLen = esds->decoderConfigLen ? descrLength(esds->decoderConfigLen):0;
-  //quicktime_atom_write_header(file, &atom, "esds");
+  av_format_ctx->put_byte(pb, 0);     // Version
+  av_format_ctx->put_be24(pb, 0);     // Flags
 
-  av_format_ctx->put_byte(pb, 0);  // Version
-  av_format_ctx->put_be24(pb, 0);  // Flags
-
-  // ES descriptor
-  putDescr(av_format_ctx, pb, 0x03, 3 + descrLength(13 + decoderSpecificInfoLen) + descrLength(1));
-
+  // elementary stream descriptor tag
+  av_format_ctx->put_byte(pb, 0x03);
+  quicktime_write_mp4_descr_length(av_format_ctx, pb,
+    3 + 5 + (13 + 5 + esds->decoderConfigLen) + 3, false);
+  // 3 bytes + 5 bytes for tag
   av_format_ctx->put_be16(pb, esds->esid);
   av_format_ctx->put_byte(pb, esds->stream_priority);
-  // DecoderConfig descriptor
-  putDescr(av_format_ctx, pb, 0x04, 13 + esds->decoderConfigLen);
-  // Object type indication
+
+  // decoder configuration description tag
+  av_format_ctx->put_byte(pb, 0x04);
+  quicktime_write_mp4_descr_length(av_format_ctx, pb,
+    13 + 5 + esds->decoderConfigLen, false);
+  // 13 bytes + 5 bytes for tag
   av_format_ctx->put_byte(pb, esds->objectTypeId); // objectTypeIndication
   av_format_ctx->put_byte(pb, esds->streamType);   // streamType
-
   av_format_ctx->put_be24(pb, esds->bufferSizeDB); // buffer size
   av_format_ctx->put_be32(pb, esds->maxBitrate);   // max bitrate
   av_format_ctx->put_be32(pb, esds->avgBitrate);   // average bitrate
 
-  // DecoderSpecific info descriptor
-  if (decoderSpecificInfoLen)
-  {
-    putDescr(av_format_ctx, pb, 0x05, esds->decoderConfigLen);
-    av_format_ctx->put_buffer(pb, esds->decoderConfig, esds->decoderConfigLen);
-  }
-  // SL descriptor
-  putDescr(av_format_ctx, pb, 0x06, 1);
-  av_format_ctx->put_byte(pb, 0x02);
+  // decoder specific description tag
+  av_format_ctx->put_byte(pb, 0x05);
+  quicktime_write_mp4_descr_length(av_format_ctx, pb, esds->decoderConfigLen, false);
+  av_format_ctx->put_buffer(pb, esds->decoderConfig, esds->decoderConfigLen);
 
-/*
-  put_byte(pb, 0);  // Version
+  // sync layer configuration descriptor tag
+  av_format_ctx->put_byte(pb, 0x06);  // tag
+  av_format_ctx->put_byte(pb, 0x01);  // length
+  av_format_ctx->put_byte(pb, 0x7F);  // no SL
 
-  // ES descriptor
-  putDescr(pb, 0x03, 3 + descrLength(13 + decoderSpecificInfoLen) + descrLength(1));
-  put_be16(pb, esds->esid);
-  put_byte(pb, 0x00); // flags (= no flags)
+  /* no IPI_DescrPointer */
+	/* no IP_IdentificationDataSet */
+	/* no IPMP_DescriptorPointer */
+	/* no LanguageDescriptor */
+	/* no QoS_Descriptor */
+	/* no RegistrationDescriptor */
+	/* no ExtensionDescriptor */
 
-  // DecoderConfig descriptor
-  putDescr(pb, 0x04, 13 + decoderSpecificInfoLen);
-
-  // Object type indication
-  put_byte(pb, esds->objectTypeId);
-
-  // the following fields is made of 6 bits to identify the streamtype (4 for video, 5 for audio)
-  // plus 1 bit to indicate upstream and 1 bit set to 1 (reserved)
-  put_byte(pb, esds->streamType); // flags (0x11 = Visualstream)
-
-  put_be24(pb, esds->bufferSizeDB); // buffer size
-  //put_byte(pb,  track->enc->rc_buffer_size>>(3+16));    // Buffersize DB (24 bits)
-  //put_be16(pb, (track->enc->rc_buffer_size>>3)&0xFFFF); // Buffersize DB
-
-  put_be32(pb, esds->maxBitrate);   // max bitrate
-  put_be32(pb, esds->avgBitrate);   // average bitrate
-  //put_be32(pb, FFMAX(track->enc->bit_rate, track->enc->rc_max_rate)); // maxbitrate (FIXME should be max rate in any 1 sec window)
-  //if(track->enc->rc_max_rate != track->enc->rc_min_rate || track->enc->rc_min_rate==0)
-  //    put_be32(pb, 0); // vbr
-  //else
-  //    put_be32(pb, track->enc->rc_max_rate); // avg bitrate
-
-  // DecoderSpecific info descriptor
-  if (decoderSpecificInfoLen) {
-    putDescr(pb, 0x05, esds->decoderConfigLen);
-    put_buffer(pb, esds->decoderConfig, esds->decoderConfigLen);
-  }
-
-  // SL descriptor
-  putDescr(pb, 0x06, 1);
-  put_byte(pb, 0x02);
-*/
 }
 
 quicktime_esds_t* quicktime_set_esds(DllAvFormat *av_format_ctx, const uint8_t * decoderConfig, int decoderConfigLen)
@@ -510,7 +505,7 @@ quicktime_esds_t* quicktime_set_esds(DllAvFormat *av_format_ctx, const uint8_t *
   esds->flags           = 0;
   
   esds->esid            = 0;
-  esds->stream_priority = 0;      // 16 ?
+  esds->stream_priority = 0;      // 16 ? 0x1f
   
   esds->objectTypeId    = 32;     // 32 = CODEC_ID_MPEG4, 33 = CODEC_ID_H264
   // the following fields is made of 6 bits to identify the streamtype (4 for video, 5 for audio)
@@ -758,8 +753,8 @@ const int isom_write_avcc(DllAvUtil *av_util_ctx, DllAvFormat *av_format_ctx,
 //-----------------------------------------------------------------------------------
 CDVDVideoCodecVideoToolBox::CDVDVideoCodecVideoToolBox() : CDVDVideoCodec()
 {
-  m_vt_session = NULL;
-  m_fmt_desc = NULL;
+  m_fmt_desc    = NULL;
+  m_vt_session  = NULL;
   m_pFormatName = "vtb";
 
   m_queue_depth = 0;
@@ -768,7 +763,7 @@ CDVDVideoCodecVideoToolBox::CDVDVideoCodecVideoToolBox() : CDVDVideoCodec()
 
   m_convert_bytestream = false;
   m_convert_3byteTo4byteNALSize = false; 
-  m_dllAvUtil = NULL;
+  m_dllAvUtil   = NULL;
   m_dllAvFormat = NULL;
   memset(&m_videobuffer, 0, sizeof(DVDVideoPicture));
 }
@@ -802,7 +797,8 @@ bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &o
     switch (hints.codec)
     {
       case CODEC_ID_MPEG4:
-        if (extrasize) {
+        if (extrasize)
+        {
           ByteIOContext *pb;
           quicktime_esds_t *esds;
 
@@ -824,7 +820,9 @@ bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &o
 
           // done with the converted extradata, we MUST free using av_free
           m_dllAvUtil->av_free(extradata);
-        } else {
+        }
+        else
+        {
           m_fmt_desc = CreateFormatDescription(kVTFormatMPEG4Video, width, height);          
         }
         m_pFormatName = "vtb-mpeg4";
@@ -848,7 +846,7 @@ bool CDVDVideoCodecVideoToolBox::Open(CDVDStreamInfo &hints, CDVDCodecOptions &o
         {
           if (extradata[4] == 0xFE)
           {
-            // video content is from so silly encoder that think 3 byte NAL sizes
+            // video content is from some silly encoder that think 3 byte NAL sizes
             // are valid, setup to convert 3 byte NAL sizes to 4 byte.
             extradata[4] = 0xFF;
             m_convert_3byteTo4byteNALSize = true;
@@ -987,9 +985,9 @@ int CDVDVideoCodecVideoToolBox::Decode(BYTE* pData, int iSize, double dts, doubl
     OSStatus status;
     double sort_time;
     uint32_t decoderFlags = 0;
-    CFDictionaryRef frameInfo;
-    CMSampleBufferRef sampleBuff;
-    ByteIOContext *pb;
+    CFDictionaryRef frameInfo = NULL;;
+    CMSampleBufferRef sampleBuff = NULL;
+    ByteIOContext *pb = NULL;
     int demux_size = 0;
     uint8_t *demux_buff = NULL;
     
@@ -1045,7 +1043,8 @@ int CDVDVideoCodecVideoToolBox::Decode(BYTE* pData, int iSize, double dts, doubl
 
     // submit for decoding
     status = VTDecompressionSessionDecodeFrame(m_vt_session, sampleBuff, decoderFlags, frameInfo, 0);
-    if (status != kVTDecoderNoErr) {
+    if (status != kVTDecoderNoErr)
+    {
       CLog::Log(LOGNOTICE, "%s - VTDecompressionSessionDecodeFrame returned(%d)",
         __FUNCTION__, (int)status);
       CFRelease(frameInfo);
@@ -1061,7 +1060,8 @@ int CDVDVideoCodecVideoToolBox::Decode(BYTE* pData, int iSize, double dts, doubl
 
     // wait for decoding to finish
     status = VTDecompressionSessionWaitForAsynchronousFrames(m_vt_session);
-    if (status != kVTDecoderNoErr) {
+    if (status != kVTDecoderNoErr)
+    {
       CLog::Log(LOGNOTICE, "%s - VTDecompressionSessionWaitForAsynchronousFrames returned(%d)",
         __FUNCTION__, (int)status);
       CFRelease(frameInfo);
@@ -1098,7 +1098,7 @@ bool CDVDVideoCodecVideoToolBox::GetPicture(DVDVideoPicture* pDvdVideoPicture)
   // clone the video picture buffer settings.
   *pDvdVideoPicture = m_videobuffer;
 
-  // get the top yuv frame, we risk getting the wrong frame if the frame queue
+  // get the top picture frame, we risk getting the wrong frame if the frame queue
   // depth is less than the number of encoded reference frames. If queue depth
   // is greater than the number of encoded reference frames, then the top frame
   // will never change and we can just grab a ref to the top frame. This way
@@ -1110,7 +1110,7 @@ bool CDVDVideoCodecVideoToolBox::GetPicture(DVDVideoPicture* pDvdVideoPicture)
   pDvdVideoPicture->iHeight         = m_display_queue->height;
   pDvdVideoPicture->iDisplayWidth   = m_display_queue->width;
   pDvdVideoPicture->iDisplayHeight  = m_display_queue->height;
-  pDvdVideoPicture->vtb = this;
+  pDvdVideoPicture->vtb             = this;
   pDvdVideoPicture->cvBufferRef     = m_display_queue->pixel_buffer_ref;
   m_display_queue->pixel_buffer_ref = NULL;
   pthread_mutex_unlock(&m_queue_mutex);
@@ -1284,7 +1284,9 @@ CDVDVideoCodecVideoToolBox::VTDecoderCallback(
   {
     newFrame->width  = CVPixelBufferGetWidthOfPlane(imageBuffer, 0);
     newFrame->height = CVPixelBufferGetHeightOfPlane(imageBuffer, 0);
-  } else {
+  }
+  else
+  {
     newFrame->width  = CVPixelBufferGetWidth(imageBuffer);
     newFrame->height = CVPixelBufferGetHeight(imageBuffer);
   }  
@@ -1337,4 +1339,5 @@ CDVDVideoCodecVideoToolBox::VTDecoderCallback(
   //
   pthread_mutex_unlock(&ctx->m_queue_mutex);	
 }
+
 #endif
