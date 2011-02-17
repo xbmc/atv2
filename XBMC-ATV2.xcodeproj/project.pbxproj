@@ -11,6 +11,7 @@
 		322D9BAF12CDEF9400400943 /* AutoPool.mm in Sources */ = {isa = PBXBuildFile; fileRef = 322D9BAE12CDEF9400400943 /* AutoPool.mm */; };
 		4D5D2E131301753F006ABC13 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D5D2E121301753F006ABC13 /* CFNetwork.framework */; };
 		F51BD1F112CA77B500B8BD20 /* libpython2.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F51BD1F012CA77B500B8BD20 /* libpython2.6.dylib */; };
+		F5475773130C8DBC00850A9A /* yuv2rgb.neon.S in Sources */ = {isa = PBXBuildFile; fileRef = F5475772130C8DBC00850A9A /* yuv2rgb.neon.S */; };
 		F54D9DD812B56A7D006870F9 /* libfaad.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9DD712B56A7D006870F9 /* libfaad.dylib */; settings = {ATTRIBUTES = (Required, ); }; };
 		F54D9DDA12B56A9C006870F9 /* libvorbisfile.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9DD912B56A9C006870F9 /* libvorbisfile.dylib */; settings = {ATTRIBUTES = (Required, ); }; };
 		F54D9E0712B65FFF006870F9 /* libc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F54D9E0612B65FFF006870F9 /* libc.dylib */; };
@@ -945,6 +946,8 @@
 		4D5D2E121301753F006ABC13 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		8D576316048677EA00EA77CD /* XBMC.frappliance */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XBMC.frappliance; sourceTree = BUILT_PRODUCTS_DIR; };
 		F51BD1F012CA77B500B8BD20 /* libpython2.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpython2.6.dylib; path = "tools/osx/ios-depends/build/lib/libpython2.6.dylib"; sourceTree = "<group>"; };
+		F5475771130C8DBC00850A9A /* yuv2rgb.neon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = yuv2rgb.neon.h; sourceTree = "<group>"; };
+		F5475772130C8DBC00850A9A /* yuv2rgb.neon.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = yuv2rgb.neon.S; sourceTree = "<group>"; };
 		F54D9DD712B56A7D006870F9 /* libfaad.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfaad.dylib; path = "tools/osx/ios-depends/build/lib/libfaad.dylib"; sourceTree = "<group>"; };
 		F54D9DD912B56A9C006870F9 /* libvorbisfile.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libvorbisfile.dylib; path = "tools/osx/ios-depends/build/lib/libvorbisfile.dylib"; sourceTree = "<group>"; };
 		F54D9E0612B65FFF006870F9 /* libc.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libc.dylib; path = usr/lib/libc.dylib; sourceTree = SDKROOT; };
@@ -4410,6 +4413,8 @@
 				F589A3FB12879A9A00D8079E /* VideoShaders */,
 				F589A40212879A9A00D8079E /* WinRenderer.h */,
 				F589A40312879A9A00D8079E /* WinRenderManager.h */,
+				F5475772130C8DBC00850A9A /* yuv2rgb.neon.S */,
+				F5475771130C8DBC00850A9A /* yuv2rgb.neon.h */,
 			);
 			path = VideoRenderers;
 			sourceTree = "<group>";
@@ -6803,6 +6808,7 @@
 				F54D9E3312B70F57006870F9 /* WinEventsIOS.mm in Sources */,
 				322D9BAF12CDEF9400400943 /* AutoPool.mm in Sources */,
 				F56B169012CF9870009B4C96 /* iOSUtils.mm in Sources */,
+				F5475773130C8DBC00850A9A /* yuv2rgb.neon.S in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
