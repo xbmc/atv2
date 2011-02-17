@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		18A0B34F129FC3A5007BB966 /* XBMC.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A0B34E129FC3A5007BB966 /* XBMC.png */; };
+		18C4B27B130B0D8400AF6DC5 /* xbmcvfsmodule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C4B27A130B0D8400AF6DC5 /* xbmcvfsmodule.cpp */; };
 		322D9BAF12CDEF9400400943 /* AutoPool.mm in Sources */ = {isa = PBXBuildFile; fileRef = 322D9BAE12CDEF9400400943 /* AutoPool.mm */; };
 		4D5D2E131301753F006ABC13 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D5D2E121301753F006ABC13 /* CFNetwork.framework */; };
 		F51BD1F112CA77B500B8BD20 /* libpython2.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F51BD1F012CA77B500B8BD20 /* libpython2.6.dylib */; };
@@ -941,6 +942,7 @@
 
 /* Begin PBXFileReference section */
 		18A0B34E129FC3A5007BB966 /* XBMC.png */ = {isa = PBXFileReference; explicitFileType = image.png; name = XBMC.png; path = xbmc/osx/atv2/XBMC.png; sourceTree = "<group>"; };
+		18C4B27A130B0D8400AF6DC5 /* xbmcvfsmodule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xbmcvfsmodule.cpp; sourceTree = "<group>"; };
 		322D9BAD12CDEF9400400943 /* AutoPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoPool.h; sourceTree = "<group>"; };
 		322D9BAE12CDEF9400400943 /* AutoPool.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AutoPool.mm; sourceTree = "<group>"; };
 		4D5D2E121301753F006ABC13 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -4863,7 +4865,6 @@
 			children = (
 				F589A61B12879A9B00D8079E /* PythonAddon.cpp */,
 				F589A61C12879A9B00D8079E /* PythonAddon.h */,
-				F589A61D12879A9B00D8079E /* xbmcaddonmodule.cpp */,
 				F589A61E12879A9B00D8079E /* controlslider.cpp */,
 				F589A61F12879A9B00D8079E /* controlradiobutton.cpp */,
 				F589A62012879A9B00D8079E /* action.cpp */,
@@ -4911,9 +4912,11 @@
 				F589A64A12879A9B00D8079E /* winxml.cpp */,
 				F589A64B12879A9B00D8079E /* winxml.h */,
 				F589A64C12879A9B00D8079E /* winxmldialog.cpp */,
+				F589A61D12879A9B00D8079E /* xbmcaddonmodule.cpp */,
 				F589A64D12879A9B00D8079E /* xbmcguimodule.cpp */,
 				F589A64E12879A9B00D8079E /* xbmcmodule.cpp */,
 				F589A64F12879A9B00D8079E /* xbmcplugin.cpp */,
+				18C4B27A130B0D8400AF6DC5 /* xbmcvfsmodule.cpp */,
 			);
 			path = xbmcmodule;
 			sourceTree = "<group>";
@@ -6808,6 +6811,7 @@
 				F54D9E3312B70F57006870F9 /* WinEventsIOS.mm in Sources */,
 				322D9BAF12CDEF9400400943 /* AutoPool.mm in Sources */,
 				F56B169012CF9870009B4C96 /* iOSUtils.mm in Sources */,
+				18C4B27B130B0D8400AF6DC5 /* xbmcvfsmodule.cpp in Sources */,
 				F5475773130C8DBC00850A9A /* yuv2rgb.neon.S in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
