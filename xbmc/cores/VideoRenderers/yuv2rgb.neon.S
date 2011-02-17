@@ -12,7 +12,7 @@
  /* Initial ARM Neon implementation of core YUV2RGB functions. */
         
     .text
-    .align
+    .align 4
 #ifndef __APPLE__
     .global _yuv420_2_rgb8888_neon
     .type   _yuv420_2_rgb8888_neon, %function
