@@ -29,7 +29,7 @@
 #include "SpecialProtocol.h"
 #if defined(__APPLE__)
   #include <ImageIO/ImageIO.h>
-  #include "iOSUtils.h"
+  #include "osx/iOSUtils.h"
   #include "FileSystem/File.h"
 #endif
 
