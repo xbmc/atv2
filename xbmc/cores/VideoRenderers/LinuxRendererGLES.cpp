@@ -1497,9 +1497,8 @@ void CLinuxRendererGLES::UploadYV12Texture(int source)
       m_rgbBuffer = new BYTE[m_rgbBufferSize];
     }
 
-#if 0
-//#if defined(__ARM_NEON__)
-    yuv420_2_rgb8888_neon(m_rgbBuffer, im->plane[0], im->plane[1], im->plane[2],
+#if defined(__ARM_NEON__)
+    yuv420_2_rgb8888_neon(m_rgbBuffer, im->plane[0], im->plane[2], im->plane[1],
       m_sourceWidth, m_sourceHeight, im->stride[0], im->stride[1], m_sourceWidth * 4);
 #else
     m_sw_context = m_dllSwScale->sws_getCachedContext(m_sw_context,
