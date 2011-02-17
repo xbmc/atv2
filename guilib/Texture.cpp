@@ -226,7 +226,7 @@ bool CBaseTexture::LoadFromFile(const CStdString& texturePath, unsigned int maxW
     *originalWidth = width;
   if (originalHeight)
     *originalHeight = height;
-
+/*
   //limit texture size to screen size - preserving aspectratio of image  
   if ( width > g_Windowing.GetWidth() )
   {
@@ -243,7 +243,7 @@ bool CBaseTexture::LoadFromFile(const CStdString& texturePath, unsigned int maxW
       height = g_Windowing.GetWidth() * aspect;
       width  = (float)height / (float)aspect;
   }
-       
+*/
   Allocate(width, height, XB_FMT_A8R8G8B8);    
     
   CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
