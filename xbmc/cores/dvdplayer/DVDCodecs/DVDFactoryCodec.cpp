@@ -147,7 +147,6 @@ CDVDVideoCodec* CDVDFactoryCodec::CreateVideoCodec( CDVDStreamInfo &hint )
 #elif defined(__APPLE__)
   hwSupport += "VideoToolBoxDecoder:no ";
 #endif
-  hwSupport += "VideoToolBoxDecoder:yes ";
 #ifdef HAVE_LIBCRYSTALHD
   hwSupport += "CrystalHD:yes ";
 #else
