@@ -195,6 +195,7 @@ bool CBaseTexture::LoadFromFile(const CStdString& texturePath, unsigned int maxW
   if (!imageBuffSize)
   {
     CLog::Log(LOGERROR, "Texture manager read texture file failed.");
+    delete [] imageBuff;
     return false;
   }
 
@@ -207,9 +208,9 @@ bool CBaseTexture::LoadFromFile(const CStdString& texturePath, unsigned int maxW
     
   if (imageSource == nil)
   {
+    CLog::Log(LOGERROR, "Texture manager unable to load file: %s", CSpecialProtocol::TranslatePath(texturePath).c_str());
     CFRelease(cfdata);
     delete [] imageBuff;
-    CLog::Log(LOGERROR, "Texture manager unable to load file: %s", CSpecialProtocol::TranslatePath(texturePath).c_str());
     return false;
   }
 
@@ -228,24 +229,27 @@ bool CBaseTexture::LoadFromFile(const CStdString& texturePath, unsigned int maxW
     *originalWidth = width;
   if (originalHeight)
     *originalHeight = height;
-/*
-  //limit texture size to screen size - preserving aspectratio of image  
-  if ( width > g_Windowing.GetWidth() )
+
+  // check texture size limits and limit to screen size - preserving aspectratio of image  
+  if ( width > g_Windowing.GetMaxTextureSize() || height > g_Windowing.GetMaxTextureSize() )
   {
-      float aspect;
+    float aspect;
+
+    if ( width > height )
+    {
       aspect = (float)width / (float)height;
-      width  = g_Windowing.GetHeight() * aspect;
+      width  = g_Windowing.GetWidth();
       height = (float)width / (float)aspect;
-  }
-    
-  if ( height > g_Windowing.GetHeight() )
-  {
-      float aspect;
+    }
+    else
+    {
       aspect = (float)height / (float)width;
-      height = g_Windowing.GetWidth() * aspect;
+      height = g_Windowing.GetHeight();
       width  = (float)height / (float)aspect;
+    }
+    CLog::Log(LOGDEBUG, "Texture manager texture clamp:new texture size: %i x %i", width, height);
   }
-*/
+
   Allocate(width, height, XB_FMT_A8R8G8B8);    
     
   CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
