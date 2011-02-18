@@ -192,7 +192,7 @@ CDVDVideoCodec* CDVDFactoryCodec::CreateVideoCodec( CDVDStreamInfo &hint )
 #endif
 
 #if defined(HAVE_VIDEOTOOLBOXDECODER)
-  if (!hint.software)
+  if (!hint.software && g_guiSettings.GetBool("videoplayer.usevideotoolbox"))
   {
     if (g_sysinfo.HasVideoToolBoxDecoder())
     {
