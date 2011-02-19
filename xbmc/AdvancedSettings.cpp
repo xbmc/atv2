@@ -35,6 +35,7 @@
 #include "SystemInfo.h"
 #include "XMLUtils.h"
 #include "utils/log.h"
+#include "filesystem/SpecialProtocol.h"
 
 using namespace XFILE;
 
@@ -736,7 +737,7 @@ bool CAdvancedSettings::Load()
       CStdString strFrom, strTo;
       TiXmlNode* pFrom = pSubstitute->FirstChild("from");
       if (pFrom)
-        strFrom = pFrom->FirstChild()->Value();
+        strFrom = _P(pFrom->FirstChild()->Value()).c_str();
       TiXmlNode* pTo = pSubstitute->FirstChild("to");
       if (pTo)
         strTo = pTo->FirstChild()->Value();
