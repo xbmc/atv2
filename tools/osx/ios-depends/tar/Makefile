@@ -9,8 +9,8 @@ APPNAME=tar
 VERSION=1.23
 SOURCE=$(APPNAME)-$(VERSION)
 # download location and format
-//BASE_URL=http://mirrors.xbmc.org/build-deps/darwin-libs
-BASE_URL=http://ftp.gnu.org/gnu/tar
+BASE_URL=http://mirrors.xbmc.org/build-deps/darwin-libs
+#BASE_URL=http://ftp.gnu.org/gnu/tar
 ARCHIVE=$(SOURCE).tar.gz
 
 RETRIEVE_TOOL=/usr/bin/curl
