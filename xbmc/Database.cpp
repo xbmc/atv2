@@ -139,7 +139,9 @@ bool CDatabase::Open(DatabaseSettings &dbSettings)
   if (m_sqlite)
   {
     dbSettings.type = "sqlite3";
-    dbSettings.host = _P(g_settings.GetDatabaseFolder());
+    //don't overwrite the dbpath if it is already set in dbSettings
+    if(dbSettings.host.IsEmpty())
+        dbSettings.host = _P(g_settings.GetDatabaseFolder());
   }
 
   // create the appropriate database structure
