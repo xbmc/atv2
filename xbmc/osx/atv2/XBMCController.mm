@@ -92,6 +92,14 @@ typedef enum {
 
   kBREventRemoteActionALPlay = 10,
 
+  kBREventRemoteAction13     = 13,  // PageUp
+  kBREventRemoteAction14     = 14,  // PageDn
+  kBREventRemoteAction15     = 15,  // Pause
+  kBREventRemoteAction16     = 16,  // Play
+  kBREventRemoteAction17     = 17,  // Stop
+  kBREventRemoteAction18     = 18,  // FastForward
+  kBREventRemoteAction19     = 19,  // Rewind
+
   kBREventRemoteActionPlayHold = 20,
   kBREventRemoteActionCenterHold,
   kBREventRemoteActionCenterHold42,
