@@ -39,6 +39,11 @@ config.log
 *.vcxproj.user
 *.obj
 
+# osx specific files
+.DS_Store
+/build/
+*.dSYM
+
 .libs/
 .deps/
 

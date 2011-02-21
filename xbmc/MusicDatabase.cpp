@@ -59,6 +59,7 @@
 #include "utils/AutoPtrHandle.h"
 #include "TextureCache.h"
 #include "GUIWindowAddonBrowser.h"
+#include "AutoPtrHandle.h"
 
 using namespace std;
 using namespace AUTOPTR;
