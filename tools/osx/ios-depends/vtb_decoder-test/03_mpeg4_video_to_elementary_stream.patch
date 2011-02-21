@@ -1,0 +1,170 @@
+diff -rpu unpatched_ffmpeg-mt/libavcodec/Makefile ffmpeg-mt/libavcodec/Makefile
+--- unpatched_ffmpeg-mt/libavcodec/Makefile	2010-03-11 17:46:30 -0800
++++ ffmpeg-mt/libavcodec/Makefile	2010-03-11 19:12:02 -0800
+@@ -564,6 +564,14 @@ OBJS-$(CONFIG_VP3_PARSER)              +
+ OBJS-$(CONFIG_AAC_ADTSTOASC_BSF)          += aac_adtstoasc_bsf.o
+ OBJS-$(CONFIG_DUMP_EXTRADATA_BSF)         += dump_extradata_bsf.o
+ OBJS-$(CONFIG_H264_MP4TOANNEXB_BSF)       += h264_mp4toannexb_bsf.o
++OBJS-$(CONFIG_MPEG4VIDEO_ES_BSF)          += mpeg4video_es_bsf.o \
++                                             mpeg4videoenc.o ituh263enc.o \
++                                             mpegvideo_enc.o motion_est.o \
++                                             ratecontrol.o mpeg12data.o \
++                                             aandcttab.o jfdctfst.o \
++                                             jfdctint.o faandct.o \
++                                             mpeg4video_parser.o mpegvideo.o \
++                                             error_resilience.o
+ OBJS-$(CONFIG_IMX_DUMP_HEADER_BSF)        += imx_dump_header_bsf.o
+ OBJS-$(CONFIG_MJPEGA_DUMP_HEADER_BSF)     += mjpega_dump_header_bsf.o
+ OBJS-$(CONFIG_MOV2TEXTSUB_BSF)            += movsub_bsf.o
+
+diff -rpu unpatched_ffmpeg-mt/libavcodec/allcodecs.c ffmpeg-mt/libavcodec/allcodecs.c
+--- unpatched_ffmpeg-mt/libavcodec/allcodecs.c	2010-03-11 17:46:29 -0800
++++ ffmpeg-mt/libavcodec/allcodecs.c	2010-03-11 19:12:02 -0800
+@@ -384,6 +384,7 @@ void avcodec_register_all(void)
+     REGISTER_BSF     (AAC_ADTSTOASC, aac_adtstoasc);
+     REGISTER_BSF     (DUMP_EXTRADATA, dump_extradata);
+     REGISTER_BSF     (H264_MP4TOANNEXB, h264_mp4toannexb);
++    REGISTER_BSF     (MPEG4VIDEO_ES, mpeg4video_es);
+     REGISTER_BSF     (IMX_DUMP_HEADER, imx_dump_header);
+     REGISTER_BSF     (MJPEGA_DUMP_HEADER, mjpega_dump_header);
+     REGISTER_BSF     (MP3_HEADER_COMPRESS, mp3_header_compress);
+
+diff -rpu unpatched_ffmpeg-mt/libavcodec/mpeg4video.h ffmpeg-mt/libavcodec/mpeg4video.h
+--- unpatched_ffmpeg-mt/libavcodec/mpeg4video.h	2010-03-11 17:46:30 -0800
++++ ffmpeg-mt/libavcodec/mpeg4video.h	2010-03-11 19:12:02 -0800
+@@ -91,6 +91,9 @@ void mpeg4_encode_mb(MpegEncContext *s,
+ void mpeg4_pred_ac(MpegEncContext * s, DCTELEM *block, int n,
+                    int dir);
+ void ff_set_mpeg4_time(MpegEncContext * s);
++void mpeg4_encode_gop_header(MpegEncContext * s);
++void mpeg4_encode_visual_object_header(MpegEncContext * s);
++void mpeg4_encode_vol_header(MpegEncContext * s, int vo_number, int vol_number);
+ void mpeg4_encode_picture_header(MpegEncContext *s, int picture_number);
+
+ int ff_mpeg4_decode_picture_header(MpegEncContext * s, GetBitContext *gb);
+
+diff -rpu unpatched_ffmpeg-mt/libavcodec/mpeg4videoenc.c ffmpeg-mt/libavcodec/mpeg4videoenc.c
+--- unpatched_ffmpeg-mt/libavcodec/mpeg4videoenc.c	2010-03-11 17:46:30 -0800
++++ ffmpeg-mt/libavcodec/mpeg4videoenc.c	2010-03-11 19:12:02 -0800
+@@ -872,7 +872,7 @@ void ff_set_mpeg4_time(MpegEncContext *
+     }
+ }
+
+-static void mpeg4_encode_gop_header(MpegEncContext * s){
++void mpeg4_encode_gop_header(MpegEncContext * s){
+     int hours, minutes, seconds;
+     int64_t time;
+
+@@ -902,7 +902,7 @@ static void mpeg4_encode_gop_header(Mpeg
+     ff_mpeg4_stuffing(&s->pb);
+ }
+
+-static void mpeg4_encode_visual_object_header(MpegEncContext * s){
++void mpeg4_encode_visual_object_header(MpegEncContext * s){
+     int profile_and_level_indication;
+     int vo_ver_id;
+
+@@ -947,7 +947,7 @@ static void mpeg4_encode_visual_object_h
+     ff_mpeg4_stuffing(&s->pb);
+ }
+
+-static void mpeg4_encode_vol_header(MpegEncContext * s, int vo_number, int vol_number)
++void mpeg4_encode_vol_header(MpegEncContext * s, int vo_number, int vol_number)
+ {
+     int vo_ver_id;
+
+diff -rpu -N unpatched-ffmpeg-mt/libavcodec/mpeg4video_es_bsf.c patched-ffmpeg-mt/libavcodec/mpeg4video_es_bsf.c
+--- unpatched-ffmpeg-mt/libavcodec/mpeg4video_es_bsf.c	1969-12-31 16:00:00 -0800
++++ patched-ffmpeg-mt/libavcodec/mpeg4video_es_bsf.c	2010-03-22 13:11:15 -0700
+@@ -0,0 +1,91 @@
++/*
++ * Copyright (c) 2009 Google Inc.
++ *
++ * This file is part of FFmpeg.
++ *
++ * FFmpeg is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public
++ * License as published by the Free Software Foundation; either
++ * version 2.1 of the License, or (at your option) any later version.
++ *
++ * FFmpeg is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with FFmpeg; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
++ */
++
++#include "avcodec.h"
++#include "mpegvideo.h"
++
++static int mpeg4video_es_filter(AVBitStreamFilterContext *bsfc,
++				AVCodecContext *avctx, const char *args,
++				uint8_t **poutbuf, int *poutbuf_size,
++				const uint8_t *buf, int buf_size,
++				int keyframe) {
++    AVCodecParserContext *cpc;
++    ParseContext1 *pc;
++    MpegEncContext *s;
++    int first_picture;
++    int ret;
++    uint8_t *frame_data;
++    int frame_size;
++    int outbuf_idx = 0;
++    int count = 0;
++
++    if (avctx->codec_id != CODEC_ID_MPEG4) {
++        av_log(NULL, AV_LOG_ERROR, "Codec is not MPEG4\n");
++        return -1;
++    }
++
++    if (!bsfc->parser) {
++        bsfc->parser = av_parser_init(CODEC_ID_MPEG4);
++    }
++    cpc = bsfc->parser;
++    pc = cpc->priv_data;
++    s = pc->enc;
++
++    *poutbuf = NULL;
++    *poutbuf_size = 0;
++    while (buf_size > 0) {
++        first_picture = pc->first_picture;
++        ret = cpc->parser->parser_parse(cpc, avctx, &frame_data, &frame_size, buf, buf_size);
++
++        if (ret < 0)
++            return ret;
++
++        buf_size -= ret;
++        buf += ret;
++
++        // If the first picture is decoded, encode the header.
++        if (first_picture && !pc->first_picture) {
++            assert(!*poutbuf);
++            *poutbuf = av_malloc(1024);
++            *poutbuf_size = 1024;
++            init_put_bits(&s->pb, *poutbuf, 1024);
++            mpeg4_encode_visual_object_header(s);
++            mpeg4_encode_vol_header(s, 0, 0);
++            flush_put_bits(&s->pb);
++            outbuf_idx = (put_bits_count(&s->pb)+7)>>3;
++        }
++
++        if (!frame_size)
++            break;
++
++        *poutbuf = av_fast_realloc(*poutbuf, poutbuf_size, outbuf_idx + frame_size);
++        memcpy(*poutbuf + outbuf_idx, frame_data, frame_size);
++        outbuf_idx += frame_size;
++    }
++
++    *poutbuf_size = outbuf_idx;
++    return 0;
++}
++
++AVBitStreamFilter mpeg4video_es_bsf = {
++    "mpeg4video_es",
++    0,
++    mpeg4video_es_filter,
++};
