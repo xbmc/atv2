@@ -34,86 +34,116 @@
 #import "XBMCDebugHelpers.h"
 
 typedef enum {
-  ATV_BUTTON_PLAY           = 5,
-  ATV_BUTTON_MENU           = 6,
-  ATV_BUTTON_MENU_H         = 8,
-  ATV_BUTTON_UP             = 1,
-  ATV_BUTTON_UP_RELEASE     = 1,
-  ATV_BUTTON_DOWN           = 2,
-  ATV_BUTTON_DOWN_RELEASE   = 2,
-  ATV_BUTTON_RIGHT          = 4,
-  ATV_BUTTON_RIGHT_RELEASE  = 4,
-  ATV_BUTTON_LEFT           = 3,
-  ATV_BUTTON_LEFT_RELEASE   = 3,   
-  ATV_BUTTON_PLAY_H         = 7,
-  
-  ATV_BUTTON_LEFT_H         = 9,
-  ATV_BUTTON_LEFT_H_RELEASE = 9,
-  ATV_BUTTON_RIGHT_H        = 10,
-  ATV_BUTTON_RIGHT_H_RELEASE= 10,
+
+  ATV_BUTTON_UP                 = 1,
+  ATV_BUTTON_UP_RELEASE         = 1,
+  ATV_BUTTON_DOWN               = 2,
+  ATV_BUTTON_DOWN_RELEASE       = 2,
+  ATV_BUTTON_LEFT               = 3,
+  ATV_BUTTON_LEFT_RELEASE       = 3,
+  ATV_BUTTON_RIGHT              = 4,
+  ATV_BUTTON_RIGHT_RELEASE      = 4,
+  ATV_BUTTON_PLAY               = 5,
+  ATV_BUTTON_MENU               = 6,
+  ATV_BUTTON_PLAY_H             = 7,
+  ATV_BUTTON_MENU_H             = 8,
+  ATV_BUTTON_LEFT_H             = 9,
+  ATV_BUTTON_LEFT_H_RELEASE     = 9,
+  ATV_BUTTON_RIGHT_H            = 10,
+  ATV_BUTTON_RIGHT_H_RELEASE    = 10,
 
   //new aluminium remote buttons
-  ATV_ALUMINIUM_PLAY        = 12,
-  ATV_ALUMINIUM_PLAY_H      = 13,
-  
+  ATV_ALUMINIUM_PLAY            = 12,
+  ATV_ALUMINIUM_PLAY_H          = 11,
+
+  //newly added remote buttons  
+  ATV_BUTTON_PAGEUP             = 13,
+  ATV_BUTTON_PAGEDOWN           = 14,
+  ATV_BUTTON_PAUSE              = 15,
+  ATV_BUTTON_PLAY2              = 16,
+  ATV_BUTTON_STOP               = 17,
+  ATV_BUTTON_STOP_RELEASE       = 17,
+  ATV_BUTTON_FASTFWD            = 18,
+  ATV_BUTTON_FASTFWD_RELEASE    = 18,
+  ATV_BUTTON_REWIND             = 19,
+  ATV_BUTTON_REWIND_RELEASE     = 19,
+  ATV_BUTTON_SKIPFWD            = 20,
+  ATV_BUTTON_SKIPBACK           = 21,
+
   //learned remote buttons
-  ATV_LEARNED_PLAY          = 70,
-  ATV_LEARNED_PAUSE         = 71,
-  ATV_LEARNED_STOP          = 72,
-  ATV_LEARNED_PREVIOUS      = 73,
-  ATV_LEARNED_NEXT          = 74,
-  ATV_LEARNED_REWIND        = 75,
-  ATV_LEARNED_REWIND_RELEASE= 75,
-  ATV_LEARNED_FORWARD       = 76,
-  ATV_LEARNED_FORWARD_RELEASE=76,
-  ATV_LEARNED_RETURN        = 77,
-  ATV_LEARNED_ENTER         = 78,
+  ATV_LEARNED_PLAY              = 70,
+  ATV_LEARNED_PAUSE             = 71,
+  ATV_LEARNED_STOP              = 72,
+  ATV_LEARNED_PREVIOUS          = 73,
+  ATV_LEARNED_NEXT              = 74,
+  ATV_LEARNED_REWIND            = 75,
+  ATV_LEARNED_REWIND_RELEASE    = 75,
+  ATV_LEARNED_FORWARD           = 76,
+  ATV_LEARNED_FORWARD_RELEASE   = 76,
+  ATV_LEARNED_RETURN            = 77,
+  ATV_LEARNED_ENTER             = 78,
 
   //gestures
-  ATV_GESTURE_SWIPE_LEFT    = 80,
-  ATV_GESTURE_SWIPE_RIGHT   = 81,
-  ATV_GESTURE_SWIPE_UP      = 82,
-  ATV_GESTURE_SWIPE_DOWN    = 83,
-  
-  ATV_BTKEYPRESS            = 84,
-  
+  ATV_GESTURE_SWIPE_LEFT        = 80,
+  ATV_GESTURE_SWIPE_RIGHT       = 81,
+  ATV_GESTURE_SWIPE_UP          = 82,
+  ATV_GESTURE_SWIPE_DOWN        = 83,
+
+  ATV_GESTURE_FLICK_LEFT        = 85,
+  ATV_GESTURE_FLICK_RIGHT       = 86,
+  ATV_GESTURE_FLICK_UP          = 87,
+  ATV_GESTURE_FLICK_DOWN        = 88,
+  ATV_GESTURE_TOUCHHOLD         = 89,
+
+  ATV_BTKEYPRESS                = 84,
+
   ATV_INVALID_BUTTON
 } eATVClientEvent;
 
 typedef enum {
   // for originator kBREventOriginatorRemote
-  kBREventRemoteActionMenu = 1,
-  kBREventRemoteActionMenuHold,
-  kBREventRemoteActionUp,
-  kBREventRemoteActionDown,
-  kBREventRemoteActionPlay,
-  kBREventRemoteActionLeft,
-  kBREventRemoteActionRight,
+  kBREventRemoteActionMenu      = 1,
+  kBREventRemoteActionMenuHold  = 2,
+  kBREventRemoteActionUp        = 3,
+  kBREventRemoteActionDown      = 4,
+  kBREventRemoteActionPlay      = 5,
+  kBREventRemoteActionLeft      = 6,
+  kBREventRemoteActionRight     = 7,
 
-  kBREventRemoteActionALPlay = 10,
+  kBREventRemoteActionALPlay    = 10,
 
-  kBREventRemoteAction13     = 13,  // PageUp
-  kBREventRemoteAction14     = 14,  // PageDn
-  kBREventRemoteAction15     = 15,  // Pause
-  kBREventRemoteAction16     = 16,  // Play
-  kBREventRemoteAction17     = 17,  // Stop
-  kBREventRemoteAction18     = 18,  // FastForward
-  kBREventRemoteAction19     = 19,  // Rewind
+  kBREventRemoteActionPageUp    = 13,
+  kBREventRemoteActionPageDown  = 14,
+  kBREventRemoteActionPause     = 15,
+  kBREventRemoteActionPlay2     = 16,
+  kBREventRemoteActionStop      = 17,
+  kBREventRemoteActionFastFwd   = 18,
+  kBREventRemoteActionRewind    = 19,
+  kBREventRemoteActionSkipBack  = 20,
+  kBREventRemoteActionSkipFwd   = 21,
 
-  kBREventRemoteActionPlayHold = 20,
+  kBREventRemoteActionPlayHold  = 22,
   kBREventRemoteActionCenterHold,
   kBREventRemoteActionCenterHold42,
 
   // Gestures, for originator kBREventOriginatorGesture
-  kBREventRemoteActionTouchBegin = 30,
-  kBREventRemoteActionTouchMove,
-  kBREventRemoteActionTouchEnd,
-  kBREventRemoteActionSwipeLeft,
-  kBREventRemoteActionSwipeRight,
-  kBREventRemoteActionSwipeUp,
-  kBREventRemoteActionSwipeDown,
-  
-  kBREventRemoteActionKeyPress = 47,
+  kBREventRemoteActionTouchBegin= 31,
+  kBREventRemoteActionTouchMove = 32,
+  kBREventRemoteActionTouchEnd  = 33,
+
+  kBREventRemoteActionSwipeLeft = 34,
+  kBREventRemoteActionSwipeRight= 35,
+  kBREventRemoteActionSwipeUp   = 36,
+  kBREventRemoteActionSwipeDown = 37,
+
+  kBREventRemoteActionFlickLeft = 38,
+  kBREventRemoteActionFlickRight= 39,
+  kBREventRemoteActionFlickUp   = 40,
+  kBREventRemoteActionFlickDown = 41,
+
+  kBREventRemoteActionTouchHold = 46,
+
+  kBREventRemoteActionKeyPress  = 47,
   kBREventRemoteActionKeyPress42,
   
 
@@ -396,7 +426,7 @@ int           m_systemsleepTimeout;
     case 786615:
       return ATV_LEARNED_STOP;
 
-    // learned nexxt
+    // learned next
     case 786613:
       return ATV_LEARNED_NEXT;
 
@@ -420,6 +450,130 @@ int           m_systemsleepTimeout;
     case kBREventRemoteActionKeyPress:
     case kBREventRemoteActionKeyPress42:
       return ATV_BTKEYPRESS;
+
+    // PageUp
+    case kBREventRemoteActionPageUp:
+      if ([f_event value] == 1)
+        return ATV_BUTTON_PAGEUP;
+      else
+        return ATV_INVALID_BUTTON;
+
+    // PageDown
+    case kBREventRemoteActionPageDown:
+      if ([f_event value] == 1)
+        return ATV_BUTTON_PAGEDOWN;
+      else
+        return ATV_INVALID_BUTTON;
+
+    // Pause
+    case kBREventRemoteActionPause:
+      if ([f_event value] == 1)
+        return ATV_BUTTON_PAUSE;
+      else
+        return ATV_INVALID_BUTTON;
+
+    // Play2
+    case kBREventRemoteActionPlay2:
+      if ([f_event value] == 1)
+        return ATV_BUTTON_PLAY2;
+      else
+        return ATV_INVALID_BUTTON;
+
+    // Stop
+    case kBREventRemoteActionStop:
+      if ([f_event value] == 1)
+        return ATV_BUTTON_STOP;
+      else
+        return ATV_INVALID_BUTTON;
+        //return ATV_BUTTON_STOP_RELEASE;
+
+    // Fast Forward
+    case kBREventRemoteActionFastFwd:
+      if ([f_event value] == 1)
+        return ATV_BUTTON_FASTFWD;
+      else
+        return ATV_INVALID_BUTTON;
+        //return ATV_BUTTON_FASTFWD_RELEASE;
+
+    // Rewind
+    case kBREventRemoteActionRewind:
+      if ([f_event value] == 1)
+        return ATV_BUTTON_REWIND;
+      else
+        return ATV_INVALID_BUTTON;
+        //return ATV_BUTTON_REWIND_RELEASE;
+
+    // Skip Forward
+    case kBREventRemoteActionSkipFwd:
+      if ([f_event value] == 1)
+        return ATV_BUTTON_SKIPFWD;
+      else
+        return ATV_INVALID_BUTTON;
+
+    // Skip Back
+    case kBREventRemoteActionSkipBack:
+      if ([f_event value] == 1)
+        return ATV_BUTTON_SKIPBACK;
+      else
+        return ATV_INVALID_BUTTON;
+
+    // Gesture Swipe Left
+    case kBREventRemoteActionSwipeLeft:
+      if ([f_event value] == 1)
+        return ATV_GESTURE_SWIPE_LEFT;
+      else
+        return ATV_INVALID_BUTTON;
+
+    // Gesture Swipe Right
+    case kBREventRemoteActionSwipeRight:
+      if ([f_event value] == 1)
+        return ATV_GESTURE_SWIPE_RIGHT;
+      else
+        return ATV_INVALID_BUTTON;
+
+    // Gesture Swipe Up
+    case kBREventRemoteActionSwipeUp:
+      if ([f_event value] == 1)
+        return ATV_GESTURE_SWIPE_UP;
+      else
+        return ATV_INVALID_BUTTON;
+
+    // Gesture Swipe Down
+    case kBREventRemoteActionSwipeDown:
+      if ([f_event value] == 1)
+        return ATV_GESTURE_SWIPE_DOWN;
+      else
+        return ATV_INVALID_BUTTON;
+
+    // Gesture Flick Left
+    case kBREventRemoteActionFlickLeft:
+      if ([f_event value] == 1)
+        return ATV_GESTURE_FLICK_LEFT;
+      else
+        return ATV_INVALID_BUTTON;
+
+    // Gesture Flick Right
+    case kBREventRemoteActionFlickRight:
+      if ([f_event value] == 1)
+        return ATV_GESTURE_FLICK_RIGHT;
+      else
+        return ATV_INVALID_BUTTON;
+
+    // Gesture Flick Up
+    case kBREventRemoteActionFlickUp:
+      if ([f_event value] == 1)
+        return ATV_GESTURE_FLICK_UP;
+      else
+        return ATV_INVALID_BUTTON;
+
+    // Gesture Flick Down
+    case kBREventRemoteActionFlickDown:
+      if ([f_event value] == 1)
+        return ATV_GESTURE_FLICK_DOWN;
+      else
+        return ATV_INVALID_BUTTON;
+
+
 
     default:
       ELOG(@"XBMCPureController: Unknown button press remoteAction = %i", remoteAction);
