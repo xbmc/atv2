@@ -26,16 +26,17 @@
 #include <AudioUnit/AudioUnit.h>
 #include <AudioToolbox/AudioToolbox.h>
 #include <AudioToolbox/AudioServices.h>
+#include <CoreAudio/CoreAudioTypes.h>
 #include <StdString.h>
 #include <list>
 #include <vector>
 
-//typedef short SInt16;
-//typedef float Float32;
-
 #include <StdString.h>
 #include <list>
 #include <vector>
+
+#define kOutputBus 0
+#define kInputBus 1
 
 // Forward declarations
 class CIOSCoreAudioHardware;
@@ -58,33 +59,41 @@ class CIOSCoreAudioDevice
 {
 public:
   CIOSCoreAudioDevice();
-  CIOSCoreAudioDevice(AudioComponentInstance deviceId);
   virtual ~CIOSCoreAudioDevice();
   
   AudioComponentInstance GetId() {return m_AudioUnit;}
   const char* GetName(CStdString& name);
+  CIOSCoreAudioDevice(AudioComponentInstance deviceId);
   UInt32 GetTotalOutputChannels();
 
   void Attach(AudioUnit audioUnit) {m_AudioUnit = audioUnit;}
   AudioComponentInstance GetComponent(){return m_AudioUnit;}
   
-  void SetDevice(AudioComponentInstance deviceId);
+  void SetupInfo();
+  bool Init(bool bPassthrough, AudioStreamBasicDescription* pDesc, AURenderCallback renderCallback, void *pClientData);
   bool Open();  
   void Close();
   void Start();
   void Stop();
 
-  bool EnableInput();
-  bool EnableOutput();
-  bool SetRenderProc(AURenderCallback callback, void* pClientData);
-  bool GetInputFormat(AudioStreamBasicDescription* pDesc);
-  bool GetOutputFormat(AudioStreamBasicDescription* pDesc);    
-  bool SetInputFormat(AudioStreamBasicDescription* pDesc);
-  bool SetOutputFormat(AudioStreamBasicDescription* pDesc);
-  bool SetOutputSampleRate(Float64 sampleRate);
-  int  FramesPerSlice();
-protected:
+  bool EnableInput(AudioComponentInstance componentInstance, AudioUnitElement bus);
+  bool EnableOutput(AudioComponentInstance componentInstance, AudioUnitElement bus);
+  bool GetFormat(AudioComponentInstance componentInstance, AudioUnitScope scope,
+                 AudioUnitElement bus, AudioStreamBasicDescription* pDesc);
+  bool SetFormat(AudioComponentInstance componentInstance, AudioUnitScope scope,
+                 AudioUnitElement bus, AudioStreamBasicDescription* pDesc);
+  Float32 GetCurrentVolume();
+  bool SetCurrentVolume(Float32 vol);
+  int  FramesPerSlice(int nSlices);
+  void AudioChannelLayout(int layoutTag);
+  bool SetRenderProc(AudioComponentInstance componentInstance, AudioUnitElement bus,
+                 AURenderCallback callback, void* pClientData);
+  bool SetSessionListener(AudioSessionPropertyID inID, 
+                 AudioSessionPropertyListener inProc, void* pClientData);
+
   AudioComponentInstance m_AudioUnit;
+  AudioComponentInstance m_MixerUnit;
+  bool m_Passthrough;
 };
 
 // Helper Functions
